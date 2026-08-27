@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Westcon Meeting Intelligence — preparación inteligente de reuniones con partners e integradores." />
-  <title>Westcon Meeting Intelligence · v0.1</title>
+  <title>Westcon Meeting Intelligence · v1.0 Final</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,7 +14,7 @@
         <img src="assets/westcon-comstor.png" alt="Westcon Comstor" />
         <div>
           <strong>Meeting Intelligence</strong>
-          <span>FY27 · v0.1</span>
+          <span>FY27 · v1.0 Final</span>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="status-dot"><i></i><span>Datos guardados en este navegador</span></div>
+        <div class="status-dot"><i></i><span>Inteligencia automática activa</span></div>
         <small>Sin backend · compatible con hosting estático</small>
       </div>
     </aside>
@@ -38,8 +38,8 @@
         <header class="hero">
           <div class="hero-copy">
             <span class="eyebrow">PREPARAR REUNIÓN CON PARTNER</span>
-            <h1>Una entrada sencilla. Una reunión pensada para tu rol.</h1>
-            <p>Recoge el contexto comercial, técnico y de relación necesario para construir después la presentación, el briefing y la narrativa adecuados.</p>
+            <h1>Dime a quién visitas, tu rol y qué quieres conseguir.</h1>
+            <p>La aplicación investiga el partner y los fabricantes, selecciona el contenido FY27 y compone una presentación final para enseñar al partner. La complejidad queda debajo.</p>
           </div>
           <div class="hero-badge">
             <span>Perfil activo</span>
@@ -55,8 +55,8 @@
         <form id="meetingForm" novalidate>
           <section class="card section-card" data-section="basics">
             <div class="section-title">
-              <div><span class="step">01</span><h2>Partner y objetivo</h2></div>
-              <span class="section-hint">Lo mínimo para empezar</span>
+              <div><span class="step">01</span><h2>La reunión</h2></div>
+              <span class="section-hint">Tres datos bastan para empezar</span>
             </div>
             <div class="grid two">
               <label>Partner / integrador <input id="partnerName" name="partnerName" required placeholder="Ej. integrador, MSP, consultora..." /></label>
@@ -79,11 +79,13 @@
               </label>
             </div>
             <label>¿Qué quieres conseguir en esta reunión?
-              <textarea id="objective" name="objective" rows="3" placeholder="Ej. revisar negocio FY27, detectar whitespace, acordar plan de certificaciones y cerrar tres acciones concretas..."></textarea>
+              <textarea id="objective" name="objective" rows="3" placeholder="Ej. revisar negocio FY27, identificar oportunidades, presentar Extreme y acordar próximos pasos..."></textarea>
             </label>
-            <label>Resultado que te gustaría llevarte
-              <input id="desiredOutcome" name="desiredOutcome" placeholder="Ej. workshop acordado, plan de canal, PoC, pipeline validado, siguiente reunión con vendor..." />
-            </label>
+            <details class="details-block compact-details"><summary>Resultado deseado (opcional)</summary>
+              <label>Resultado que te gustaría llevarte
+                <input id="desiredOutcome" name="desiredOutcome" placeholder="Ej. workshop acordado, plan de canal, PoC, pipeline validado..." />
+              </label>
+            </details>
           </section>
 
           <section class="card section-card" data-section="role">
@@ -100,8 +102,8 @@
 
           <section class="card section-card" data-section="scope">
             <div class="section-title">
-              <div><span class="step">03</span><h2>Qué quieres poner sobre la mesa</h2></div>
-              <span class="section-hint">Fabricantes, tecnología y servicios</span>
+              <div><span class="step">03</span><h2>Fabricantes y foco</h2></div>
+              <span class="section-hint">Selecciona lo esencial; el resto se deduce</span>
             </div>
             <div class="grid two align-start">
               <div>
@@ -115,11 +117,13 @@
                 <label>Tecnologías / temas prioritarios
                   <textarea id="technologies" name="technologies" rows="4" placeholder="Ej. SASE, OT Security, AI networking, DDI, contact center, automatización..."></textarea>
                 </label>
-                <div class="toggle-stack">
-                  <label class="toggle"><input type="checkbox" id="includeGeneral" checked><span></span> Incluir introducción general Westcon</label>
-                  <label class="toggle"><input type="checkbox" id="reserveVendorSlides"><span></span> Reservar espacio para slides oficiales del fabricante</label>
-                  <label class="toggle"><input type="checkbox" id="includeServices" checked><span></span> Recomendar servicios Westcon relacionados</label>
-                </div>
+                <details class="details-block compact-details"><summary>Opciones de contenido (normalmente no hace falta tocarlas)</summary>
+                  <div class="toggle-stack">
+                    <label class="toggle"><input type="checkbox" id="includeGeneral" checked><span></span> Introducción Westcon</label>
+                    <label class="toggle"><input type="checkbox" id="reserveVendorSlides"><span></span> Hueco para slides oficiales del vendor</label>
+                    <label class="toggle"><input type="checkbox" id="includeServices" checked><span></span> Servicios Westcon relevantes</label>
+                  </div>
+                </details>
               </div>
             </div>
             <details class="details-block"><summary>Seleccionar servicios Westcon concretos</summary><div id="serviceChips" class="chip-grid"></div></details>
@@ -127,46 +131,47 @@
 
           <section class="card section-card role-section" data-section="roledata">
             <div class="section-title">
-              <div><span class="step">04</span><h2 id="roleSectionTitle">Información específica del perfil</h2></div>
-              <span class="section-hint">Solo aparece lo que importa para tu rol</span>
+              <div><span class="step">04</span><h2 id="roleSectionTitle">Solo lo que tú sabes</h2></div>
+              <span class="section-hint">Todo es opcional salvo lo imprescindible para el rol</span>
             </div>
             <div id="roleFields" class="role-fields empty-state">
               <p>Selecciona PSM, VSM o Solution Architect para adaptar esta sección.</p>
             </div>
           </section>
 
-          <section class="card section-card" data-section="intelligence">
+          <section class="card section-card intelligence-auto" data-section="intelligence">
             <div class="section-title">
-              <div><span class="step">05</span><h2>Inteligencia que debe investigar</h2></div>
-              <span class="section-hint">Define qué deberá comprobar la capa de research</span>
+              <div><span class="step">05</span><h2>Inteligencia automática</h2></div>
+              <span class="section-hint">No tienes que elegir fuentes ni escribir búsquedas</span>
             </div>
-            <div class="research-grid" id="researchGrid"></div>
-            <div class="grid two">
-              <label>Horizonte temporal de noticias
-                <select id="researchHorizon"><option value="30">Últimos 30 días</option><option value="90" selected>Últimos 90 días</option><option value="180">Últimos 6 meses</option><option value="365">Último año</option></select>
-              </label>
-              <label>URLs / fuentes conocidas del partner
-                <input id="knownSources" placeholder="Web corporativa, partner locator, página de certificaciones..." />
-              </label>
-            </div>
-            <div class="source-rule"><strong>Regla de confianza:</strong> cada hallazgo deberá conservar fuente, fecha, URL y distinguir <em>hecho confirmado</em>, <em>inferencia</em> e <em>hipótesis comercial</em>.</div>
+            <div id="researchGrid" class="research-grid auto-research-grid"></div>
+            <div class="callout intelligence-promise"><strong>La aplicación investiga por defecto:</strong> partner, portfolio y alianzas, certificaciones, noticias, estrategia, contrataciones, casos públicos, programa de canal, competidores, documentación técnica y posicionamiento público en Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y otras fuentes relevantes.</div>
+            <details class="details-block compact-details"><summary>Ajustes de investigación (opcional)</summary>
+              <div class="grid two">
+                <label>Horizonte temporal de noticias
+                  <select id="researchHorizon"><option value="30">Últimos 30 días</option><option value="90" selected>Últimos 90 días</option><option value="180">Últimos 6 meses</option><option value="365">Último año</option></select>
+                </label>
+                <label>URLs / fuentes conocidas
+                  <input id="knownSources" placeholder="Web del partner, locator, certificaciones, noticia concreta..." />
+                </label>
+              </div>
+            </details>
+            <div class="source-rule"><strong>Rigor:</strong> los hechos externos conservan fuente, fecha y URL. El motor no presenta como hecho una inferencia ni atribuye posiciones de analista si la evidencia pública no las declara.</div>
           </section>
 
           <section class="card section-card" data-section="output">
             <div class="section-title">
-              <div><span class="step">06</span><h2>Salida que quieres generar</h2></div>
-              <span class="section-hint">Generación PowerPoint con diseño y contenido corporativo FY27</span>
+              <div><span class="step">06</span><h2>Presentación final</h2></div>
+              <span class="section-hint">El resultado está pensado para mostrarlo al partner</span>
             </div>
-            <div class="grid three">
+            <div class="grid two">
               <label>Profundidad
-                <select id="deckDepth"><option value="short">Ejecutiva · 6–8 slides</option><option value="standard" selected>Estándar · 10–14 slides</option><option value="deep">Profunda · 15–20 slides</option></select>
+                <select id="deckDepth"><option value="short">Ejecutiva · 8–10 slides</option><option value="standard" selected>Estándar · 12–16 slides</option><option value="deep">Profunda · 18–26 slides</option></select>
               </label>
               <label>Idioma
                 <select id="language"><option>Español</option><option>Inglés</option><option>Portugués</option></select>
               </label>
-              <label>Tono
-                <select id="tone"><option>Ejecutivo y directo</option><option>Consultivo</option><option>Técnico</option><option>Comercial</option></select>
-              </label>
+              <select id="tone" hidden><option selected>Automático por perfil</option></select>
             </div>
             <div class="output-options">
               <label class="toggle"><input type="checkbox" id="outPptx" checked><span></span> PowerPoint editable</label>
@@ -181,12 +186,12 @@
           <section class="action-zone">
             <div>
               <strong id="readyTitle">Completa partner, objetivo y perfil</strong>
-              <span id="readySubtitle">La aplicación te indicará si faltan datos importantes antes de generar.</span>
+              <span id="readySubtitle">La investigación y la composición se hacen automáticamente.</span>
             </div>
             <div class="action-buttons">
               <button type="button" class="secondary" id="saveBtn">Guardar borrador</button>
               <button type="button" class="secondary" id="exportBtn">Exportar JSON</button>
-              <button type="button" class="primary" id="buildBlueprintBtn">Crear blueprint de reunión</button>
+              <button type="button" class="primary" id="buildBlueprintBtn">Investigar y preparar presentación</button>
             </div>
           </section>
         </form>
@@ -200,16 +205,17 @@
       </section>
 
       <section id="knowledge" class="panel">
-        <header class="page-head"><div><span class="eyebrow">BASE DE CONOCIMIENTO · SEMILLA</span><h1>Contenido disponible en esta primera versión</h1><p>El prototipo ya conoce el portfolio FY27 y las fuentes corporativas de partida.</p></div></header>
+        <header class="page-head"><div><span class="eyebrow">BASE DE CONOCIMIENTO VIVA</span><h1>Contenido corporativo e inteligencia de mercado</h1><p>La aplicación combina el corpus FY27 con inteligencia pública actualizada y research en tiempo de preparación.</p></div></header>
         <div id="sourceCards" class="source-cards"></div>
+        <div id="intelligenceStatus" class="card"></div>
         <div class="card"><div class="section-title"><div><h2>Fabricantes por área</h2></div><span class="section-hint" id="vendorCount"></span></div><div id="knowledgeVendors" class="knowledge-vendors"></div></div>
       </section>
 
       <section id="about" class="panel">
-        <header class="page-head"><div><span class="eyebrow">ALCANCE v0.1.2</span><h1>Primera versión: capturar bien antes de automatizarlo todo</h1></div></header>
+        <header class="page-head"><div><span class="eyebrow">VERSIÓN FINAL v1.0</span><h1>Presentación partner-facing con inteligencia intensiva</h1></div></header>
         <div class="about-grid">
-          <div class="card"><h3>Ya funciona</h3><ul><li>Formulario adaptativo por PSM, VSM y Solution Architect.</li><li>Selección del portfolio FY27 y servicios Westcon.</li><li>Facturación, evolución, pipeline, certificaciones, canal, arquitectura, competencia y criterios PoC.</li><li>Definición del plan de investigación pública.</li><li>Scoring de completitud y detección de huecos.</li><li>Blueprint narrativo automático según el rol.</li><li>PowerPoint generado en el navegador con identidad FY27, reutilización de slides corporativas/datasheets y slides dinámicas editables.</li><li>Guardado local, importación y exportación JSON.</li></ul></div>
-          <div class="card"><h3>Siguiente capa</h3><ul><li>Research real y actualización periódica con fuentes públicas.</li><li>Knowledge graph y RAG sobre documentos.</li><li>Importación Excel/CRM de negocio y pipeline.</li><li>Fusión XML de objetos PowerPoint originales para que las slides reutilizadas también sean editables objeto a objeto.</li><li>Briefing, notas y seguimiento post-reunión.</li></ul></div>
+          <div class="card"><h3>Máxima sencillez por fuera</h3><ul><li>Partner, rol y objetivo son suficientes para un PSM; VSM y SA añaden el fabricante foco.</li><li>La aplicación propone automáticamente la narrativa y prioriza el contenido relevante.</li><li>Los datos internos de facturación, pipeline, certificaciones o arquitectura son opcionales y se mantienen en el navegador.</li><li>El PowerPoint resultante está redactado y diseñado para enseñarlo al partner: no expone scoring, hipótesis, competidores internos ni instrucciones de venta.</li></ul></div>
+          <div class="card"><h3>Máxima inteligencia por dentro</h3><ul><li>84 slides corporativas FY27 y 12 datasheets verticales como corpus semilla.</li><li>36 fichas de fabricante con propuesta de valor, ventajas, casos de uso, señales de oportunidad y contexto competitivo.</li><li>Research en tiempo de preparación sobre el partner y fabricantes seleccionados.</li><li>Actualización diaria y tolerante a fallos con GDELT, Google News, páginas oficiales y caché previa.</li><li>Radar de Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y KuppingerCole, conservando fuente, fecha y URL.</li><li>Noticias, casos públicos, canal, documentación técnica y señales de mercado para reforzar la conversación.</li><li>Regla evidence-first: una posición de analista solo se presenta cuando una fuente pública la sustenta explícitamente.</li></ul></div>
         </div>
       </section>
     </main>
@@ -242,6 +248,8 @@
   <script src="vendor/pptxgen.bundle.js"></script>
   <script src="data/knowledge.js"></script>
   <script src="data/vendor-logo-map.js"></script>
+  <script src="data/vendor-intelligence.js"></script>
+  <script src="data/live-intelligence.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

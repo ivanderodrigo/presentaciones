@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "1.0.0",
   "sourceDecks": [
     {
       "name": "Westcon Comstor España FY2027",
@@ -504,5 +504,14 @@
       "pages": "1-12",
       "type": "vertical"
     }
+  ],
+  "intelligenceLayers": [
+    "Corporate FY27",
+    "Vertical playbooks",
+    "Vendor intelligence",
+    "Competitive context",
+    "Public analyst signals",
+    "News/media/cases",
+    "Role-specific narrative"
   ]
 }

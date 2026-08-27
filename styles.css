@@ -43,3 +43,12 @@ label{display:grid;gap:7px;font-size:13px;font-weight:700;color:#385263;margin:1
 @media (max-width:900px){.app-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.brand{padding-bottom:12px}.nav{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}.sidebar-footer{display:none}.main{padding:16px}.hero{display:block;padding:28px}.hero-badge{margin-top:20px}.grid.two,.grid.three,.blueprint-grid,.source-cards,.about-grid{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.action-zone{position:relative;bottom:auto;align-items:flex-start;flex-direction:column}.kpi-strip,.metric-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:580px){.role-grid,.vendor-grid,.research-grid,.knowledge-vendors{grid-template-columns:1fr}.progress-meta{display:block}.progress-meta span{display:block;margin-top:4px}.action-buttons{width:100%}.action-buttons button{flex:1}.hero h1{font-size:30px}.main{padding:10px}.section-card{padding:17px}.nav{grid-template-columns:1fr}.kpi-strip,.metric-row{grid-template-columns:1fr}}
 @media print{.sidebar,.progress-wrap,.action-zone,.nav,.output-bar{display:none!important}.main{padding:0}.panel{display:block!important}.panel:not(#builder){display:none!important}.hero{box-shadow:none}.section-card{break-inside:avoid}.blueprint{display:block!important}}
+/* v1.0 · intelligence is automatic, not another form to fill */
+.research-grid.auto-research-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.research-summary-card{min-height:112px;border:1px solid #dbe7ec;border-radius:15px;padding:14px;background:linear-gradient(145deg,#fff,#f7fbfc);display:flex;gap:12px;align-items:flex-start}
+.research-summary-card i{font-style:normal;width:27px;height:27px;border-radius:9px;background:#e9f7f7;color:#087e88;display:grid;place-items:center;font-size:11px;font-weight:900;flex:0 0 auto}
+.research-summary-card strong{display:block;font-size:11px;letter-spacing:.75px;color:#12384b;margin:3px 0 6px}
+.research-summary-card span{display:block;font-size:11px;line-height:1.4;color:#617985}
+.intelligence-promise{margin-top:14px}
+@media(max-width:1180px){.research-grid.auto-research-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.research-grid.auto-research-grid{grid-template-columns:1fr}}

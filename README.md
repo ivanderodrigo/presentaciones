@@ -1,77 +1,185 @@
-# Westcon Meeting Intelligence · v0.1.2
+# Westcon Meeting Intelligence · v1.0 Final
 
-Primera versión estática para preparar reuniones de Westcon Comstor con **partners / integradores** desde distintos perfiles internos:
+Aplicación estática, desplegable directamente en **GitHub Pages**, para preparar reuniones de Westcon Comstor con **partners e integradores** y generar un PowerPoint FY27 final, atractivo y diseñado para ser mostrado al partner.
 
-- **PSM (perfil comercial orientado al partner)**: negocio global del partner, facturación por fabricante, evolución, objetivos, pipeline, whitespace y plan de crecimiento.
-- **VSM (perfil comercial orientado al fabricante)**: relación fabricante–Westcon–partner, tier, certificaciones, plan de canal, incentivos/MDF, pipeline y bloqueos.
-- **Solution Architect (perfil técnico)**: caso de uso, arquitectura, requisitos, alternativas, diferenciadores, analistas y criterios de PoC/PoV.
+## Filosofía de esta versión
 
-No existe un perfil separado **“Comercial / BDM”**: la función comercial se representa como **PSM** cuando la conversación está orientada al partner y como **VSM** cuando está orientada al desarrollo de un fabricante dentro de ese partner.
+**Muy simple para el usuario; muy compleja por debajo.**
 
-## Qué funciona en esta versión
+El usuario no tiene que redactar una presentación ni elegir fuentes de research. La entrada mínima es:
 
-- Formulario adaptativo por rol y roles secundarios.
-- Portfolio FY27 sembrado desde las presentaciones corporativas facilitadas.
-- Servicios Westcon / BLUEPRINT como base de propuesta de valor.
-- Tablas de facturación y oportunidades con lectura automática.
-- Definición de áreas de investigación y generación de queries de research.
-- Blueprint narrativo automático según el perfil.
-- PowerPoint `.pptx` editable generado en el navegador con PptxGenJS.
-- Briefing HTML, impresión / Guardar como PDF.
-- Guardado en `localStorage` por navegador.
-- Importación y exportación de reuniones en JSON.
-- Cero backend y cero proceso de build para poder desplegarlo directamente en GitHub Pages.
+1. partner / integrador;
+2. rol: **PSM, VSM o Solution Architect**;
+3. objetivo de la reunión;
+4. para VSM/SA, fabricante foco; para PSM es opcional.
 
-## Publicarlo en GitHub Pages
+El resto se deduce y se investiga. Los campos adicionales existen solo para aportar información que Internet no puede conocer: facturación, pipeline, certificaciones en curso, contexto de relación, arquitectura actual, criterios de PoC, etc.
 
-1. Crea un repositorio, por ejemplo `westcon-meeting-intelligence`.
-2. Sube **todo el contenido de esta carpeta a la raíz del repositorio**.
-3. En GitHub abre **Settings → Pages**.
-4. En **Build and deployment**, selecciona **Deploy from a branch**.
-5. Selecciona `main` y `/ (root)` y guarda.
-6. GitHub publicará la URL de Pages en unos minutos.
+## El PowerPoint es partner-facing
 
-No hay que ejecutar `npm install`, compilar ni construir nada.
+La presentación final **no contiene lenguaje interno** como “cómo vender”, scoring de fabricantes, whitespace, hipótesis, research pendiente o instrucciones al comercial. Esa información solo sirve al motor para decidir qué contenido incluir, en qué orden y con qué argumentos.
 
-## Nota importante sobre PowerPoint
+La narrativa visible utiliza formulaciones como:
 
-La aplicación es estática y lleva **PptxGenJS incluido localmente** en `vendor/`, por lo que la generación de `.pptx` no depende de un CDN ni de un proceso de build.
+- objetivo y agenda;
+- evolución conjunta;
+- oportunidades en curso;
+- casos de uso;
+- por qué una solución encaja;
+- diferenciación;
+- evidencia de mercado;
+- posicionamiento público de analistas;
+- referencias y señales recientes;
+- servicios Westcon relevantes;
+- próximos pasos.
 
-## Datos y privacidad de esta v0.1.2
+## Tres motores según el rol
 
-Los datos introducidos se guardan **solo en el `localStorage` del navegador** salvo que el usuario descargue el JSON. No existe servidor, base de datos ni autenticación. Por tanto:
+### PSM
 
-- no utilizar esta v0.1.2 para información comercial sensible en equipos compartidos;
-- borrar el almacenamiento del navegador si se trabaja en un equipo no personal;
-- para uso corporativo multiusuario real, la siguiente fase debe incorporar autenticación y almacenamiento autorizado.
+Gestión comercial global orientada al partner. Puede incorporar facturación por fabricante, evolución, objetivos y pipeline, pero también funciona sin esos datos. El motor detecta áreas de crecimiento, selecciona fabricantes/capacidades relevantes y compone una business review externa.
 
-## Research automático
+### VSM
 
-GitHub Pages no puede guardar secretos ni ejecutar búsquedas de Internet del lado servidor. Esta v0.1.2 deja preparado el **modelo de research**, las áreas a investigar, reglas de confianza y queries sugeridas. La siguiente versión debería añadir una de estas capas:
+Desarrollo de un fabricante dentro del partner. Combina relación, negocio, tier, certificaciones, programa de canal, incentivos, oportunidades y el contexto público actualizado del fabricante.
 
-1. GitHub Actions programado que actualice `data/research/*.json` desde fuentes públicas; o
-2. servicio/API corporativo de research con autenticación; o
-3. integración con una base de conocimiento/RAG autorizada.
+### Solution Architect
 
-El frontend está diseñado para consumir esos resultados sin cambiar el flujo de usuario.
+Narrativa técnica: necesidad, criterios de diseño, propuesta de solución, ventajas verificables, diferenciación, evidencia de analistas, casos, documentación técnica y PoC/PoV medible.
 
-## Fuentes semilla
+## Base de conocimiento FY27
 
-- `Westcon_Comstor_Espana_FY27_completa.pptx`
-- `Westcon_Datasheets_Verticales_FY27.pptx`
+La aplicación incluye como corpus semilla:
 
-Se han utilizado para sembrar portfolio, servicios, taxonomías, BLUEPRINT y lógica de contenido. La reutilización física de slides existentes dentro del nuevo PPTX queda para la siguiente iteración.
+- **Westcon Comstor España FY2027** — 84 slides;
+- **Westcon Datasheets Verticales FY27** — 12 slides;
+- portfolio estructurado de **36 fabricantes**;
+- servicios Westcon y framework BLUEPRINT;
+- taxonomías de Ciberseguridad, Networking, Cloud/UC/Automatización;
+- playbooks y casos para Banca y Seguros, Administración Pública, Industria/Utilities y Retail.
 
+Las slides corporativas/datasheets se reutilizan cuando aportan valor; la información específica de reunión se genera con la misma identidad visual FY27.
 
-## Cambio importante v0.1.2 — PowerPoint corporativo real
+## Motor de inteligencia
 
-La generación de PowerPoint ya no usa una plantilla genérica blanca. La salida:
+La versión final v1.0 trabaja con tres niveles que se complementan:
 
-- reutiliza visualmente slides reales de **Westcon Comstor España FY2027**;
-- reutiliza los **datasheets verticales FY27** adecuados a vertical y área tecnológica;
-- incluye las fichas corporativas de los fabricantes seleccionados;
-- reutiliza slides reales de servicios (preventa, 3D Labs, assessments, lifecycle, FLEX, Intelligent Demand, etc.);
-- genera las slides variables de PSM, VSM y Solution Architect con la misma paleta, tipografía y gramática visual FY27;
-- mantiene fuera de la presentación dirigida al partner la cola interna de research y las preguntas de discovery; estas se conservan en briefing/notas.
+### 1. Inteligencia estructurada permanente
 
-Las slides dinámicas son editables. En esta versión las slides corporativas reutilizadas se insertan 1:1 como imagen de alta resolución para conservar exactamente su diseño. La siguiente evolución prevista es fusionar los objetos XML originales del PPTX para que también esas slides reutilizadas sean editables elemento a elemento.
+Cada fabricante dispone de una ficha con:
+
+- categoría y propuesta de valor;
+- ventajas extraídas del corpus FY27;
+- casos de uso y señales de oportunidad;
+- criterios de decisión;
+- competidores/alternativas para razonamiento interno;
+- mapeo a verticales;
+- slides corporativas que se pueden reutilizar.
+
+### 2. Research público programado para los 36 fabricantes
+
+`.github/workflows/update-intelligence.yml` ejecuta diariamente `scripts/research_intelligence.py`.
+
+El proceso usa varias rutas independientes y tolerantes a fallos:
+
+- **GDELT DOC 2.0**;
+- **Google News RSS**;
+- sitemaps y páginas oficiales de fabricante;
+- caché anterior cuando una fuente temporalmente falla.
+
+Se investigan varias familias: analistas, mercado/innovación, casos de cliente, canal/certificaciones y arquitectura/documentación.
+
+La evidencia se deduplica, puntúa por autoridad y conserva **fuente, fecha y URL**.
+
+### 3. Research en tiempo de preparar la reunión
+
+Al pulsar **Investigar y preparar presentación**, el navegador consulta señales recientes sobre:
+
+- partner: estrategia, alianzas, certificaciones, adquisiciones, proyectos, inversión, contratación y relación con los vendors seleccionados;
+- fabricante: analistas, noticias, innovación, casos, fuentes oficiales, relación con el partner, canal y —para SA— arquitectura/benchmark/integraciones.
+
+Se usa caché local de 12 horas para no repetir trabajo innecesario.
+
+## Analistas y rigor
+
+El radar contempla, entre otros:
+
+- Gartner;
+- Forrester;
+- IDC / IDC MarketScape;
+- Omdia;
+- GigaOm;
+- ISG;
+- Canalys;
+- KuppingerCole.
+
+Regla fundamental: **la aplicación no convierte “aparece en un informe” en “Leader”**. Una posición concreta solo puede mostrarse si la evidencia pública la declara explícitamente. Las URLs completas quedan disponibles en las notas del presentador.
+
+## Verticalización
+
+Cuando se selecciona una vertical, el motor cruza:
+
+`vertical × caso de uso × fabricante × tecnología × evidencia × contenido FY27`
+
+para construir slides específicas y seleccionar automáticamente los datasheets/playbooks relevantes.
+
+## Privacidad
+
+Los datos que introduce PSM/VSM/SA —facturación, pipeline, contexto interno, arquitectura, etc.— permanecen en `localStorage` del navegador salvo que el usuario exporte manualmente el JSON.
+
+El repositorio solo contiene el corpus de la aplicación y **evidencia pública** obtenida por el proceso de actualización.
+
+## Instalación en GitHub Pages
+
+Copia el contenido de esta carpeta a la raíz del repositorio, conservando tu `.git`, y ejecuta:
+
+```powershell
+git add -A
+git commit -m "Westcon Meeting Intelligence v1.0 final"
+git push origin main
+```
+
+En GitHub:
+
+**Settings → Pages → Deploy from a branch → main → /(root)**
+
+## Primera actualización intensiva
+
+Después del despliegue abre:
+
+**GitHub → Actions → Update public market intelligence → Run workflow**
+
+La ejecución rellena/refresca `data/live-intelligence.json` y `data/live-intelligence.js` para todo el portfolio. A partir de ahí el workflow vuelve a ejecutarse diariamente.
+
+## Ejecución local
+
+```powershell
+python -m http.server 8000
+```
+
+Abrir `http://localhost:8000`.
+
+## Estructura principal
+
+```text
+index.html
+styles.css
+app.js
+assets/
+  source-slides/
+    corporate/      # 84 slides FY27
+    verticals/      # 12 datasheets
+  vendors/
+data/
+  knowledge.js/json
+  vendor-intelligence.js/json
+  live-intelligence.js/json
+scripts/
+  research_intelligence.py
+.github/workflows/
+  update-intelligence.yml
+vendor/
+  pptxgen.bundle.js
+```
+
+La aplicación no necesita Node, npm ni un servidor de aplicación para funcionar en GitHub Pages.

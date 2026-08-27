@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-08-27T09:20:00+00:00",
+  "method": "Seeded public evidence + scheduled Google News RSS discovery",
+  "policy": "Evidence only; no analyst position is inferred beyond public wording.",
+  "errors": [],
+  "vendors": {
+    "Extreme Networks": {
+      "query": "\"Extreme Networks\" (Gartner OR Forrester OR \"IDC MarketScape\" OR Omdia OR GigaOm OR ISG OR Canalys)",
+      "updatedAt": "2026-08-27T09:20:00+00:00",
+      "status": "seeded-public-evidence",
+      "evidence": [
+        {
+          "title": "Gartner Magic Quadrant for Enterprise Wired and Wireless LAN — Extreme Networks is included among evaluated vendors",
+          "url": "https://www.gartner.com/en/documents/7860081",
+          "publisher": "Gartner",
+          "publishedAt": "2026-05-18T00:00:00+00:00",
+          "analysts": [
+            "Gartner"
+          ],
+          "confidence": "high",
+          "kind": "public-analyst-signal"
+        },
+        {
+          "title": "Extreme Networks is a Leader in the IDC MarketScape: Worldwide Enterprise Wireless LAN 2025 Vendor Assessment",
+          "url": "https://www.extremenetworks.com/resources/report/idc-marketscape-worldwide-enterprise-wireless-lan-2025-vendor-assessment",
+          "publisher": "Extreme Networks / IDC MarketScape",
+          "publishedAt": "2025-10-15T00:00:00+00:00",
+          "analysts": [
+            "IDC"
+          ],
+          "confidence": "medium",
+          "kind": "public-analyst-signal"
+        },
+        {
+          "title": "Extreme Networks: Advancing the limits of networking to new extremes",
+          "url": "https://omdia.tech.informa.com/om137901/extreme-networks-advancing-the-limits-of-networking-to-new-extremes",
+          "publisher": "Omdia",
+          "publishedAt": "2025-06-26T00:00:00+00:00",
+          "analysts": [
+            "Omdia"
+          ],
+          "confidence": "high",
+          "kind": "public-analyst-signal"
+        }
+      ]
+    }
+  }
+}

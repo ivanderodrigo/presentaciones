@@ -1,0 +1,26 @@
+name: Validate Meeting Intelligence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'styles.css'
+      - 'app.js'
+      - 'data/**'
+      - 'scripts/**'
+      - 'assets/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Structural quality gate
+        run: python scripts/quality_gate.py
+      - name: Compile research engine
+        run: python -m py_compile scripts/research_intelligence.py
