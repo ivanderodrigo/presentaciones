@@ -1,4 +1,4 @@
-# Westcon Meeting Intelligence · v0.1.1
+# Westcon Meeting Intelligence · v0.1.2
 
 Primera versión estática para preparar reuniones de Westcon Comstor con **partners / integradores** desde distintos perfiles internos:
 
@@ -37,17 +37,17 @@ No hay que ejecutar `npm install`, compilar ni construir nada.
 
 La aplicación es estática y lleva **PptxGenJS incluido localmente** en `vendor/`, por lo que la generación de `.pptx` no depende de un CDN ni de un proceso de build.
 
-## Datos y privacidad de esta v0.1.1
+## Datos y privacidad de esta v0.1.2
 
 Los datos introducidos se guardan **solo en el `localStorage` del navegador** salvo que el usuario descargue el JSON. No existe servidor, base de datos ni autenticación. Por tanto:
 
-- no utilizar esta v0.1 para información comercial sensible en equipos compartidos;
+- no utilizar esta v0.1.2 para información comercial sensible en equipos compartidos;
 - borrar el almacenamiento del navegador si se trabaja en un equipo no personal;
 - para uso corporativo multiusuario real, la siguiente fase debe incorporar autenticación y almacenamiento autorizado.
 
 ## Research automático
 
-GitHub Pages no puede guardar secretos ni ejecutar búsquedas de Internet del lado servidor. Esta v0.1.1 deja preparado el **modelo de research**, las áreas a investigar, reglas de confianza y queries sugeridas. La siguiente versión debería añadir una de estas capas:
+GitHub Pages no puede guardar secretos ni ejecutar búsquedas de Internet del lado servidor. Esta v0.1.2 deja preparado el **modelo de research**, las áreas a investigar, reglas de confianza y queries sugeridas. La siguiente versión debería añadir una de estas capas:
 
 1. GitHub Actions programado que actualice `data/research/*.json` desde fuentes públicas; o
 2. servicio/API corporativo de research con autenticación; o
@@ -61,3 +61,17 @@ El frontend está diseñado para consumir esos resultados sin cambiar el flujo d
 - `Westcon_Datasheets_Verticales_FY27.pptx`
 
 Se han utilizado para sembrar portfolio, servicios, taxonomías, BLUEPRINT y lógica de contenido. La reutilización física de slides existentes dentro del nuevo PPTX queda para la siguiente iteración.
+
+
+## Cambio importante v0.1.2 — PowerPoint corporativo real
+
+La generación de PowerPoint ya no usa una plantilla genérica blanca. La salida:
+
+- reutiliza visualmente slides reales de **Westcon Comstor España FY2027**;
+- reutiliza los **datasheets verticales FY27** adecuados a vertical y área tecnológica;
+- incluye las fichas corporativas de los fabricantes seleccionados;
+- reutiliza slides reales de servicios (preventa, 3D Labs, assessments, lifecycle, FLEX, Intelligent Demand, etc.);
+- genera las slides variables de PSM, VSM y Solution Architect con la misma paleta, tipografía y gramática visual FY27;
+- mantiene fuera de la presentación dirigida al partner la cola interna de research y las preguntas de discovery; estas se conservan en briefing/notas.
+
+Las slides dinámicas son editables. En esta versión las slides corporativas reutilizadas se insertan 1:1 como imagen de alta resolución para conservar exactamente su diseño. La siguiente evolución prevista es fusionar los objetos XML originales del PPTX para que también esas slides reutilizadas sean editables elemento a elemento.

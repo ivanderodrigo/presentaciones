@@ -1,4 +1,4 @@
-/* Westcon Meeting Intelligence v0.1.1 — static, GitHub Pages friendly */
+/* Westcon Meeting Intelligence v0.1.2 — static, GitHub Pages friendly */
 (() => {
   const K = window.WESTCON_KNOWLEDGE || {};
   const state = { primaryRole: null, supportRoles: new Set(), currentId: null };
@@ -320,44 +320,185 @@
   }
 
   // ---------- PowerPoint ----------
-  async function generatePptx(m,slides,insights,questions,queries){
-    if(typeof window.PptxGenJS==='undefined'){alert('No se ha podido cargar el generador PowerPoint. Comprueba tu conexión a Internet y vuelve a intentarlo.');return;}
-    const pptx=new window.PptxGenJS();pptx.layout='LAYOUT_WIDE';pptx.author='Westcon Meeting Intelligence';pptx.subject=`Reunión con ${m.partner}`;pptx.title=`${m.partner} · ${roleById(m.primaryRole)?.name||''}`;pptx.company='Westcon Comstor';pptx.lang='es-ES';
-    pptx.defineSlideMaster({title:'MASTER',background:{color:'F5F8FA'},objects:[{rect:{x:0,y:0,w:13.333,h:.22,fill:{color:'E4007F'},line:{color:'E4007F'}}},{text:{text:'Westcon Meeting Intelligence · FY27',options:{x:.45,y:7.12,w:5,h:.18,fontFace:'Aptos',fontSize:8,color:'627986'}}},{text:{text:'Arquitectura y mensajes sujetos a validación',options:{x:8.5,y:7.12,w:4.3,h:.18,fontFace:'Aptos',fontSize:8,color:'627986',align:'right'}}}],slideNumber:{x:12.85,y:7.1,color:'627986',fontSize:8}});
-    const C={navy:'082A3A',ink:'163243',magenta:'E4007F',cyan:'08A7B5',amber:'F2A900',muted:'6D7F8A',white:'FFFFFF',line:'DDE6EB',bg:'F5F8FA',green:'17986D'};
-    const addTitle=(s,title,sub='')=>{s.addText(title,{x:.55,y:.52,w:12.1,h:.55,fontFace:'Aptos Display',fontSize:28,bold:true,color:C.navy,margin:0});if(sub)s.addText(sub,{x:.57,y:1.12,w:11.9,h:.36,fontFace:'Aptos',fontSize:12,color:C.muted,margin:0});};
-    const addBullets=(s,items,x=.7,y=1.7,w=11.9,h=4.9)=>{const runs=[];items.filter(Boolean).forEach((t,i)=>{runs.push({text:String(t),options:{bullet:{indent:18},breakLine:true}})});s.addText(runs,{x,y,w,h,fontFace:'Aptos',fontSize:17,color:C.ink,breakLine:false,paraSpaceAfterPt:11,margin:.04,fit:'shrink'});};
-    // Cover
-    let s=pptx.addSlide();s.background={color:C.navy};s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.25,fill:{color:C.magenta},line:{color:C.magenta}});try{s.addImage({path:'assets/westcon-comstor.png',x:.62,y:.48,w:2.25,h:.82,transparency:0})}catch{}s.addText((m.partner||'Partner').toUpperCase(),{x:.7,y:2.25,w:11.8,h:.6,fontFace:'Aptos Display',fontSize:36,bold:true,color:C.white,margin:0});s.addText(m.objective||'Reunión de trabajo',{x:.72,y:3.02,w:10.9,h:.65,fontFace:'Aptos',fontSize:19,color:'C9DCE4',margin:0,fit:'shrink'});s.addText(`${roleById(m.primaryRole)?.name||''} · ${m.duration||''} · ${m.country||''}`,{x:.72,y:4.05,w:9,h:.3,fontSize:12,color:'7ED7DE',margin:0});s.addText('Generado por Westcon Meeting Intelligence',{x:.72,y:6.55,w:6,h:.25,fontSize:9,color:'8DA6B2',margin:0});
-    // Meeting thesis
-    s=pptx.addSlide('MASTER');addTitle(s,'Qué queremos conseguir',m.desiredOutcome||'Resultado concreto a validar durante la reunión');addBullets(s,[`Objetivo: ${m.objective}`,m.vertical?`Foco: ${m.vertical}`:'',m.vendors.length?`Fabricantes sobre la mesa: ${m.vendors.join(', ')}`:'Fabricantes a priorizar tras discovery',m.technologies?`Tecnologías: ${m.technologies}`:'']);
-    // Corporate
-    if(m.includeGeneral){s=pptx.addSlide('MASTER');addTitle(s,'Westcon Comstor en 60 segundos','Distribuidor especializado en Ciberseguridad, Networking e Infraestructura Cloud');const f=K.corporateFacts||{};const cards=[[f.grossSalesFY25||'$5.24B','Ventas brutas FY25'],[f.activePartners||'11,000+','Partners activos'],[f.employees||'3,600+','Empleados'],['51% / 42% / 7%','Cyber / Networking / Cloud']];cards.forEach((c,i)=>{s.addShape(pptx.ShapeType.roundRect,{x:.7+i*3.05,y:2.0,w:2.72,h:1.55,rectRadius:.08,fill:{color:'FFFFFF'},line:{color:C.line}});s.addText(c[0],{x:.92+i*3.05,y:2.28,w:2.25,h:.5,fontSize:24,bold:true,color:i===0?C.magenta:C.cyan,align:'center'});s.addText(c[1],{x:.92+i*3.05,y:2.92,w:2.25,h:.35,fontSize:10,color:C.muted,align:'center'});});addBullets(s,['Portfolio especializado y expertise local con alcance global.','Preventa, PoC/PoV, formación, demanda, financiación, staging, soporte y lifecycle.'],.9,4.25,11.3,1.4);}
-    // Role-specific data slides
-    if(m.primaryRole==='psm'){
-      const b=m.roleData.business||[];s=pptx.addSlide('MASTER');addTitle(s,'Negocio por fabricante','Datos introducidos por el PSM: separar siempre de inteligencia pública.');if(b.length){const rows=[['Fabricante','FY25','FY26','FY27 YTD','Objetivo','Pipeline'],...b.map(r=>[r.vendor,fmtMoney(r.fy25),fmtMoney(r.fy26),fmtMoney(r.fy27),fmtMoney(r.target),fmtMoney(r.pipeline)])];s.addTable(rows,{x:.55,y:1.7,w:12.2,h:4.7,border:{type:'solid',pt:1,color:C.line},fill:'FFFFFF',color:C.ink,fontSize:10,bold:false,margin:.06,rowH:.38,colW:[2.3,1.7,1.7,1.8,1.8,1.8],autoFit:false});}else addBullets(s,['No se han cargado datos de facturación todavía.']);
-      s=pptx.addSlide('MASTER');addTitle(s,'Lectura ejecutiva de la cuenta');addBullets(s,[m.roleData.context,...insights.map(x=>x.text),m.roleData.whitespace?`Whitespace declarado: ${m.roleData.whitespace}`:'']);
-      addOpportunitySlide(pptx,m,C,addTitle,addBullets);
-    } else if(m.primaryRole==='vsm'){
-      s=pptx.addSlide('MASTER');const v=m.roleData.vendor||m.vendors[0]||'Fabricante';addTitle(s,`Estado de relación · ${v}`);addBullets(s,[`Relación: ${m.roleData.relationship||'Por definir'}`,`Tier actual: ${m.roleData.tier||'Por confirmar'} → objetivo: ${m.roleData.targetTier||'Por definir'}`,`FY27 YTD: ${fmtMoney(m.roleData.revenue)} · objetivo: ${fmtMoney(m.roleData.target)}`,m.roleData.channelPlan?`Plan de canal: ${m.roleData.channelPlan}`:'']);
-      s=pptx.addSlide('MASTER');addTitle(s,'Certificaciones e incentivos');addBullets(s,[m.roleData.certs?`Actuales: ${m.roleData.certs}`:'Certificaciones actuales: por validar',m.roleData.certsNext?`Gaps / en proceso: ${m.roleData.certsNext}`:'',m.roleData.incentives?`Incentivos / MDF: ${m.roleData.incentives}`:'Investigar programas e incentivos vigentes con fuente y fecha']);addOpportunitySlide(pptx,m,C,addTitle,addBullets);
-    } else if(m.primaryRole==='sa'){
-      s=pptx.addSlide('MASTER');addTitle(s,'Problema y criterios de diseño',m.roleData.useCase||'Caso de uso por definir');addBullets(s,[m.roleData.current?`Situación actual: ${m.roleData.current}`:'',m.roleData.requirements?`Requisitos: ${m.roleData.requirements}`:'',m.roleData.risks?`Riesgos / limitaciones conocidas: ${m.roleData.risks}`:'']);
-      s=pptx.addSlide('MASTER');addTitle(s,`¿Por qué ${m.roleData.vendor||m.vendors[0]||'esta solución'}?`,'La versión final debe defender decisiones con evidencia, no claims genéricos.');addBullets(s,[m.roleData.differentiators||'Diferenciadores a investigar y validar.',m.roleData.competitors?`Alternativas: ${m.roleData.competitors}`:'Alternativas a identificar.',m.roleData.analysts?`Evidencia deseada: ${m.roleData.analysts}`:'Posicionamiento Gartner / IDC / Forrester / Omdia a verificar.']);
-      s=pptx.addSlide('MASTER');addTitle(s,'PoC / PoV medible');addBullets(s,[m.roleData.poc||'Definir criterios de éxito, alcance, baseline, métricas y responsables.']);
-    }
-    if((m.supportRoles||[]).length){s=pptx.addSlide('MASTER');addTitle(s,'Bloques de apoyo seleccionados');addBullets(s,(m.supportRoles||[]).map(r=>{const rr=roleById(r);return `${rr?.name||r}: ${rr?.mission||'apoyo a la reunión'}.`;}));}
-    // Research
-    s=pptx.addSlide('MASTER');addTitle(s,'Inteligencia que debe validar la reunión','Cada hallazgo externo debe conservar fuente, URL, fecha y nivel de confianza.');addBullets(s,queries.map(q=>'Buscar: '+q));
-    // Questions
-    s=pptx.addSlide('MASTER');addTitle(s,'Preguntas que deben abrir conversación');addBullets(s,questions);
-    // Next steps
-    s=pptx.addSlide('MASTER');addTitle(s,'Siguientes pasos','Cerrar la reunión con pocas acciones, responsables y fecha.');addBullets(s,[m.desiredOutcome?`Resultado buscado: ${m.desiredOutcome}`:'Acordar el siguiente paso concreto.',m.primaryRole==='psm'&&m.roleData.actions?`Pendientes previos: ${m.roleData.actions}`:'',m.primaryRole==='vsm'&&m.roleData.blockers?`Bloqueos a resolver: ${m.roleData.blockers}`:'','Asignar owner Westcon + owner partner por acción.','Fijar fecha de revisión y criterio de éxito.']);
-    // Notes best effort
-    if(m.outputs.notes){try{pptx._slides.forEach((sl,i)=>sl.addNotes?.(`Slide ${i+1}. Mensaje principal: ${slides[i]?.purpose||'Conducir la conversación y validar hipótesis.'}`))}catch{}}
-    try{await pptx.writeFile({fileName:`${slug(m.partner)}-${m.primaryRole||'meeting'}.pptx`});}catch(e){console.error(e);alert('No se pudo generar el PowerPoint. Prueba de nuevo con conexión a Internet o utiliza el briefing HTML.');}
+  // v0.1.2: el PPTX reutiliza visualmente las slides corporativas/datasheets originales
+  // y genera las slides variables con la misma gramática visual Westcon FY27.
+  const _assetCache=new Map();
+  async function assetData(url){
+    if(_assetCache.has(url)) return _assetCache.get(url);
+    const p=fetch(url).then(r=>{if(!r.ok)throw new Error(`No se pudo cargar ${url}`);return r.blob()}).then(blob=>new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(blob);}));
+    _assetCache.set(url,p);return p;
   }
-  function addOpportunitySlide(pptx,m,C,addTitle,addBullets){const opp=m.roleData.opportunities||[];const s=pptx.addSlide('MASTER');addTitle(s,'Pipeline y oportunidades');if(!opp.length){addBullets(s,['No se han cargado oportunidades. Utilizar la reunión para discovery y validación de pipeline.']);return;}const rows=[['Oportunidad','Vendor','Solución','Importe','Fase','%'],...opp.map(o=>[o.name,o.vendor,o.solution,fmtMoney(o.amount),o.stage,String(o.prob)])];s.addTable(rows,{x:.5,y:1.65,w:12.3,h:4.9,border:{type:'solid',pt:1,color:C.line},fill:'FFFFFF',color:C.ink,fontSize:9,margin:.05,rowH:.38,colW:[2.4,1.8,2.6,1.6,1.4,.7],autoFit:false});}
+  const sourceAsset=(kind,n)=>`assets/source-slides/${kind}/slide-${String(n).padStart(2,'0')}.png`;
+  const vendorSourceSlides={
+    'Anomali':[8],'AttackIQ':[9],'Certes Networks':[10],'Cisco':[11,41],'Claroty':[12],'CrowdStrike':[13],'F5':[14],
+    'FireMon':[15],'Fortanix':[16],'Ivanti':[17],'LevelBlue':[18],'Menlo Security':[19],'NETSCOUT':[20],
+    'Noname / Akamai API Security':[21],'Okta':[22],'Palo Alto Networks':[23],'Ping Identity':[24],'Proofpoint':[25],
+    'Vectra AI':[26],'XM Cyber':[27],'Zscaler':[28],'1Password':[29],'Ciena':[40],'EfficientIP':[42],'Ericsson':[43],
+    'Extreme Networks':[44],'Juniper Networks':[45],'Nokia':[46],'Ruckus Networks':[47],'Weblib':[48],
+    'AudioCodes':[59],'Avaya':[60],'AWS':[61],'Microsoft':[62],'Penguin Solutions':[63],'UiPath':[64]
+  };
+  const verticalSourceMap={
+    'Banca y seguros':{cyber:{playbook:30,message:31,datasheet:1},network:{playbook:49,message:50,datasheet:5},cloud:{playbook:65,message:66,datasheet:9}},
+    'Administración pública':{cyber:{playbook:32,message:33,datasheet:2},network:{playbook:51,message:52,datasheet:6},cloud:{playbook:67,message:68,datasheet:10}},
+    'Industria y utilities':{cyber:{playbook:34,message:35,datasheet:3},network:{playbook:53,message:54,datasheet:7},cloud:{playbook:69,message:70,datasheet:11}},
+    'Retail':{cyber:{playbook:36,message:37,datasheet:4},network:{playbook:55,message:56,datasheet:8},cloud:{playbook:71,message:72,datasheet:12}}
+  };
+  function selectedVendorNames(m){
+    const out=[...(m.vendors||[])];
+    const focus=m.roleData?.vendor;
+    if(focus&&!out.includes(focus))out.unshift(focus);
+    return [...new Set(out.filter(Boolean))];
+  }
+  function vendorAreasForMeeting(m){
+    const a=new Set();
+    selectedVendorNames(m).forEach(name=>{
+      const v=(K.vendors||[]).find(x=>x.name===name);const area=(v?.area||'').toLowerCase();
+      if(area.includes('ciber'))a.add('cyber');if(area.includes('network'))a.add('network');if(area.includes('cloud')||area.includes('automat'))a.add('cloud');
+    });
+    const t=(m.technologies||'').toLowerCase();
+    if(/security|ciber|zero trust|sase|xdr|iam|soc|api|ot|siem|edr|firewall/.test(t))a.add('cyber');
+    if(/network|wifi|wi-fi|switch|routing|wan|5g|dns|ddi|ipam|optical|campus/.test(t))a.add('network');
+    if(/cloud|azure|aws|automat|rpa|uc|contact center|collaboration|edge|ia|ai/.test(t))a.add('cloud');
+    if(!a.size&&m.vertical&&m.vertical!=='Otros') ['cyber','network','cloud'].forEach(x=>a.add(x));
+    return [...a];
+  }
+  function serviceSourceSlides(m){
+    const chosen=m.services||[];const out=[];const has=q=>chosen.some(s=>s.toLowerCase().includes(q));
+    if(has('preventa')||has('rfi')||has('poc'))out.push(73);
+    if(has('demo')||has('3d'))out.push(74);
+    if(has('skill')||has('academy')||has('lms'))out.push(75);
+    if(has('benchmark'))out.push(76);
+    if(has('lifecycle')||has('customer success')||has('renov'))out.push(77);
+    if(has('gds')||has('staging')||has('soporte'))out.push(78,79);
+    if(has('flex'))out.push(80);
+    if(has('intelligent demand')||has('campaña')||has('webinar'))out.push(81);
+    if(!out.length&&m.includeServices){
+      if(m.primaryRole==='psm')out.push(78,81,80);
+      else if(m.primaryRole==='vsm')out.push(75,81,78);
+      else out.push(73,74,76);
+    }
+    return [...new Set(out)];
+  }
+
+  async function generatePptx(m,slides,insights,questions,queries){
+    if(typeof window.PptxGenJS==='undefined'){alert('No se ha podido cargar el generador PowerPoint.');return;}
+    const pptx=new window.PptxGenJS();pptx.layout='LAYOUT_WIDE';pptx.author='Westcon Meeting Intelligence';pptx.subject=`Reunión con ${m.partner}`;pptx.title=`${m.partner} · ${roleById(m.primaryRole)?.name||''}`;pptx.company='Westcon Comstor';pptx.lang='es-ES';
+    const C={navy:'1A2E44',navy2:'113A50',navy3:'082335',magenta:'E5007D',cyan:'12C7C0',amber:'FFAE00',purple:'6C5CA3',white:'FFFFFF',muted:'AEBECA',line:'24506A',green:'169F82',soft:'DDE6EB'};
+    const roleAccent=m.primaryRole==='sa'?C.cyan:m.primaryRole==='vsm'?C.purple:C.magenta;
+    let logoData=null;try{logoData=await assetData('assets/westcon-comstor.png')}catch{}
+    const addFooter=(s,accent=roleAccent)=>{s.addShape(pptx.ShapeType.rect,{x:0,y:7.36,w:13.333,h:.14,fill:{color:accent},line:{color:accent}});s.addText('FY2027 — Westcon Comstor España',{x:.45,y:7.12,w:4.2,h:.16,fontFace:'Corbel',fontSize:7.5,color:C.muted,margin:0});s.addText('Contenido dinámico · validar datos externos y comerciales',{x:7.4,y:7.12,w:5.45,h:.16,fontFace:'Corbel',fontSize:7.5,color:C.muted,align:'right',margin:0});};
+    const addBrand=(s,section,title,subtitle='',accent=roleAccent)=>{s.background={color:C.navy};if(logoData){s.addShape(pptx.ShapeType.roundRect,{x:10.92,y:.22,w:1.9,h:.55,rectRadius:.05,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logoData,x:11.08,y:.32,w:1.55,h:.34});}s.addText(String(section||'WESTCON COMSTOR').toUpperCase(),{x:.48,y:.27,w:5.2,h:.23,fontFace:'Corbel',fontSize:10,bold:true,color:accent,charSpacing:1.2,margin:0});s.addText(title,{x:.48,y:.68,w:10.0,h:.62,fontFace:'Corbel',fontSize:27,bold:true,color:C.white,margin:0,fit:'shrink'});if(subtitle)s.addText(subtitle,{x:.5,y:1.36,w:11.8,h:.42,fontFace:'Corbel',fontSize:12,color:C.muted,margin:0,fit:'shrink'});addFooter(s,accent);};
+    const addCard=(s,x,y,w,h,title,text,accent=roleAccent)=>{s.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:.06,fill:{color:C.navy2,transparency:3},line:{color:accent,pt:1.1}});if(title)s.addText(title.toUpperCase(),{x:x+.18,y:y+.14,w:w-.36,h:.24,fontFace:'Corbel',fontSize:10,bold:true,color:accent,margin:0,fit:'shrink'});if(text)s.addText(String(text),{x:x+.18,y:y+(title?0.52:0.2),w:w-.36,h:h-(title?0.66:0.36),fontFace:'Corbel',fontSize:13,color:C.white,margin:.01,fit:'shrink',valign:'mid'});};
+    const addKpi=(s,x,y,w,label,value,accent=roleAccent)=>{s.addShape(pptx.ShapeType.roundRect,{x,y,w,h:1.02,rectRadius:.05,fill:{color:C.navy2},line:{color:accent,pt:1}});s.addText(String(value||'—'),{x:x+.1,y:y+.16,w:w-.2,h:.37,fontFace:'Corbel',fontSize:19,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});s.addText(label,{x:x+.1,y:y+.62,w:w-.2,h:.2,fontFace:'Corbel',fontSize:8.5,color:C.muted,align:'center',margin:0,fit:'shrink'});};
+    const addBullets=(s,items,x=.65,y=2.05,w=12,h=4.7,fs=15)=>{const runs=[];items.filter(Boolean).forEach(t=>runs.push({text:String(t),options:{bullet:{indent:14},breakLine:true}}));s.addText(runs,{x,y,w,h,fontFace:'Corbel',fontSize:fs,color:C.white,margin:.02,paraSpaceAfterPt:9,fit:'shrink'});};
+    const addOriginal=async(kind,n,notes='')=>{const s=pptx.addSlide();try{s.addImage({data:await assetData(sourceAsset(kind,n)),x:0,y:0,w:13.333,h:7.5});}catch(e){addBrand(s,'CONTENIDO CORPORATIVO',`Slide ${n} no disponible`,String(e.message||e));}if(notes&&m.outputs.notes)try{s.addNotes(notes)}catch{}return s;};
+    const addPlaceholder=(vendor)=>{const s=pptx.addSlide();addBrand(s,'FABRICANTE',`Slides oficiales de ${vendor}`,'Espacio reservado para incorporar contenido oficial específico de esta reunión.',C.purple);s.addShape(pptx.ShapeType.roundRect,{x:1.05,y:2.35,w:11.2,h:2.5,rectRadius:.08,fill:{color:C.navy2},line:{color:C.purple,pt:1.3,dash:'dash'}});s.addText('INSERTAR AQUÍ SLIDES OFICIALES DEL FABRICANTE',{x:1.4,y:3.2,w:10.5,h:.45,fontFace:'Corbel',fontSize:20,bold:true,color:C.muted,align:'center',margin:0});return s;};
+
+    // Portada: usa el fondo corporativo original para mantener identidad 1:1.
+    let s=pptx.addSlide();try{s.addImage({data:await assetData(sourceAsset('corporate',1)),x:0,y:0,w:13.333,h:7.5})}catch{s.background={color:C.navy};}
+    s.addShape(pptx.ShapeType.rect,{x:.0,y:1.55,w:7.2,h:3.55,fill:{color:C.navy,transparency:1},line:{color:C.navy,transparency:100}});
+    s.addText((m.partner||'PARTNER').toUpperCase(),{x:.68,y:2.03,w:6.0,h:.82,fontFace:'Corbel',fontSize:32,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(m.objective||'Reunión de trabajo',{x:.7,y:2.95,w:5.85,h:.68,fontFace:'Corbel',fontSize:17,color:C.white,margin:0,fit:'shrink'});
+    s.addText(`${roleById(m.primaryRole)?.name||''}${m.meetingType?' · '+m.meetingType:''}${m.duration?' · '+m.duration:''}`,{x:.7,y:3.92,w:5.8,h:.28,fontFace:'Corbel',fontSize:10.5,bold:true,color:C.amber,margin:0});
+    if(m.desiredOutcome)s.addText(`Objetivo de salida: ${m.desiredOutcome}`,{x:.7,y:4.38,w:5.8,h:.38,fontFace:'Corbel',fontSize:10.5,color:C.muted,margin:0,fit:'shrink'});
+    if(m.outputs.notes)try{s.addNotes(`Objetivo: ${m.objective}\nResultado buscado: ${m.desiredOutcome||'por validar'}\nPreguntas sugeridas:\n- ${questions.join('\n- ')}`)}catch{}
+
+    // Slides corporativas reales.
+    if(m.includeGeneral){
+      await addOriginal('corporate',2,'Quiénes somos — slide original FY27.');
+      if(m.outputs.depth!=='short')await addOriginal('corporate',3,'Propuesta de valor — slide original FY27.');
+      await addOriginal('corporate',5,'Portfolio de fabricantes — slide original FY27.');
+      if(m.primaryRole==='psm'&&m.outputs.depth==='deep')await addOriginal('corporate',4,'Framework BLUEPRINT — slide original FY27.');
+    }
+
+    // Tesis de la reunión en formato corporativo, no una lista genérica blanca.
+    s=pptx.addSlide();addBrand(s,'REUNIÓN CON PARTNER','Qué queremos conseguir',m.desiredOutcome||'Resultado que debemos validar y acordar en la reunión.');
+    addCard(s,.55,2.05,3.85,1.55,'OBJETIVO',m.objective||'Por definir',roleAccent);
+    addCard(s,4.72,2.05,3.85,1.55,'FOCO',m.vertical||m.technologies||'Relación y oportunidades',C.cyan);
+    addCard(s,8.89,2.05,3.85,1.55,'FABRICANTES',selectedVendorNames(m).join(', ')||'A priorizar durante la reunión',C.amber);
+    addCard(s,.55,3.95,5.95,1.75,'RESULTADO ESPERADO',m.desiredOutcome||'Acordar un siguiente paso concreto, con responsables y fecha.',C.magenta);
+    addCard(s,6.82,3.95,5.92,1.75,'CONTEXTO',m.primaryRole==='psm'?(m.roleData.context||'Revisar relación global, evolución y oportunidades.'):m.primaryRole==='vsm'?(m.roleData.channelPlan||'Desarrollar el fabricante dentro del partner.'):(m.roleData.useCase||'Defender la solución y acordar una prueba de valor.'),C.green);
+
+    if(m.primaryRole==='psm'){
+      const b=(m.roleData.business||[]).filter(r=>r.vendor);const total27=b.reduce((a,r)=>a+Number(r.fy27||0),0);const totalTarget=b.reduce((a,r)=>a+Number(r.target||0),0);const pipe=b.reduce((a,r)=>a+Number(r.pipeline||0),0)+(m.roleData.opportunities||[]).reduce((a,r)=>a+Number(r.amount||0),0);
+      s=pptx.addSlide();addBrand(s,'PSM · PARTNER BUSINESS REVIEW','Situación de la relación',m.roleData.context||'Lectura global de la cuenta y de las palancas para crecer.');
+      addKpi(s,.65,2.0,2.85,'FY27 YTD',fmtMoney(total27),C.magenta);addKpi(s,3.77,2.0,2.85,'Objetivo FY27',fmtMoney(totalTarget),C.cyan);addKpi(s,6.89,2.0,2.85,'Pipeline',fmtMoney(pipe),C.amber);addKpi(s,10.01,2.0,2.65,'Potencial',m.roleData.potential||'—',C.green);
+      addCard(s,.65,3.42,5.9,2.05,'LECTURAS CLAVE',[...insights.map(x=>x.text)].slice(0,4).join('\n• ')||'Todavía no hay suficiente dato para interpretar la evolución.',C.magenta);
+      addCard(s,6.78,3.42,5.9,2.05,'WHITESPACE',m.roleData.whitespace||'Identificar fabricantes, servicios y capacidades sin negocio actual.',C.cyan);
+
+      s=pptx.addSlide();addBrand(s,'PSM · EVOLUCIÓN','Negocio por fabricante','Facturación introducida por el PSM. No se mezcla con datos inferidos de fuentes públicas.');
+      if(!b.length){addBullets(s,['No se han cargado datos de facturación.','Añade FY25, FY26, FY27 YTD, objetivo y pipeline para cada fabricante.']);}
+      else{
+        const rows=b.slice(0,m.outputs.depth==='deep'?8:6);const max=Math.max(1,...rows.flatMap(r=>[Number(r.fy25||0),Number(r.fy26||0),Number(r.fy27||0),Number(r.target||0)]));
+        s.addText('Fabricante',{x:.58,y:1.92,w:2.05,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});s.addText('FY25',{x:2.66,y:1.92,w:1.9,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});s.addText('FY26',{x:4.68,y:1.92,w:1.9,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});s.addText('FY27 YTD',{x:6.70,y:1.92,w:1.9,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});s.addText('Objetivo',{x:8.72,y:1.92,w:1.9,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});s.addText('Pipeline',{x:10.74,y:1.92,w:1.9,h:.25,fontFace:'Corbel',fontSize:9,bold:true,color:C.muted,margin:0});
+        rows.forEach((r,i)=>{const y=2.35+i*.63;s.addText(r.vendor,{x:.58,y,w:1.95,h:.3,fontFace:'Corbel',fontSize:10,bold:true,color:C.white,margin:0,fit:'shrink'});[[r.fy25,C.purple,2.66],[r.fy26,C.cyan,4.68],[r.fy27,C.magenta,6.70],[r.target,C.amber,8.72],[r.pipeline,C.green,10.74]].forEach(([val,col,x])=>{const n=Number(val||0);s.addShape(pptx.ShapeType.roundRect,{x,y:y+.02,w:1.7,h:.27,rectRadius:.03,fill:{color:C.navy2},line:{color:C.line,pt:.5}});if(n>0)s.addShape(pptx.ShapeType.roundRect,{x,y:y+.02,w:Math.max(.08,1.7*n/max),h:.27,rectRadius:.03,fill:{color:col},line:{color:col}});s.addText(fmtMoney(n),{x,y:y+.34,w:1.72,h:.18,fontFace:'Corbel',fontSize:7.2,color:C.muted,align:'center',margin:0,fit:'shrink'});});});
+      }
+      addOpportunitySlideBranded(pptx,m,C,addBrand,roleAccent);
+      s=pptx.addSlide();addBrand(s,'PSM · PLAN DE CUENTA','Dónde crecer juntos','Convertir el análisis en una conversación concreta de crecimiento.');
+      addCard(s,.6,2.0,3.85,2.25,'1 · DEFENDER Y EXPANDIR','Consolidar fabricantes con negocio, proteger renovaciones y ampliar líneas/servicios.',C.magenta);
+      addCard(s,4.74,2.0,3.85,2.25,'2 · ACTIVAR WHITESPACE',m.roleData.whitespace||'Priorizar 2–3 fabricantes/capacidades con encaje real en el partner.',C.cyan);
+      addCard(s,8.88,2.0,3.85,2.25,'3 · ACELERAR PIPELINE','Seleccionar oportunidades con ayuda requerida de Westcon o del fabricante.',C.amber);
+      addCard(s,.6,4.6,12.13,1.15,'ACCIONES ABIERTAS',m.roleData.actions||'Acordar responsables, fechas y criterio de éxito para cada acción.',C.green);
+    } else if(m.primaryRole==='vsm'){
+      const v=m.roleData.vendor||selectedVendorNames(m)[0]||'Fabricante';
+      s=pptx.addSlide();addBrand(s,`VSM · ${v}`,`Estado de la relación ${v} – Partner`,'Negocio, programa de canal y próximos hitos.');
+      addKpi(s,.7,2.0,2.8,'FY27 YTD',fmtMoney(m.roleData.revenue),C.magenta);addKpi(s,3.78,2.0,2.8,'Objetivo',fmtMoney(m.roleData.target),C.amber);addKpi(s,6.86,2.0,2.8,'Tier actual',m.roleData.tier||'Por validar',C.purple);addKpi(s,9.94,2.0,2.7,'Tier objetivo',m.roleData.targetTier||'Por definir',C.cyan);
+      addCard(s,.7,3.48,5.85,2.05,'PLAN DE CANAL',m.roleData.channelPlan||'Definir foco, verticales, enablement, generación de demanda y objetivos.',C.magenta);
+      addCard(s,6.83,3.48,5.82,2.05,'ESTADO DE RELACIÓN',m.roleData.relationship||'Por definir',C.cyan);
+      s=pptx.addSlide();addBrand(s,`VSM · ${v}`,'Certificaciones, incentivos y desarrollo','Qué necesita el partner para progresar con el fabricante.');
+      addCard(s,.65,2.0,3.8,2.0,'CERTIFICACIONES ACTUALES',m.roleData.certs||'Por validar',C.green);addCard(s,4.77,2.0,3.8,2.0,'GAPS / EN PROCESO',m.roleData.certsNext||'Por identificar',C.amber);addCard(s,8.89,2.0,3.8,2.0,'INCENTIVOS / MDF',m.roleData.incentives||'Investigar programas vigentes y elegibilidad.',C.purple);
+      addCard(s,.65,4.35,12.04,1.35,'BLOQUEOS A RESOLVER',m.roleData.blockers||'Validar bloqueos comerciales, técnicos, de certificación o de programa.',C.magenta);
+      addOpportunitySlideBranded(pptx,m,C,addBrand,roleAccent);
+    } else if(m.primaryRole==='sa'){
+      const v=m.roleData.vendor||selectedVendorNames(m)[0]||'Solución';
+      s=pptx.addSlide();addBrand(s,`SOLUTION ARCHITECT · ${v}`,'Problema y criterios de diseño',m.roleData.useCase||'Caso de uso por concretar.');
+      addCard(s,.65,2.0,5.85,2.0,'SITUACIÓN ACTUAL',m.roleData.current||'Arquitectura actual por confirmar.',C.cyan);addCard(s,6.8,2.0,5.85,2.0,'REQUISITOS',m.roleData.requirements||'Definir requisitos funcionales, operativos y de seguridad.',C.magenta);addCard(s,.65,4.35,12.0,1.35,'RIESGOS / RESTRICCIONES',m.roleData.risks||'Identificar dependencias, limitaciones y criterios de exclusión.',C.amber);
+      s=pptx.addSlide();addBrand(s,`SOLUTION ARCHITECT · ${v}`,`¿Por qué ${v}?`,'Defender decisiones técnicas con evidencia y trade-offs, no con claims genéricos.');
+      addCard(s,.65,2.0,5.85,2.15,'DIFERENCIADORES',m.roleData.differentiators||'Investigar capacidades diferenciales verificables para este caso de uso.',C.green);addCard(s,6.8,2.0,5.85,2.15,'ALTERNATIVAS',m.roleData.competitors||'Identificar competidores y condiciones en las que cada alternativa encaja mejor.',C.purple);addCard(s,.65,4.5,12.0,1.25,'ANALISTAS / EVIDENCIA',m.roleData.analysts||'Gartner · IDC · Forrester · Omdia · GigaOm · ISG: incorporar solo información verificable y fechada.',C.cyan);
+      s=pptx.addSlide();addBrand(s,`SOLUTION ARCHITECT · ${v}`,'PoC / PoV medible','La prueba debe responder a los criterios que decidirán la solución.');addCard(s,.85,2.1,11.65,2.05,'CRITERIOS DE ÉXITO',m.roleData.poc||'Definir alcance, baseline, métricas, datos necesarios, responsables y umbral de éxito.',C.magenta);addCard(s,.85,4.5,3.55,1.15,'BASELINE','Situación actual medible',C.cyan);addCard(s,4.88,4.5,3.55,1.15,'PRUEBA','Escenario representativo',C.amber);addCard(s,8.91,4.5,3.55,1.15,'DECISIÓN','Criterio objetivo de aceptación',C.green);
+    }
+
+    // Reutilización de playbooks y datasheets FY27 según vertical y área.
+    const areas=vendorAreasForMeeting(m);const vmap=verticalSourceMap[m.vertical];
+    if(vmap){
+      const areaLimit=m.outputs.depth==='short'?1:m.outputs.depth==='standard'?2:3;
+      for(const area of areas.slice(0,areaLimit)){
+        const x=vmap[area];if(!x)continue;
+        if(m.outputs.depth==='deep')await addOriginal('corporate',x.playbook,`Playbook sectorial ${m.vertical} · ${area}.`);
+        await addOriginal('verticals',x.datasheet,`Datasheet vertical FY27 · ${m.vertical} · ${area}.`);
+        if(m.outputs.depth==='deep')await addOriginal('corporate',x.message,`Mensajes clave sectoriales ${m.vertical} · ${area}.`);
+      }
+    }
+
+    // Fichas originales de los fabricantes seleccionados.
+    const vendors=selectedVendorNames(m);const maxVendorSlides=m.outputs.depth==='short'?2:m.outputs.depth==='standard'?5:10;let vendorCount=0;
+    for(const vendor of vendors){
+      const nums=vendorSourceSlides[vendor]||[];
+      for(const n of nums){if(vendorCount>=maxVendorSlides)break;await addOriginal('corporate',n,`Ficha corporativa FY27 de ${vendor}.`);vendorCount++;}
+      if(m.reserveVendorSlides)addPlaceholder(vendor);
+      if(vendorCount>=maxVendorSlides)break;
+    }
+
+    // Servicios: reutiliza las slides originales que encajan con el perfil/selección.
+    if(m.includeServices){const ss=serviceSourceSlides(m);const lim=m.outputs.depth==='short'?1:m.outputs.depth==='standard'?2:4;for(const n of ss.slice(0,lim))await addOriginal('corporate',n,'Capacidad/servicio Westcon Comstor FY27.');}
+
+    // Cierre con plan concreto, no research interno visible al partner.
+    s=pptx.addSlide();addBrand(s,'SIGUIENTE PASO','Plan de acción acordado','Salir de la reunión con pocas acciones, responsables y fecha.');
+    addCard(s,.7,2.0,3.75,2.15,'WESTCON',m.primaryRole==='psm'?(m.roleData.actions||'Activar recursos, fabricante y servicios necesarios.'):(m.primaryRole==='vsm'?(m.roleData.blockers||'Resolver bloqueos y activar plan de canal.'):'Preparar diseño, demo/PoC y criterios de éxito.'),C.magenta);
+    addCard(s,4.78,2.0,3.75,2.15,'PARTNER','Confirmar responsables, oportunidad/caso de uso prioritario y datos necesarios.',C.cyan);
+    addCard(s,8.86,2.0,3.75,2.15,'FABRICANTE','Alinear recursos, programa, preventa o soporte especializado cuando aplique.',C.purple);
+    addCard(s,.7,4.55,11.91,1.18,'RESULTADO QUE BUSCAMOS',m.desiredOutcome||'Un siguiente paso concreto, medible y con fecha.',C.amber);
+    if(m.outputs.notes)try{s.addNotes(`Preguntas recomendadas:\n- ${questions.join('\n- ')}\n\nResearch pendiente (NO mostrar al partner):\n- ${queries.join('\n- ')}`)}catch{}
+    if(m.outputs.depth!=='short')await addOriginal('corporate',84,'Cierre corporativo original FY27.');
+
+    try{await pptx.writeFile({fileName:`${slug(m.partner)}-${m.primaryRole||'meeting'}-westcon-fy27.pptx`});}catch(e){console.error(e);alert('No se pudo generar el PowerPoint. Revisa la consola y vuelve a intentarlo.');}
+  }
+
+  function addOpportunitySlideBranded(pptx,m,C,addBrand,accent){
+    const opp=(m.roleData.opportunities||[]).filter(o=>o.name||o.vendor||o.amount);const s=pptx.addSlide();addBrand(s,m.primaryRole==='vsm'?'VSM · PIPELINE':'PSM · PIPELINE','Pipeline y oportunidades','Priorizar dónde actuar, no solo listar oportunidades.',accent);
+    if(!opp.length){s.addText('Todavía no se han cargado oportunidades.',{x:.8,y:2.35,w:11.7,h:.45,fontFace:'Corbel',fontSize:20,bold:true,color:C.white,align:'center',margin:0});s.addText('Utiliza la reunión para discovery y añade después oportunidad, fabricante, solución, importe, fase y probabilidad.',{x:1.25,y:3.0,w:10.8,h:.7,fontFace:'Corbel',fontSize:13,color:C.muted,align:'center',margin:0});return;}
+    opp.slice(0,6).forEach((o,i)=>{const col=i%2,row=Math.floor(i/2),x=.62+col*6.08,y=1.95+row*1.55;s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.78,h:1.28,rectRadius:.06,fill:{color:C.navy2},line:{color:i%3===0?C.magenta:i%3===1?C.cyan:C.amber,pt:1}});s.addText(o.name||o.solution||'Oportunidad',{x:x+.18,y:y+.14,w:3.8,h:.28,fontFace:'Corbel',fontSize:12,bold:true,color:C.white,margin:0,fit:'shrink'});s.addText(`${o.vendor||'Vendor por definir'} · ${o.stage||'Fase por definir'}`,{x:x+.18,y:y+.52,w:3.9,h:.22,fontFace:'Corbel',fontSize:9,color:C.muted,margin:0,fit:'shrink'});s.addText(fmtMoney(o.amount),{x:x+4.1,y:y+.18,w:1.45,h:.3,fontFace:'Corbel',fontSize:14,bold:true,color:C.amber,align:'right',margin:0,fit:'shrink'});s.addText(`${Number(o.prob||0)}%`,{x:x+4.25,y:y+.64,w:1.3,h:.24,fontFace:'Corbel',fontSize:11,bold:true,color:C.cyan,align:'right',margin:0});});
+  }
 
   // ---------- Knowledge / panels ----------
   function renderKnowledge(){const sc=$('#sourceCards');sc.innerHTML=(K.sourceDecks||[]).map(s=>`<div class="card source-card"><span class="badge ${s.type==='verticals'?'cyan':'magenta'}">${esc(s.type)}</span><h3>${esc(s.name)}</h3><p>${esc(s.slides)} slides · fuente semilla de la base de conocimiento.</p></div>`).join('');$('#vendorCount').textContent=`${(K.vendors||[]).length} fabricantes`;$('#knowledgeVendors').innerHTML=(K.vendors||[]).map(v=>`<div class="knowledge-vendor"><img src="${vendorLogo(v.name)}" alt=""><div><strong>${esc(v.name)}</strong><small>${esc(v.area)}</small></div></div>`).join('');}
