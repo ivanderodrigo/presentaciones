@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "0.1.1",
+  "id": "demo-vsm",
+  "updatedAt": "2026-08-27T07:00:00.000Z",
+  "partner": "Partner Demo Iberia",
+  "country": "España",
+  "meetingType": "vendor-focus",
+  "duration": "60 min",
+  "objective": "Desarrollar el negocio del fabricante dentro del partner y acordar plan de certificación y pipeline.",
+  "desiredOutcome": "Plan de canal de 90 días y certificaciones objetivo.",
+  "primaryRole": "vsm",
+  "supportRoles": [],
+  "vendors": [
+    "Palo Alto Networks"
+  ],
+  "vertical": "Otros",
+  "technologies": "SASE, XDR, CNAPP",
+  "includeGeneral": true,
+  "reserveVendorSlides": true,
+  "includeServices": true,
+  "services": [
+    "SkillBoost / Academy / LMS",
+    "Preventa y diseño técnico",
+    "Intelligent Demand / campañas / webinars"
+  ],
+  "roleData": {
+    "vendor": "Palo Alto Networks",
+    "tier": "Registered",
+    "targetTier": "Innovator / nivel superior",
+    "revenue": 76000,
+    "target": 150000,
+    "relationship": "En desarrollo",
+    "certs": "Dos perfiles técnicos certificados; capacitación comercial inicial.",
+    "certsNext": "Completar requisitos de especialización y ampliar certificación de preventa.",
+    "channelPlan": "Priorizar SASE y SOC platform en cuentas enterprise.",
+    "incentives": "Validar MDF y campañas vigentes antes de la reunión.",
+    "opportunities": [
+      {
+        "name": "SASE Enterprise",
+        "vendor": "Palo Alto Networks",
+        "solution": "SASE",
+        "amount": 90000,
+        "stage": "Qualified",
+        "prob": 45
+      }
+    ],
+    "blockers": "Falta capacidad certificada y generación de demanda recurrente."
+  },
+  "research": [
+    "partner",
+    "alliances",
+    "certifications",
+    "news",
+    "channel",
+    "verticals",
+    "market",
+    "cases",
+    "analyst"
+  ],
+  "researchHorizon": 90,
+  "knownSources": "",
+  "outputs": {
+    "depth": "standard",
+    "language": "Español",
+    "tone": "Comercial",
+    "pptx": true,
+    "brief": true,
+    "notes": true,
+    "questions": true,
+    "pdf": false,
+    "sources": true
+  }
+}

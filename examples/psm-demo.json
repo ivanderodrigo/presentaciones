@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "0.1.1",
+  "id": "demo-psm",
+  "updatedAt": "2026-08-27T07:00:00.000Z",
+  "partner": "Partner Demo Iberia",
+  "country": "España",
+  "meetingType": "business-review",
+  "duration": "60 min",
+  "objective": "Revisar evolución FY27, priorizar whitespace y acordar tres acciones conjuntas de crecimiento.",
+  "desiredOutcome": "Plan de 90 días con responsables y dos oportunidades priorizadas.",
+  "primaryRole": "psm",
+  "supportRoles": [
+    "sa"
+  ],
+  "vendors": [
+    "Cisco",
+    "CrowdStrike",
+    "Palo Alto Networks"
+  ],
+  "vertical": "Industria y utilities",
+  "technologies": "Networking, XDR, SASE, OT Security",
+  "includeGeneral": true,
+  "reserveVendorSlides": false,
+  "includeServices": true,
+  "services": [
+    "Preventa y diseño técnico",
+    "PoC / PoV y criterios de éxito",
+    "Intelligent Demand / campañas / webinars"
+  ],
+  "roleData": {
+    "relationship": "En desarrollo",
+    "target": 650000,
+    "potential": "Alto",
+    "context": "Relación estable. Buen negocio de networking y crecimiento en endpoint; queremos abrir OT y servicios.",
+    "business": [
+      {
+        "vendor": "Cisco",
+        "fy25": 230000,
+        "fy26": 280000,
+        "fy27": 310000,
+        "target": 380000,
+        "pipeline": 95000
+      },
+      {
+        "vendor": "CrowdStrike",
+        "fy25": 60000,
+        "fy26": 90000,
+        "fy27": 125000,
+        "target": 160000,
+        "pipeline": 70000
+      },
+      {
+        "vendor": "Palo Alto Networks",
+        "fy25": 85000,
+        "fy26": 105000,
+        "fy27": 76000,
+        "target": 110000,
+        "pipeline": 25000
+      }
+    ],
+    "opportunities": [
+      {
+        "name": "Industrial Zero Trust",
+        "vendor": "Palo Alto Networks",
+        "solution": "SASE",
+        "amount": 80000,
+        "stage": "Design",
+        "prob": 55
+      },
+      {
+        "name": "SOC modernisation",
+        "vendor": "CrowdStrike",
+        "solution": "XDR/MDR",
+        "amount": 120000,
+        "stage": "Qualified",
+        "prob": 45
+      }
+    ],
+    "whitespace": "Explorar Claroty para OT y servicios de assessment; revisar DDI con EfficientIP.",
+    "actions": "Cerrar workshop OT, revisar caída de Palo Alto y validar campaña conjunta Q4."
+  },
+  "research": [
+    "partner",
+    "alliances",
+    "certifications",
+    "news",
+    "verticals",
+    "careers",
+    "market",
+    "cases",
+    "analyst"
+  ],
+  "researchHorizon": 90,
+  "knownSources": "Web corporativa del partner; partner locators de fabricantes",
+  "outputs": {
+    "depth": "standard",
+    "language": "Español",
+    "tone": "Ejecutivo y directo",
+    "pptx": true,
+    "brief": true,
+    "notes": true,
+    "questions": true,
+    "pdf": false,
+    "sources": true
+  }
+}

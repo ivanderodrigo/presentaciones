@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "0.1.1",
+  "id": "demo-sa",
+  "updatedAt": "2026-08-27T07:00:00.000Z",
+  "partner": "Partner Demo Iberia",
+  "country": "España",
+  "meetingType": "technical",
+  "duration": "90 min",
+  "objective": "Presentar una arquitectura OT Security defendible y definir un PoC con criterios de éxito.",
+  "desiredOutcome": "Acordar alcance de PoC y requisitos técnicos.",
+  "primaryRole": "sa",
+  "supportRoles": [],
+  "vendors": [
+    "Claroty",
+    "Cisco"
+  ],
+  "vertical": "Industria y utilities",
+  "technologies": "OT/XIoT visibility, secure remote access, segmentation",
+  "includeGeneral": true,
+  "reserveVendorSlides": true,
+  "includeServices": true,
+  "services": [
+    "Preventa y diseño técnico",
+    "Demos y 3D Lab",
+    "PoC / PoV y criterios de éxito"
+  ],
+  "roleData": {
+    "vendor": "Claroty",
+    "useCase": "Visibilidad OT y acceso remoto seguro para proveedores",
+    "current": "Entorno industrial con red IT/OT convergente y activos legacy.",
+    "requirements": "Descubrimiento pasivo, cero impacto en producción, integración con SIEM, control de terceros y despliegue escalable por planta.",
+    "competitors": "Nozomi Networks, Dragos, Microsoft Defender for IoT",
+    "differentiators": "Cobertura XIoT, visibilidad pasiva, acceso remoto seguro y ecosistema de integraciones.",
+    "analysts": "Gartner / Forrester / IDC / Omdia y referencias industriales públicas verificables.",
+    "poc": "Inventario de activos, cobertura de protocolos, detección de riesgo y flujo de acceso remoto con trazabilidad.",
+    "risks": "Validar compatibilidad de protocolos específicos y requisitos de segmentación existentes."
+  },
+  "research": [
+    "partner",
+    "alliances",
+    "certifications",
+    "analyst",
+    "competition",
+    "technical",
+    "market",
+    "cases"
+  ],
+  "researchHorizon": 180,
+  "knownSources": "",
+  "outputs": {
+    "depth": "deep",
+    "language": "Español",
+    "tone": "Técnico",
+    "pptx": true,
+    "brief": true,
+    "notes": true,
+    "questions": true,
+    "pdf": false,
+    "sources": true
+  }
+}
