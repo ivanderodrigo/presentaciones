@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Westcon Meeting Intelligence — preparación inteligente de reuniones con partners e integradores." />
-  <title>Westcon Meeting Intelligence · v1.0 Final</title>
+  <title>Westcon Meeting Intelligence · v2.0</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,7 +14,7 @@
         <img src="assets/westcon-comstor.png" alt="Westcon Comstor" />
         <div>
           <strong>Meeting Intelligence</strong>
-          <span>FY27 · v1.0 Final</span>
+          <span>FY27 · v2.0</span>
         </div>
       </div>
 
@@ -39,7 +39,7 @@
           <div class="hero-copy">
             <span class="eyebrow">PREPARAR REUNIÓN CON PARTNER</span>
             <h1>Dime a quién visitas, tu rol y qué quieres conseguir.</h1>
-            <p>La aplicación investiga el partner y los fabricantes, selecciona el contenido FY27 y compone una presentación final para enseñar al partner. La complejidad queda debajo.</p>
+            <p>Partner Intelligence, Vendor Intelligence y Presentation Director trabajan debajo: investigan, recuerdan, priorizan y componen una presentación final para enseñar al partner.</p>
           </div>
           <div class="hero-badge">
             <span>Perfil activo</span>
@@ -100,33 +100,39 @@
             </div>
           </section>
 
-          <section class="card section-card" data-section="scope">
+          <section class="card section-card smart-scope" data-section="scope">
             <div class="section-title">
-              <div><span class="step">03</span><h2>Fabricantes y foco</h2></div>
-              <span class="section-hint">Selecciona lo esencial; el resto se deduce</span>
+              <div><span class="step">03</span><h2>Foco automático</h2></div>
+              <span class="section-hint">Puedes dejarlo completamente en manos del motor</span>
             </div>
-            <div class="grid two align-start">
-              <div>
-                <div class="field-head"><strong>Fabricantes implicados</strong><input id="vendorSearch" class="mini-search" placeholder="Buscar fabricante" /></div>
-                <div id="vendorGrid" class="vendor-grid"></div>
-              </div>
-              <div>
-                <label>Vertical / foco de mercado
-                  <select id="vertical" name="vertical"></select>
-                </label>
-                <label>Tecnologías / temas prioritarios
-                  <textarea id="technologies" name="technologies" rows="4" placeholder="Ej. SASE, OT Security, AI networking, DDI, contact center, automatización..."></textarea>
-                </label>
-                <details class="details-block compact-details"><summary>Opciones de contenido (normalmente no hace falta tocarlas)</summary>
-                  <div class="toggle-stack">
-                    <label class="toggle"><input type="checkbox" id="includeGeneral" checked><span></span> Introducción Westcon</label>
-                    <label class="toggle"><input type="checkbox" id="reserveVendorSlides"><span></span> Hueco para slides oficiales del vendor</label>
-                    <label class="toggle"><input type="checkbox" id="includeServices" checked><span></span> Servicios Westcon relevantes</label>
-                  </div>
-                </details>
-              </div>
+            <div class="auto-focus-strip">
+              <div><i>AI</i><strong>Presentation Director</strong><span>deduce fabricantes, vertical, servicios y profundidad a partir del partner, tu rol, el objetivo y la evidencia disponible.</span></div>
+              <span class="auto-pill">AUTOMÁTICO</span>
             </div>
-            <details class="details-block"><summary>Seleccionar servicios Westcon concretos</summary><div id="serviceChips" class="chip-grid"></div></details>
+            <details class="details-block smart-details"><summary>Afinar fabricantes, vertical o tecnologías (opcional)</summary>
+              <div class="grid two align-start smart-details-body">
+                <div>
+                  <div class="field-head"><strong>Fabricantes implicados</strong><input id="vendorSearch" class="mini-search" placeholder="Buscar fabricante" /></div>
+                  <div id="vendorGrid" class="vendor-grid"></div>
+                </div>
+                <div>
+                  <label>Vertical / foco de mercado
+                    <select id="vertical" name="vertical"></select>
+                  </label>
+                  <label>Tecnologías / temas prioritarios
+                    <textarea id="technologies" name="technologies" rows="4" placeholder="Ej. SASE, OT Security, AI networking, DDI, contact center, automatización..."></textarea>
+                  </label>
+                  <details class="details-block compact-details"><summary>Opciones de contenido</summary>
+                    <div class="toggle-stack">
+                      <label class="toggle"><input type="checkbox" id="includeGeneral" checked><span></span> Introducción Westcon</label>
+                      <label class="toggle"><input type="checkbox" id="reserveVendorSlides"><span></span> Hueco para slides oficiales del vendor</label>
+                      <label class="toggle"><input type="checkbox" id="includeServices" checked><span></span> Servicios Westcon relevantes</label>
+                    </div>
+                  </details>
+                  <details class="details-block compact-details"><summary>Seleccionar servicios Westcon concretos</summary><div id="serviceChips" class="chip-grid"></div></details>
+                </div>
+              </div>
+            </details>
           </section>
 
           <section class="card section-card role-section" data-section="roledata">
@@ -139,14 +145,15 @@
             </div>
           </section>
 
-          <section class="card section-card intelligence-auto" data-section="intelligence">
+          <section class="card section-card intelligence-auto compact-engine" data-section="intelligence">
             <div class="section-title">
               <div><span class="step">05</span><h2>Inteligencia automática</h2></div>
-              <span class="section-hint">No tienes que elegir fuentes ni escribir búsquedas</span>
+              <span class="section-hint">Activa por defecto · no tienes que configurar nada</span>
             </div>
-            <div id="researchGrid" class="research-grid auto-research-grid"></div>
-            <div class="callout intelligence-promise"><strong>La aplicación investiga por defecto:</strong> partner, portfolio y alianzas, certificaciones, noticias, estrategia, contrataciones, casos públicos, programa de canal, competidores, documentación técnica y posicionamiento público en Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y otras fuentes relevantes.</div>
-            <details class="details-block compact-details"><summary>Ajustes de investigación (opcional)</summary>
+            <div class="engine-live"><span class="engine-pulse"></span><div><strong>Research intensivo + evidence-first</strong><small>Partner · fabricantes · competencia · analistas · noticias · casos · canal · arquitectura · mercado</small></div><span class="auto-pill">ACTIVO</span></div>
+            <details class="details-block smart-details"><summary>Ver qué investiga y ajustar fuentes (opcional)</summary>
+              <div id="researchGrid" class="research-grid auto-research-grid"></div>
+              <div class="callout intelligence-promise"><strong>La aplicación investiga por defecto:</strong> partner, portfolio y alianzas, certificaciones, noticias, estrategia, contrataciones, casos públicos, programa de canal, competidores, documentación técnica y posicionamiento público en Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys, KuppingerCole y otras fuentes relevantes.</div>
               <div class="grid two">
                 <label>Horizonte temporal de noticias
                   <select id="researchHorizon"><option value="30">Últimos 30 días</option><option value="90" selected>Últimos 90 días</option><option value="180">Últimos 6 meses</option><option value="365">Último año</option></select>
@@ -155,8 +162,8 @@
                   <input id="knownSources" placeholder="Web del partner, locator, certificaciones, noticia concreta..." />
                 </label>
               </div>
+              <div class="source-rule"><strong>Rigor:</strong> los hechos externos conservan fuente, fecha y URL. El motor no presenta como hecho una inferencia ni atribuye posiciones de analista si la evidencia pública no las declara.</div>
             </details>
-            <div class="source-rule"><strong>Rigor:</strong> los hechos externos conservan fuente, fecha y URL. El motor no presenta como hecho una inferencia ni atribuye posiciones de analista si la evidencia pública no las declara.</div>
           </section>
 
           <section class="card section-card" data-section="output">
@@ -166,7 +173,7 @@
             </div>
             <div class="grid two">
               <label>Profundidad
-                <select id="deckDepth"><option value="short">Ejecutiva · 8–10 slides</option><option value="standard" selected>Estándar · 12–16 slides</option><option value="deep">Profunda · 18–26 slides</option></select>
+                <select id="deckDepth"><option value="auto" selected>Automática según reunión y duración</option><option value="short">Ejecutiva · 8–10 slides</option><option value="standard">Estándar · 12–16 slides</option><option value="deep">Profunda · 18–24 slides</option></select>
               </label>
               <label>Idioma
                 <select id="language"><option>Español</option><option>Inglés</option><option>Portugués</option></select>
@@ -212,10 +219,10 @@
       </section>
 
       <section id="about" class="panel">
-        <header class="page-head"><div><span class="eyebrow">VERSIÓN FINAL v1.0</span><h1>Presentación partner-facing con inteligencia intensiva</h1></div></header>
+        <header class="page-head"><div><span class="eyebrow">VERSIÓN 2.0</span><h1>Inteligencia persistente + director automático de presentación</h1></div></header>
         <div class="about-grid">
-          <div class="card"><h3>Máxima sencillez por fuera</h3><ul><li>Partner, rol y objetivo son suficientes para un PSM; VSM y SA añaden el fabricante foco.</li><li>La aplicación propone automáticamente la narrativa y prioriza el contenido relevante.</li><li>Los datos internos de facturación, pipeline, certificaciones o arquitectura son opcionales y se mantienen en el navegador.</li><li>El PowerPoint resultante está redactado y diseñado para enseñarlo al partner: no expone scoring, hipótesis, competidores internos ni instrucciones de venta.</li></ul></div>
-          <div class="card"><h3>Máxima inteligencia por dentro</h3><ul><li>84 slides corporativas FY27 y 12 datasheets verticales como corpus semilla.</li><li>36 fichas de fabricante con propuesta de valor, ventajas, casos de uso, señales de oportunidad y contexto competitivo.</li><li>Research en tiempo de preparación sobre el partner y fabricantes seleccionados.</li><li>Actualización diaria y tolerante a fallos con GDELT, Google News, páginas oficiales y caché previa.</li><li>Radar de Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y KuppingerCole, conservando fuente, fecha y URL.</li><li>Noticias, casos públicos, canal, documentación técnica y señales de mercado para reforzar la conversación.</li><li>Regla evidence-first: una posición de analista solo se presenta cuando una fuente pública la sustenta explícitamente.</li></ul></div>
+          <div class="card"><h3>Máxima sencillez por fuera</h3><ul><li>Partner, rol y objetivo son suficientes para un PSM; VSM y SA añaden el fabricante foco.</li><li>El Presentation Director decide automáticamente profundidad, número de slides, nivel de introducción y contenido según rol, duración, tipo de reunión y conocimiento previo del partner.</li><li>Los datos internos de facturación, pipeline, certificaciones o arquitectura son opcionales y se mantienen en el navegador.</li><li>El PowerPoint resultante está redactado y diseñado para enseñarlo al partner: no expone scoring, hipótesis, competidores internos ni instrucciones de venta.</li></ul></div>
+          <div class="card"><h3>Máxima inteligencia por dentro</h3><ul><li>84 slides corporativas FY27 y 12 datasheets verticales como corpus semilla.</li><li>36 fichas de fabricante con propuesta de valor, ventajas, casos de uso, señales de oportunidad y contexto competitivo.</li><li>Partner Intelligence persistente: perfil público, fabricantes detectados, capacidades, verticales, movimientos y memoria de reuniones.</li><li>Research en tiempo de preparación sobre el partner y fabricantes seleccionados.</li><li>Actualización diaria y tolerante a fallos con GDELT, Google News, páginas oficiales y caché previa.</li><li>Radar de Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y KuppingerCole, conservando fuente, fecha y URL.</li><li>Noticias, casos públicos, canal, documentación técnica y señales de mercado para reforzar la conversación.</li><li>Regla evidence-first: una posición de analista solo se presenta cuando una fuente pública la sustenta explícitamente.</li></ul></div>
         </div>
       </section>
     </main>
@@ -245,11 +252,28 @@
     </tr>
   </template>
 
+  <dialog id="outcomeDialog" class="outcome-dialog">
+    <form method="dialog" id="outcomeForm">
+      <div class="dialog-head"><div><span class="eyebrow">MEMORIA DE LA RELACIÓN</span><h2>Registrar resultado de la reunión</h2></div><button value="cancel" class="icon-btn" aria-label="Cerrar">×</button></div>
+      <p class="dialog-sub">Tarda menos de un minuto. La siguiente presentación utilizará esta memoria para continuar la conversación.</p>
+      <input type="hidden" id="outcomePartner">
+      <div class="grid two">
+        <label>Qué interesó / qué acordamos<textarea id="outcomeSummary" rows="4" placeholder="Ej. interés en campus fabric, workshop técnico y revisión de dos cuentas..."></textarea></label>
+        <label>Objeciones o temas pendientes<textarea id="outcomeObjections" rows="4" placeholder="Ej. necesita validar integración, presupuesto, certificación..."></textarea></label>
+        <label>Próximo paso<input id="outcomeNextStep" placeholder="Ej. workshop de arquitectura con preventa"></label>
+        <label>Fecha objetivo<input type="date" id="outcomeNextDate"></label>
+      </div>
+      <div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" id="saveOutcomeBtn" class="primary">Guardar memoria</button></div>
+    </form>
+  </dialog>
+
   <script src="vendor/pptxgen.bundle.js"></script>
   <script src="data/knowledge.js"></script>
   <script src="data/vendor-logo-map.js"></script>
   <script src="data/vendor-intelligence.js"></script>
   <script src="data/live-intelligence.js"></script>
+  <script src="data/partner-intelligence.js"></script>
+  <script src="data/slide-index.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

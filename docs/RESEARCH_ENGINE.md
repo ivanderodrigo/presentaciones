@@ -1,33 +1,82 @@
-# Research Engine · v1.0
+# Research Engine · v2.0
 
 ## Objetivo
 
-Aumentar la calidad comercial/técnica de la presentación sin trasladar complejidad al usuario.
+Crear mucha profundidad de inteligencia sin trasladar trabajo al PSM, VSM o SA.
 
-## Dos ritmos de investigación
+## Dos ritmos
 
-### Background diario
+### 1. Background diario · 36 fabricantes
 
-Para los 36 fabricantes se investigan cuatro familias:
+`scripts/research_intelligence.py` utiliza rutas gratuitas y tolerantes a fallos:
 
-- analyst: Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys, KuppingerCole;
-- market: innovación, lanzamientos, adquisiciones, partnerships, premios y expansión;
-- channel: programa de canal, certificaciones, especializaciones, incentivos y MDF;
-- technology: arquitectura, integración, benchmarks y despliegues.
+- GDELT DOC 2.0;
+- Google News RSS;
+- sitemaps/páginas oficiales del fabricante;
+- caché previa si una ruta falla.
 
-Fuentes independientes: GDELT, Google News RSS y páginas/sitemaps oficiales. El proceso es concurrente, deduplica, puntúa autoridad y conserva caché previa si hay fallos.
+Familias de búsqueda:
 
-### Runtime por reunión
+- analistas;
+- casos públicos;
+- mercado/estrategia/momentum;
+- market share/adopción;
+- canal/certificaciones/incentivos;
+- tecnología/arquitectura/benchmarks;
+- competencia/migración/diferenciación;
+- resiliencia/seguridad/incidentes/confianza.
 
-Solo se profundiza en el partner y los vendors relevantes. Se consultan estrategia, alianzas, proyectos, inversión, contratación, relación vendor-partner, analistas, casos, medios, fuentes oficiales y —en SA— documentación técnica específica del caso de uso.
+El motor busca diversidad de fuentes y limita duplicados de la misma historia.
 
-## Evidence-first
+### 2. Runtime por reunión
 
-Niveles orientativos de autoridad:
+Se profundiza solo en el partner y los vendors que el director considera relevantes:
 
-- analista directo: máxima;
-- fabricante oficial: alta;
-- medio tecnológico especializado: media-alta;
-- discovery general: media/baja hasta ser corroborado.
+- estrategia y alianzas del partner;
+- portfolio, skills, certificaciones y verticales;
+- proyectos, clientes, contratos y noticias;
+- contratación como señal de inversión;
+- relación pública partner-vendor;
+- analistas y posicionamiento;
+- referencias y casos;
+- competencia;
+- documentación técnica e integraciones;
+- programa de canal para VSM;
+- arquitectura/benchmark/PoC para SA.
 
-Las posiciones concretas de consultoras nunca se infieren por mera aparición en un informe.
+## Partner dossier compartido
+
+`scripts/research_partner.py` permite lanzar un research más profundo de un partner concreto desde GitHub Actions. Consulta el portfolio completo de Westcon en lotes para evitar consultas excesivamente grandes.
+
+## Autoridad y confianza
+
+Prioridad orientativa:
+
+1. analista directo / publisher de analista;
+2. fabricante oficial;
+3. medio tecnológico especializado;
+4. discovery general pendiente de triangulación.
+
+Se conserva:
+
+- título;
+- publisher;
+- fecha;
+- URL;
+- clase de fuente;
+- score de autoridad;
+- confianza;
+- flags de riesgo;
+- si existe o no una declaración explícita de posición de analista.
+
+## Regla de analistas
+
+Aparecer en un Magic Quadrant, Wave o MarketScape no significa ser Leader. La aplicación solo muestra una posición concreta si la evidencia pública contiene una afirmación explícita susceptible de ser citada.
+
+## Tolerancia a fallos
+
+- las consultas son independientes;
+- un timeout no cancela el resto;
+- se deduplica antes de persistir;
+- la caché anterior se conserva cuando no hay señal nueva;
+- el quality gate avisa sobre cobertura sin impedir el despliegue.

@@ -1,0 +1,1 @@
+window.WESTCON_PARTNER_INTELLIGENCE = {"version":"2.0.0","generatedAt":null,"partners":{},"policy":"Shared cache of public partner intelligence. Private commercial data is never written here."};

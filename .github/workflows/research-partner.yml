@@ -1,0 +1,44 @@
+name: Research partner dossier
+on:
+  workflow_dispatch:
+    inputs:
+      partner:
+        description: 'Partner / integrador'
+        required: true
+        type: string
+      country:
+        description: 'País / mercado'
+        required: false
+        default: 'Iberia'
+        type: string
+      horizon:
+        description: 'Horizonte en días'
+        required: false
+        default: '365'
+        type: string
+permissions:
+  contents: write
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build / refresh partner dossier
+        run: python scripts/research_partner.py --partner "${{ inputs.partner }}" --country "${{ inputs.country }}" --horizon "${{ inputs.horizon }}"
+      - name: Validate
+        run: python scripts/quality_gate.py
+      - name: Commit dossier
+        run: |
+          git config user.name "westcon-intelligence-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/partner-intelligence.json data/partner-intelligence.js
+          if git diff --cached --quiet; then
+            echo "No partner intelligence changes"
+          else
+            git commit -m "chore: refresh partner intelligence - ${{ inputs.partner }}"
+            git push
+          fi

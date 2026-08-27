@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "generatedFrom": "Westcon_Comstor_Espana_FY27_completa.pptx",
   "vendors": {
     "Anomali": {
@@ -35,7 +35,66 @@
         "\"Anomali\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Anticipa amenazas antes de que impacten. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Anomali\" Gartner",
+          "\"Anomali\" Forrester",
+          "\"Anomali\" IDC MarketScape",
+          "\"Anomali\" Omdia",
+          "\"Anomali\" GigaOm",
+          "\"Anomali\" ISG",
+          "\"Anomali\" Canalys",
+          "\"Anomali\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Anomali\" competitive differentiation",
+          "\"Anomali\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Anomali\" customer case study",
+          "\"Anomali\" deployment success story"
+        ],
+        "channel": [
+          "\"Anomali\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Anomali\" \"Recorded Future\" comparison",
+          "\"Anomali\" \"ThreatConnect\" comparison",
+          "\"Anomali\" \"Mandiant / Google Threat Intelligence\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "SOC modernization"
+        ],
+        "Administración pública": [
+          "SOC modernization",
+          "Threat intelligence consolidation"
+        ],
+        "Industria y utilities": [
+          "Reduce el tiempo de detección de amenazas hasta un 80%"
+        ],
+        "Retail": [
+          "SOC modernization",
+          "Threat intelligence consolidation"
+        ]
+      }
     },
     "AttackIQ": {
       "name": "AttackIQ",
@@ -70,7 +129,68 @@
         "\"AttackIQ\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Valida tus defensas de forma continua, no solo una vez al año. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"AttackIQ\" Gartner",
+          "\"AttackIQ\" Forrester",
+          "\"AttackIQ\" IDC MarketScape",
+          "\"AttackIQ\" Omdia",
+          "\"AttackIQ\" GigaOm",
+          "\"AttackIQ\" ISG",
+          "\"AttackIQ\" Canalys",
+          "\"AttackIQ\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"AttackIQ\" competitive differentiation",
+          "\"AttackIQ\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"AttackIQ\" customer case study",
+          "\"AttackIQ\" deployment success story"
+        ],
+        "channel": [
+          "\"AttackIQ\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"AttackIQ\" \"SafeBreach\" comparison",
+          "\"AttackIQ\" \"Picus Security\" comparison",
+          "\"AttackIQ\" \"Cymulate\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Continuous control validation",
+          "CTEM"
+        ],
+        "Administración pública": [
+          "Continuous control validation",
+          "CTEM"
+        ],
+        "Industria y utilities": [
+          "Continuous control validation",
+          "CTEM"
+        ],
+        "Retail": [
+          "Continuous control validation",
+          "CTEM"
+        ]
+      }
     },
     "Certes Networks": {
       "name": "Certes Networks",
@@ -105,7 +225,68 @@
         "\"Certes Networks\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Protege los datos en movimiento sin tocar la red. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Certes Networks\" Gartner",
+          "\"Certes Networks\" Forrester",
+          "\"Certes Networks\" IDC MarketScape",
+          "\"Certes Networks\" Omdia",
+          "\"Certes Networks\" GigaOm",
+          "\"Certes Networks\" ISG",
+          "\"Certes Networks\" Canalys",
+          "\"Certes Networks\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Certes Networks\" competitive differentiation",
+          "\"Certes Networks\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Certes Networks\" customer case study",
+          "\"Certes Networks\" deployment success story"
+        ],
+        "channel": [
+          "\"Certes Networks\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Certes Networks\" \"MACsec/IPsec approaches\" comparison",
+          "\"Certes Networks\" \"Thales network encryption\" comparison",
+          "\"Certes Networks\" \"Atos/Eviden encryption\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Data-in-motion protection"
+        ],
+        "Administración pública": [
+          "Data-in-motion protection",
+          "Crypto segmentation"
+        ],
+        "Industria y utilities": [
+          "NIS2 / regulated networks",
+          "Data-in-motion protection",
+          "Cumple NIS2, GDPR e ISO 27001 sin rediseñar la red"
+        ],
+        "Retail": [
+          "Data-in-motion protection",
+          "Crypto segmentation"
+        ]
+      }
     },
     "Cisco": {
       "name": "Cisco",
@@ -144,7 +325,68 @@
         "\"Cisco\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Seguridad integrada para usuarios, red, identidad y aplicaciones. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Cisco\" Gartner",
+          "\"Cisco\" Forrester",
+          "\"Cisco\" IDC MarketScape",
+          "\"Cisco\" Omdia",
+          "\"Cisco\" GigaOm",
+          "\"Cisco\" ISG",
+          "\"Cisco\" Canalys",
+          "\"Cisco\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Cisco\" competitive differentiation",
+          "\"Cisco\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Cisco\" customer case study",
+          "\"Cisco\" deployment success story"
+        ],
+        "channel": [
+          "\"Cisco\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Cisco\" \"HPE Aruba Networking\" comparison",
+          "\"Cisco\" \"Juniper Networks\" comparison",
+          "\"Cisco\" \"Palo Alto Networks\" comparison",
+          "\"Cisco\" \"Fortinet\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Data centre networking"
+        ],
+        "Administración pública": [
+          "Secure Firewall y Secure Access refuerzan red, usuario y acceso remoto bajo un enfoque Zero Trust.",
+          "SASE / Zero Trust",
+          "Campus modernization"
+        ],
+        "Industria y utilities": [
+          "Secure Firewall y Secure Access refuerzan red, usuario y acceso remoto bajo un enfoque Zero Trust."
+        ],
+        "Retail": [
+          "Campus modernization",
+          "SASE / Zero Trust"
+        ]
+      }
     },
     "Claroty": {
       "name": "Claroty",
@@ -181,7 +423,69 @@
         "\"Claroty\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "El único proveedor con visibilidad total del Extended IoT. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Claroty\" Gartner",
+          "\"Claroty\" Forrester",
+          "\"Claroty\" IDC MarketScape",
+          "\"Claroty\" Omdia",
+          "\"Claroty\" GigaOm",
+          "\"Claroty\" ISG",
+          "\"Claroty\" Canalys",
+          "\"Claroty\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Claroty\" competitive differentiation",
+          "\"Claroty\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Claroty\" customer case study",
+          "\"Claroty\" deployment success story"
+        ],
+        "channel": [
+          "\"Claroty\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Claroty\" \"Nozomi Networks\" comparison",
+          "\"Claroty\" \"Dragos\" comparison",
+          "\"Claroty\" \"Armis\" comparison",
+          "\"Claroty\" \"Microsoft Defender for IoT\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "OT visibility",
+          "Secure remote access"
+        ],
+        "Administración pública": [
+          "Acceso remoto seguro Zero Trust para proveedores externos"
+        ],
+        "Industria y utilities": [
+          "Secure remote access",
+          "Reduce el riesgo operativo en plantas industriales hasta un 60%",
+          "OT visibility"
+        ],
+        "Retail": [
+          "OT visibility",
+          "Secure remote access"
+        ]
+      }
     },
     "CrowdStrike": {
       "name": "CrowdStrike",
@@ -218,7 +522,67 @@
         "\"CrowdStrike\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de autenticación y fricción",
+        "Integración con directorios y aplicaciones",
+        "Gobierno, políticas y trazabilidad",
+        "Resiliencia y escala de identidad",
+        "Cobertura del riesgo prioritario"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Prevención, detección y respuesta desde una única plataforma. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"CrowdStrike\" Gartner",
+          "\"CrowdStrike\" Forrester",
+          "\"CrowdStrike\" IDC MarketScape",
+          "\"CrowdStrike\" Omdia",
+          "\"CrowdStrike\" GigaOm",
+          "\"CrowdStrike\" ISG",
+          "\"CrowdStrike\" Canalys",
+          "\"CrowdStrike\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"CrowdStrike\" competitive differentiation",
+          "\"CrowdStrike\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"CrowdStrike\" customer case study",
+          "\"CrowdStrike\" deployment success story"
+        ],
+        "channel": [
+          "\"CrowdStrike\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"CrowdStrike\" \"Microsoft Defender\" comparison",
+          "\"CrowdStrike\" \"SentinelOne\" comparison",
+          "\"CrowdStrike\" \"Palo Alto Cortex\" comparison",
+          "\"CrowdStrike\" \"Trend Micro\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Identity protection"
+        ],
+        "Administración pública": [
+          "Identity protection"
+        ],
+        "Industria y utilities": [
+          "Servicios MDR/CrowdStrike Falcon Complete para máxima protección gestionada",
+          "Identity protection"
+        ],
+        "Retail": [
+          "EDR/XDR consolidation",
+          "MDR"
+        ]
+      }
     },
     "F5": {
       "name": "F5",
@@ -255,7 +619,70 @@
         "\"F5\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Protege y acelera cada aplicación, en cualquier entorno. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"F5\" Gartner",
+          "\"F5\" Forrester",
+          "\"F5\" IDC MarketScape",
+          "\"F5\" Omdia",
+          "\"F5\" GigaOm",
+          "\"F5\" ISG",
+          "\"F5\" Canalys",
+          "\"F5\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"F5\" competitive differentiation",
+          "\"F5\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"F5\" customer case study",
+          "\"F5\" deployment success story"
+        ],
+        "channel": [
+          "\"F5\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"F5\" \"Akamai\" comparison",
+          "\"F5\" \"Cloudflare\" comparison",
+          "\"F5\" \"Imperva / Thales\" comparison",
+          "\"F5\" \"Fortinet\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Reduce la superficie de ataque de APIs con protección automática",
+          "API protection"
+        ],
+        "Administración pública": [
+          "WAAP modernization",
+          "API protection"
+        ],
+        "Industria y utilities": [
+          "Reduce la superficie de ataque de APIs con protección automática",
+          "Mitiga ataques DDoS volumétricos de hasta 1 Tbps",
+          "Mejora el rendimiento de aplicaciones hasta un 40% con optimización global"
+        ],
+        "Retail": [
+          "Reduce la superficie de ataque de APIs con protección automática",
+          "API protection"
+        ]
+      }
     },
     "FireMon": {
       "name": "FireMon",
@@ -290,7 +717,66 @@
         "\"FireMon\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Controla, simplifica y automatiza tu postura de seguridad de red. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"FireMon\" Gartner",
+          "\"FireMon\" Forrester",
+          "\"FireMon\" IDC MarketScape",
+          "\"FireMon\" Omdia",
+          "\"FireMon\" GigaOm",
+          "\"FireMon\" ISG",
+          "\"FireMon\" Canalys",
+          "\"FireMon\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"FireMon\" competitive differentiation",
+          "\"FireMon\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"FireMon\" customer case study",
+          "\"FireMon\" deployment success story"
+        ],
+        "channel": [
+          "\"FireMon\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"FireMon\" \"Tufin\" comparison",
+          "\"FireMon\" \"AlgoSec\" comparison",
+          "\"FireMon\" \"Palo Alto Panorama policy workflows\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Compliance automation"
+        ],
+        "Administración pública": [
+          "Compliance automation"
+        ],
+        "Industria y utilities": [
+          "Reduce reglas duplicadas y permisos excesivos en hasta un 40%",
+          "Change management"
+        ],
+        "Retail": [
+          "Compliance automation",
+          "Automatiza auditorías de cumplimiento PCI-DSS, NIST, ISO 27001"
+        ]
+      }
     },
     "Fortanix": {
       "name": "Fortanix",
@@ -327,7 +813,67 @@
         "\"Fortanix\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Protege datos incluso cuando están en uso (Confidential Computing). La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Fortanix\" Gartner",
+          "\"Fortanix\" Forrester",
+          "\"Fortanix\" IDC MarketScape",
+          "\"Fortanix\" Omdia",
+          "\"Fortanix\" GigaOm",
+          "\"Fortanix\" ISG",
+          "\"Fortanix\" Canalys",
+          "\"Fortanix\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Fortanix\" competitive differentiation",
+          "\"Fortanix\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Fortanix\" customer case study",
+          "\"Fortanix\" deployment success story"
+        ],
+        "channel": [
+          "\"Fortanix\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Fortanix\" \"Thales CipherTrust\" comparison",
+          "\"Fortanix\" \"Entrust KeyControl/nShield\" comparison",
+          "\"Fortanix\" \"HashiCorp Vault\" comparison",
+          "\"Fortanix\" \"Cloud-native KMS\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Data sovereignty"
+        ],
+        "Administración pública": [
+          "Data sovereignty"
+        ],
+        "Industria y utilities": [
+          "Único enfoque de seguridad que protege datos en uso (no solo en reposo y en tránsito)",
+          "Habilita casos de uso de IA segura y análisis de datos privados"
+        ],
+        "Retail": [
+          "Key management",
+          "Tokenization"
+        ]
+      }
     },
     "Ivanti": {
       "name": "Ivanti",
@@ -364,7 +910,69 @@
         "\"Ivanti\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Gestiona, protege y automatiza cada endpoint con IA. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Ivanti\" Gartner",
+          "\"Ivanti\" Forrester",
+          "\"Ivanti\" IDC MarketScape",
+          "\"Ivanti\" Omdia",
+          "\"Ivanti\" GigaOm",
+          "\"Ivanti\" ISG",
+          "\"Ivanti\" Canalys",
+          "\"Ivanti\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Ivanti\" competitive differentiation",
+          "\"Ivanti\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Ivanti\" customer case study",
+          "\"Ivanti\" deployment success story"
+        ],
+        "channel": [
+          "\"Ivanti\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Ivanti\" \"Microsoft Intune\" comparison",
+          "\"Ivanti\" \"ServiceNow\" comparison",
+          "\"Ivanti\" \"ManageEngine\" comparison",
+          "\"Ivanti\" \"VMware Workspace ONE / Omnissa\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Endpoint management",
+          "Patch acceleration"
+        ],
+        "Administración pública": [
+          "Device risk / Zero Trust",
+          "Acceso Zero Trust adaptativo basado en riesgo del dispositivo"
+        ],
+        "Industria y utilities": [
+          "Gestión unificada de PCs, móviles, servidores e IoT desde un panel",
+          "Automatización inteligente que reduce la carga de TI hasta un 50%"
+        ],
+        "Retail": [
+          "Endpoint management",
+          "Patch acceleration"
+        ]
+      }
     },
     "LevelBlue": {
       "name": "LevelBlue",
@@ -401,7 +1009,68 @@
         "\"LevelBlue\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Tu SOC 24x7 sin el coste de construirlo. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"LevelBlue\" Gartner",
+          "\"LevelBlue\" Forrester",
+          "\"LevelBlue\" IDC MarketScape",
+          "\"LevelBlue\" Omdia",
+          "\"LevelBlue\" GigaOm",
+          "\"LevelBlue\" ISG",
+          "\"LevelBlue\" Canalys",
+          "\"LevelBlue\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"LevelBlue\" competitive differentiation",
+          "\"LevelBlue\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"LevelBlue\" customer case study",
+          "\"LevelBlue\" deployment success story"
+        ],
+        "channel": [
+          "\"LevelBlue\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"LevelBlue\" \"Orange Cyberdefense\" comparison",
+          "\"LevelBlue\" \"Telefonica Tech\" comparison",
+          "\"LevelBlue\" \"NTT DATA security services\" comparison",
+          "\"LevelBlue\" \"IBM Security services\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "SOC outsourcing",
+          "SOC 24x7x365 con MTTR <30 minutos para incidentes críticos"
+        ],
+        "Administración pública": [
+          "SOC outsourcing",
+          "MDR"
+        ],
+        "Industria y utilities": [
+          "Reduce el coste de seguridad hasta un 40% vs. equipo interno propio"
+        ],
+        "Retail": [
+          "SOC outsourcing",
+          "MDR"
+        ]
+      }
     },
     "Menlo Security": {
       "name": "Menlo Security",
@@ -438,7 +1107,69 @@
         "\"Menlo Security\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Aisla el riesgo del navegador: sin malware ni phishing. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Menlo Security\" Gartner",
+          "\"Menlo Security\" Forrester",
+          "\"Menlo Security\" IDC MarketScape",
+          "\"Menlo Security\" Omdia",
+          "\"Menlo Security\" GigaOm",
+          "\"Menlo Security\" ISG",
+          "\"Menlo Security\" Canalys",
+          "\"Menlo Security\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Menlo Security\" competitive differentiation",
+          "\"Menlo Security\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Menlo Security\" customer case study",
+          "\"Menlo Security\" deployment success story"
+        ],
+        "channel": [
+          "\"Menlo Security\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Menlo Security\" \"Island\" comparison",
+          "\"Menlo Security\" \"Palo Alto Prisma Access Browser\" comparison",
+          "\"Menlo Security\" \"Cloudflare Browser Isolation\" comparison",
+          "\"Menlo Security\" \"Zscaler browser isolation\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Browser security",
+          "Phishing resistance"
+        ],
+        "Administración pública": [
+          "Browser security",
+          "Phishing resistance"
+        ],
+        "Industria y utilities": [
+          "Sin agente en el endpoint: reducción de fricción para usuarios remotos",
+          "Protección contra ataques Highly Evasive Adaptive Threats (HEAT)"
+        ],
+        "Retail": [
+          "Browser security",
+          "Phishing resistance"
+        ]
+      }
     },
     "NETSCOUT": {
       "name": "NETSCOUT",
@@ -475,7 +1206,69 @@
         "\"NETSCOUT\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Visibilidad total de la red: detecta lo que los demás no ven. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"NETSCOUT\" Gartner",
+          "\"NETSCOUT\" Forrester",
+          "\"NETSCOUT\" IDC MarketScape",
+          "\"NETSCOUT\" Omdia",
+          "\"NETSCOUT\" GigaOm",
+          "\"NETSCOUT\" ISG",
+          "\"NETSCOUT\" Canalys",
+          "\"NETSCOUT\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"NETSCOUT\" competitive differentiation",
+          "\"NETSCOUT\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"NETSCOUT\" customer case study",
+          "\"NETSCOUT\" deployment success story"
+        ],
+        "channel": [
+          "\"NETSCOUT\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"NETSCOUT\" \"Arbor alternatives / Radware\" comparison",
+          "\"NETSCOUT\" \"Darktrace\" comparison",
+          "\"NETSCOUT\" \"Vectra AI\" comparison",
+          "\"NETSCOUT\" \"ExtraHop\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "DDoS protection",
+          "Network observability"
+        ],
+        "Administración pública": [
+          "Investigación forense con contexto histórico de hasta 12 meses"
+        ],
+        "Industria y utilities": [
+          "Protege tanto la infraestructura como la experiencia de servicio",
+          "Investigación forense con contexto histórico de hasta 12 meses",
+          "DDoS protection"
+        ],
+        "Retail": [
+          "DDoS protection",
+          "Network observability"
+        ]
+      }
     },
     "Noname / Akamai API Security": {
       "name": "Noname / Akamai API Security",
@@ -512,7 +1305,72 @@
         "\"Noname / Akamai API Security\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Descubre, protege y prueba cada API de tu organización. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Noname / Akamai API Security\" Gartner",
+          "\"Noname / Akamai API Security\" Forrester",
+          "\"Noname / Akamai API Security\" IDC MarketScape",
+          "\"Noname / Akamai API Security\" Omdia",
+          "\"Noname / Akamai API Security\" GigaOm",
+          "\"Noname / Akamai API Security\" ISG",
+          "\"Noname / Akamai API Security\" Canalys",
+          "\"Noname / Akamai API Security\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Noname / Akamai API Security\" competitive differentiation",
+          "\"Noname / Akamai API Security\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Noname / Akamai API Security\" customer case study",
+          "\"Noname / Akamai API Security\" deployment success story"
+        ],
+        "channel": [
+          "\"Noname / Akamai API Security\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Noname / Akamai API Security\" \"Salt Security\" comparison",
+          "\"Noname / Akamai API Security\" \"Cequence\" comparison",
+          "\"Noname / Akamai API Security\" \"Traceable AI\" comparison",
+          "\"Noname / Akamai API Security\" \"42Crunch\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Runtime API protection",
+          "Pruebas de seguridad de APIs integradas en el pipeline de CI/CD",
+          "Protección runtime contra OWASP API Top 10 en tiempo real"
+        ],
+        "Administración pública": [
+          "API discovery",
+          "Runtime API protection"
+        ],
+        "Industria y utilities": [
+          "Runtime API protection",
+          "Protección runtime contra OWASP API Top 10 en tiempo real",
+          "Descubre APIs shadow y zombies que nadie sabe que existen"
+        ],
+        "Retail": [
+          "Runtime API protection",
+          "Pruebas de seguridad de APIs integradas en el pipeline de CI/CD",
+          "Protección runtime contra OWASP API Top 10 en tiempo real"
+        ]
+      }
     },
     "Okta": {
       "name": "Okta",
@@ -549,7 +1407,67 @@
         "\"Okta\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de autenticación y fricción",
+        "Integración con directorios y aplicaciones",
+        "Gobierno, políticas y trazabilidad",
+        "Resiliencia y escala de identidad",
+        "Cobertura del riesgo prioritario"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La identidad es el nuevo perímetro: protégela con liderazgo. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Okta\" Gartner",
+          "\"Okta\" Forrester",
+          "\"Okta\" IDC MarketScape",
+          "\"Okta\" Omdia",
+          "\"Okta\" GigaOm",
+          "\"Okta\" ISG",
+          "\"Okta\" Canalys",
+          "\"Okta\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Okta\" competitive differentiation",
+          "\"Okta\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Okta\" customer case study",
+          "\"Okta\" deployment success story"
+        ],
+        "channel": [
+          "\"Okta\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Okta\" \"Microsoft Entra ID\" comparison",
+          "\"Okta\" \"Ping Identity\" comparison",
+          "\"Okta\" \"CyberArk Identity\" comparison",
+          "\"Okta\" \"ForgeRock / Ping\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Identity lifecycle"
+        ],
+        "Administración pública": [
+          "Identity lifecycle",
+          "Habilitación de Zero Trust sin fricción para usuarios y partners externos"
+        ],
+        "Industria y utilities": [
+          "Habilitación de Zero Trust sin fricción para usuarios y partners externos"
+        ],
+        "Retail": [
+          "Workforce IAM",
+          "CIAM"
+        ]
+      }
     },
     "Palo Alto Networks": {
       "name": "Palo Alto Networks",
@@ -588,7 +1506,67 @@
         "\"Palo Alto Networks\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La plataforma de seguridad más completa y consolidada del mercado. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Palo Alto Networks\" Gartner",
+          "\"Palo Alto Networks\" Forrester",
+          "\"Palo Alto Networks\" IDC MarketScape",
+          "\"Palo Alto Networks\" Omdia",
+          "\"Palo Alto Networks\" GigaOm",
+          "\"Palo Alto Networks\" ISG",
+          "\"Palo Alto Networks\" Canalys",
+          "\"Palo Alto Networks\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Palo Alto Networks\" competitive differentiation",
+          "\"Palo Alto Networks\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Palo Alto Networks\" customer case study",
+          "\"Palo Alto Networks\" deployment success story"
+        ],
+        "channel": [
+          "\"Palo Alto Networks\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Palo Alto Networks\" \"Fortinet\" comparison",
+          "\"Palo Alto Networks\" \"Cisco\" comparison",
+          "\"Palo Alto Networks\" \"Check Point\" comparison",
+          "\"Palo Alto Networks\" \"CrowdStrike\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "SOC modernization"
+        ],
+        "Administración pública": [
+          "Platform consolidation",
+          "NGFW"
+        ],
+        "Industria y utilities": [
+          "Consolidación de herramientas: reduce el stack de seguridad hasta un 50%"
+        ],
+        "Retail": [
+          "Platform consolidation",
+          "NGFW"
+        ]
+      }
     },
     "Ping Identity": {
       "name": "Ping Identity",
@@ -625,7 +1603,67 @@
         "\"Ping Identity\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de autenticación y fricción",
+        "Integración con directorios y aplicaciones",
+        "Gobierno, políticas y trazabilidad",
+        "Resiliencia y escala de identidad",
+        "Cobertura del riesgo prioritario"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Identidad robusta para las empresas más exigentes. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Ping Identity\" Gartner",
+          "\"Ping Identity\" Forrester",
+          "\"Ping Identity\" IDC MarketScape",
+          "\"Ping Identity\" Omdia",
+          "\"Ping Identity\" GigaOm",
+          "\"Ping Identity\" ISG",
+          "\"Ping Identity\" Canalys",
+          "\"Ping Identity\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Ping Identity\" competitive differentiation",
+          "\"Ping Identity\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Ping Identity\" customer case study",
+          "\"Ping Identity\" deployment success story"
+        ],
+        "channel": [
+          "\"Ping Identity\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Ping Identity\" \"Okta\" comparison",
+          "\"Ping Identity\" \"Microsoft Entra ID\" comparison",
+          "\"Ping Identity\" \"CyberArk Identity\" comparison",
+          "\"Ping Identity\" \"IBM Verify\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Identity orchestration",
+          "API access"
+        ],
+        "Administración pública": [
+          "Identity orchestration"
+        ],
+        "Industria y utilities": [
+          "Complex hybrid IAM",
+          "CIAM"
+        ],
+        "Retail": [
+          "API access"
+        ]
+      }
     },
     "Proofpoint": {
       "name": "Proofpoint",
@@ -662,7 +1700,68 @@
         "\"Proofpoint\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "El 90% de los ataques comienza por el email — protege ese vector. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Proofpoint\" Gartner",
+          "\"Proofpoint\" Forrester",
+          "\"Proofpoint\" IDC MarketScape",
+          "\"Proofpoint\" Omdia",
+          "\"Proofpoint\" GigaOm",
+          "\"Proofpoint\" ISG",
+          "\"Proofpoint\" Canalys",
+          "\"Proofpoint\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Proofpoint\" competitive differentiation",
+          "\"Proofpoint\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Proofpoint\" customer case study",
+          "\"Proofpoint\" deployment success story"
+        ],
+        "channel": [
+          "\"Proofpoint\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Proofpoint\" \"Microsoft Defender for Office 365\" comparison",
+          "\"Proofpoint\" \"Mimecast\" comparison",
+          "\"Proofpoint\" \"Abnormal Security\" comparison",
+          "\"Proofpoint\" \"Netskope DLP\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Email protection",
+          "Human risk"
+        ],
+        "Administración pública": [
+          "Email protection",
+          "Human risk"
+        ],
+        "Industria y utilities": [
+          "Email protection"
+        ],
+        "Retail": [
+          "Email protection",
+          "Human risk"
+        ]
+      }
     },
     "Vectra AI": {
       "name": "Vectra AI",
@@ -699,7 +1798,67 @@
         "\"Vectra AI\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de autenticación y fricción",
+        "Integración con directorios y aplicaciones",
+        "Gobierno, políticas y trazabilidad",
+        "Resiliencia y escala de identidad",
+        "Cobertura del riesgo prioritario"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "IA que ve lo que los analistas humanos no pueden ver. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Vectra AI\" Gartner",
+          "\"Vectra AI\" Forrester",
+          "\"Vectra AI\" IDC MarketScape",
+          "\"Vectra AI\" Omdia",
+          "\"Vectra AI\" GigaOm",
+          "\"Vectra AI\" ISG",
+          "\"Vectra AI\" Canalys",
+          "\"Vectra AI\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Vectra AI\" competitive differentiation",
+          "\"Vectra AI\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Vectra AI\" customer case study",
+          "\"Vectra AI\" deployment success story"
+        ],
+        "channel": [
+          "\"Vectra AI\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Vectra AI\" \"Darktrace\" comparison",
+          "\"Vectra AI\" \"ExtraHop\" comparison",
+          "\"Vectra AI\" \"NETSCOUT\" comparison",
+          "\"Vectra AI\" \"Cisco Secure Network Analytics\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "SOC signal prioritization",
+          "Identity attack detection"
+        ],
+        "Administración pública": [
+          "Identity attack detection"
+        ],
+        "Industria y utilities": [
+          "Reduce el ruido de alertas hasta un 90%: solo investigas lo que importa"
+        ],
+        "Retail": [
+          "NDR",
+          "Identity attack detection"
+        ]
+      }
     },
     "XM Cyber": {
       "name": "XM Cyber",
@@ -736,7 +1895,68 @@
         "\"XM Cyber\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Conoce el camino del atacante antes de que él lo recorra. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"XM Cyber\" Gartner",
+          "\"XM Cyber\" Forrester",
+          "\"XM Cyber\" IDC MarketScape",
+          "\"XM Cyber\" Omdia",
+          "\"XM Cyber\" GigaOm",
+          "\"XM Cyber\" ISG",
+          "\"XM Cyber\" Canalys",
+          "\"XM Cyber\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"XM Cyber\" competitive differentiation",
+          "\"XM Cyber\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"XM Cyber\" customer case study",
+          "\"XM Cyber\" deployment success story"
+        ],
+        "channel": [
+          "\"XM Cyber\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"XM Cyber\" \"Wiz exposure management\" comparison",
+          "\"XM Cyber\" \"Tenable ExposureAI\" comparison",
+          "\"XM Cyber\" \"Rapid7 exposure management\" comparison",
+          "\"XM Cyber\" \"AttackIQ / BAS\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Attack path management",
+          "CTEM"
+        ],
+        "Administración pública": [
+          "Attack path management",
+          "CTEM"
+        ],
+        "Industria y utilities": [
+          "Visualiza los attack paths antes de que los atacantes los exploten"
+        ],
+        "Retail": [
+          "Attack path management",
+          "CTEM"
+        ]
+      }
     },
     "Zscaler": {
       "name": "Zscaler",
@@ -773,7 +1993,68 @@
         "\"Zscaler\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Conecta usuarios y apps sin exponer la red corporativa. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Zscaler\" Gartner",
+          "\"Zscaler\" Forrester",
+          "\"Zscaler\" IDC MarketScape",
+          "\"Zscaler\" Omdia",
+          "\"Zscaler\" GigaOm",
+          "\"Zscaler\" ISG",
+          "\"Zscaler\" Canalys",
+          "\"Zscaler\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Zscaler\" competitive differentiation",
+          "\"Zscaler\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Zscaler\" customer case study",
+          "\"Zscaler\" deployment success story"
+        ],
+        "channel": [
+          "\"Zscaler\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Zscaler\" \"Netskope\" comparison",
+          "\"Zscaler\" \"Palo Alto Prisma Access\" comparison",
+          "\"Zscaler\" \"Cisco Secure Access\" comparison",
+          "\"Zscaler\" \"Cloudflare One\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "DLP / data protection"
+        ],
+        "Administración pública": [
+          "VPN replacement",
+          "SSE"
+        ],
+        "Industria y utilities": [
+          "Reducción del 85% en incidentes de seguridad relacionados con acceso remoto",
+          "DLP / data protection"
+        ],
+        "Retail": [
+          "VPN replacement",
+          "SSE"
+        ]
+      }
     },
     "1Password": {
       "name": "1Password",
@@ -810,7 +2091,67 @@
         "\"1Password\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de autenticación y fricción",
+        "Integración con directorios y aplicaciones",
+        "Gobierno, políticas y trazabilidad",
+        "Resiliencia y escala de identidad",
+        "Cobertura del riesgo prioritario"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Contraseñas y secretos bajo control: el primer paso del Zero Trust. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"1Password\" Gartner",
+          "\"1Password\" Forrester",
+          "\"1Password\" IDC MarketScape",
+          "\"1Password\" Omdia",
+          "\"1Password\" GigaOm",
+          "\"1Password\" ISG",
+          "\"1Password\" Canalys",
+          "\"1Password\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"1Password\" competitive differentiation",
+          "\"1Password\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"1Password\" customer case study",
+          "\"1Password\" deployment success story"
+        ],
+        "channel": [
+          "\"1Password\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"1Password\" \"Bitwarden\" comparison",
+          "\"1Password\" \"Keeper\" comparison",
+          "\"1Password\" \"Dashlane\" comparison",
+          "\"1Password\" \"CyberArk\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Enterprise password management",
+          "Developer secrets"
+        ],
+        "Administración pública": [
+          "Enterprise password management",
+          "Developer secrets"
+        ],
+        "Industria y utilities": [
+          "Shadow IT visibility"
+        ],
+        "Retail": [
+          "Adopción de >100,000 empresas: el estándar de facto en gestión de passwords"
+        ]
+      }
     },
     "Ciena": {
       "name": "Ciena",
@@ -847,7 +2188,67 @@
         "\"Ciena\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La fibra óptica que mueve el mundo digital. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Ciena\" Gartner",
+          "\"Ciena\" Forrester",
+          "\"Ciena\" IDC MarketScape",
+          "\"Ciena\" Omdia",
+          "\"Ciena\" GigaOm",
+          "\"Ciena\" ISG",
+          "\"Ciena\" Canalys",
+          "\"Ciena\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Ciena\" competitive differentiation",
+          "\"Ciena\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Ciena\" customer case study",
+          "\"Ciena\" deployment success story"
+        ],
+        "channel": [
+          "\"Ciena\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Ciena\" \"Nokia\" comparison",
+          "\"Ciena\" \"Cisco optical\" comparison",
+          "\"Ciena\" \"Huawei optical\" comparison",
+          "\"Ciena\" \"Infinera / Nokia\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Transport automation",
+          "DCI"
+        ],
+        "Administración pública": [
+          "Transport automation"
+        ],
+        "Industria y utilities": [
+          "Reduce el coste por bit de transporte hasta un 50% vs generación anterior",
+          "Transport automation"
+        ],
+        "Retail": [
+          "Transport automation"
+        ]
+      }
     },
     "EfficientIP": {
       "name": "EfficientIP",
@@ -883,7 +2284,68 @@
         "\"EfficientIP\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoV con escenarios de riesgo, cobertura y tiempo de respuesta",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La base invisible de toda red: protégela y automatízala. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"EfficientIP\" Gartner",
+          "\"EfficientIP\" Forrester",
+          "\"EfficientIP\" IDC MarketScape",
+          "\"EfficientIP\" Omdia",
+          "\"EfficientIP\" GigaOm",
+          "\"EfficientIP\" ISG",
+          "\"EfficientIP\" Canalys",
+          "\"EfficientIP\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"EfficientIP\" competitive differentiation",
+          "\"EfficientIP\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"EfficientIP\" customer case study",
+          "\"EfficientIP\" deployment success story"
+        ],
+        "channel": [
+          "\"EfficientIP\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"EfficientIP\" \"Infoblox\" comparison",
+          "\"EfficientIP\" \"BlueCat\" comparison",
+          "\"EfficientIP\" \"Men&Mice / Micetro\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "IPAM automation",
+          "Cloud network automation"
+        ],
+        "Administración pública": [
+          "IPAM automation",
+          "DDI modernization",
+          "Cloud network automation"
+        ],
+        "Industria y utilities": [
+          "Reduce el tiempo de resolución de incidentes de red hasta un 60%"
+        ],
+        "Retail": [
+          "IPAM automation",
+          "Cloud network automation"
+        ]
+      }
     },
     "Ericsson": {
       "name": "Ericsson",
@@ -920,7 +2382,68 @@
         "\"Ericsson\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Conectividad 5G empresarial: el futuro de la WAN ya está aquí. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Ericsson\" Gartner",
+          "\"Ericsson\" Forrester",
+          "\"Ericsson\" IDC MarketScape",
+          "\"Ericsson\" Omdia",
+          "\"Ericsson\" GigaOm",
+          "\"Ericsson\" ISG",
+          "\"Ericsson\" Canalys",
+          "\"Ericsson\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Ericsson\" competitive differentiation",
+          "\"Ericsson\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Ericsson\" customer case study",
+          "\"Ericsson\" deployment success story"
+        ],
+        "channel": [
+          "\"Ericsson\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Ericsson\" \"Cisco / Meraki cellular\" comparison",
+          "\"Ericsson\" \"Nokia private wireless\" comparison",
+          "\"Ericsson\" \"HPE Aruba private 5G\" comparison",
+          "\"Ericsson\" \"Peplink\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "5G failover",
+          "Private cellular"
+        ],
+        "Administración pública": [
+          "5G failover",
+          "Private cellular"
+        ],
+        "Industria y utilities": [
+          "Ideal para retail, transporte, industria y ONG: conecta cualquier ubicación"
+        ],
+        "Retail": [
+          "5G failover",
+          "Private cellular"
+        ]
+      }
     },
     "Extreme Networks": {
       "name": "Extreme Networks",
@@ -957,7 +2480,68 @@
         "\"Extreme Networks\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Redes que se gestionan solas gracias a la IA. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Extreme Networks\" Gartner",
+          "\"Extreme Networks\" Forrester",
+          "\"Extreme Networks\" IDC MarketScape",
+          "\"Extreme Networks\" Omdia",
+          "\"Extreme Networks\" GigaOm",
+          "\"Extreme Networks\" ISG",
+          "\"Extreme Networks\" Canalys",
+          "\"Extreme Networks\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Extreme Networks\" competitive differentiation",
+          "\"Extreme Networks\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Extreme Networks\" customer case study",
+          "\"Extreme Networks\" deployment success story"
+        ],
+        "channel": [
+          "\"Extreme Networks\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Extreme Networks\" \"Cisco\" comparison",
+          "\"Extreme Networks\" \"HPE Aruba Networking\" comparison",
+          "\"Extreme Networks\" \"Juniper Mist\" comparison",
+          "\"Extreme Networks\" \"Ruckus Networks\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Campus modernization",
+          "Wi-Fi refresh"
+        ],
+        "Administración pública": [
+          "Campus modernization"
+        ],
+        "Industria y utilities": [
+          "Campus modernization",
+          "Wi-Fi refresh"
+        ],
+        "Retail": [
+          "Wi-Fi refresh",
+          "Portfolio completo: switching, routing, Wi-Fi y NAC integrados"
+        ]
+      }
     },
     "Juniper Networks": {
       "name": "Juniper Networks",
@@ -994,7 +2578,66 @@
         "\"Juniper Networks\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La primera red verdaderamente autónoma gracias a Mist AI. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Juniper Networks\" Gartner",
+          "\"Juniper Networks\" Forrester",
+          "\"Juniper Networks\" IDC MarketScape",
+          "\"Juniper Networks\" Omdia",
+          "\"Juniper Networks\" GigaOm",
+          "\"Juniper Networks\" ISG",
+          "\"Juniper Networks\" Canalys",
+          "\"Juniper Networks\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Juniper Networks\" competitive differentiation",
+          "\"Juniper Networks\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Juniper Networks\" customer case study",
+          "\"Juniper Networks\" deployment success story"
+        ],
+        "channel": [
+          "\"Juniper Networks\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Juniper Networks\" \"Cisco\" comparison",
+          "\"Juniper Networks\" \"HPE Aruba Networking\" comparison",
+          "\"Juniper Networks\" \"Arista Networks\" comparison",
+          "\"Juniper Networks\" \"Extreme Networks\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Data centre fabric"
+        ],
+        "Administración pública": [
+          "Mist AI campus"
+        ],
+        "Industria y utilities": [
+          "Mist AI reduce los tickets de soporte de red hasta un 90%"
+        ],
+        "Retail": [
+          "Mist AI campus",
+          "Data centre fabric"
+        ]
+      }
     },
     "Nokia": {
       "name": "Nokia",
@@ -1031,7 +2674,65 @@
         "\"Nokia\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Infraestructura de red para los operadores más exigentes del mundo. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Nokia\" Gartner",
+          "\"Nokia\" Forrester",
+          "\"Nokia\" IDC MarketScape",
+          "\"Nokia\" Omdia",
+          "\"Nokia\" GigaOm",
+          "\"Nokia\" ISG",
+          "\"Nokia\" Canalys",
+          "\"Nokia\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Nokia\" competitive differentiation",
+          "\"Nokia\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Nokia\" customer case study",
+          "\"Nokia\" deployment success story"
+        ],
+        "channel": [
+          "\"Nokia\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Nokia\" \"Cisco\" comparison",
+          "\"Nokia\" \"Juniper Networks\" comparison",
+          "\"Nokia\" \"Ciena\" comparison",
+          "\"Nokia\" \"Huawei\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Network automation"
+        ],
+        "Administración pública": [
+          "Network automation"
+        ],
+        "Industria y utilities": [
+          "Optical transport"
+        ],
+        "Retail": [
+          "Network automation"
+        ]
+      }
     },
     "Ruckus Networks": {
       "name": "Ruckus Networks",
@@ -1068,7 +2769,68 @@
         "\"Ruckus Networks\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, disponibilidad y operación",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Wi-Fi que funciona donde otros fallan: entornos densos y críticos. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Ruckus Networks\" Gartner",
+          "\"Ruckus Networks\" Forrester",
+          "\"Ruckus Networks\" IDC MarketScape",
+          "\"Ruckus Networks\" Omdia",
+          "\"Ruckus Networks\" GigaOm",
+          "\"Ruckus Networks\" ISG",
+          "\"Ruckus Networks\" Canalys",
+          "\"Ruckus Networks\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Ruckus Networks\" competitive differentiation",
+          "\"Ruckus Networks\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Ruckus Networks\" customer case study",
+          "\"Ruckus Networks\" deployment success story"
+        ],
+        "channel": [
+          "\"Ruckus Networks\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Ruckus Networks\" \"Cisco / Meraki\" comparison",
+          "\"Ruckus Networks\" \"HPE Aruba Networking\" comparison",
+          "\"Ruckus Networks\" \"Extreme Networks\" comparison",
+          "\"Ruckus Networks\" \"Juniper Mist\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "High-density Wi-Fi",
+          "Hospitality"
+        ],
+        "Administración pública": [
+          "Venue / campus",
+          "High-density Wi-Fi"
+        ],
+        "Industria y utilities": [
+          "ChannelFly: selección dinámica de canal para máximo throughput sin interferencias"
+        ],
+        "Retail": [
+          "High-density Wi-Fi",
+          "BeamFlex: antenas adaptativas que mejoran la señal >40% vs Wi-Fi estándar"
+        ]
+      }
     },
     "Weblib": {
       "name": "Weblib",
@@ -1105,7 +2867,68 @@
         "\"Weblib\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia y disponibilidad de servicio",
+        "Automatización y simplicidad operativa",
+        "Escalabilidad y arquitectura",
+        "Integración con red existente",
+        "Coste total y lifecycle"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Convierte tu Wi-Fi en una herramienta de negocio y experiencia de cliente. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Weblib\" Gartner",
+          "\"Weblib\" Forrester",
+          "\"Weblib\" IDC MarketScape",
+          "\"Weblib\" Omdia",
+          "\"Weblib\" GigaOm",
+          "\"Weblib\" ISG",
+          "\"Weblib\" Canalys",
+          "\"Weblib\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Weblib\" competitive differentiation",
+          "\"Weblib\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Weblib\" customer case study",
+          "\"Weblib\" deployment success story"
+        ],
+        "channel": [
+          "\"Weblib\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Weblib\" \"Purple\" comparison",
+          "\"Weblib\" \"Cloud4Wi\" comparison",
+          "\"Weblib\" \"Cisco Spaces\" comparison",
+          "\"Weblib\" \"Aislelabs\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Integración con CRM y plataformas de marketing automation"
+        ],
+        "Administración pública": [
+          "Integración con CRM y plataformas de marketing automation"
+        ],
+        "Industria y utilities": [
+          "Captive portal",
+          "Guest Wi-Fi analytics"
+        ],
+        "Retail": [
+          "Transforma el Wi-Fi gratuito en un canal de marketing y datos de cliente",
+          "Integración con CRM y plataformas de marketing automation",
+          "Guest Wi-Fi analytics"
+        ]
+      }
     },
     "AudioCodes": {
       "name": "AudioCodes",
@@ -1142,7 +2965,68 @@
         "\"AudioCodes\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de usuario y agente",
+        "Integración con telefonía y aplicaciones",
+        "Calidad, resiliencia y operación",
+        "Migración por fases",
+        "Analítica y automatización"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, resolución y calidad",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La voz empresarial en la era de Microsoft Teams. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"AudioCodes\" Gartner",
+          "\"AudioCodes\" Forrester",
+          "\"AudioCodes\" IDC MarketScape",
+          "\"AudioCodes\" Omdia",
+          "\"AudioCodes\" GigaOm",
+          "\"AudioCodes\" ISG",
+          "\"AudioCodes\" Canalys",
+          "\"AudioCodes\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"AudioCodes\" competitive differentiation",
+          "\"AudioCodes\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"AudioCodes\" customer case study",
+          "\"AudioCodes\" deployment success story"
+        ],
+        "channel": [
+          "\"AudioCodes\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"AudioCodes\" \"Ribbon Communications\" comparison",
+          "\"AudioCodes\" \"Cisco voice gateways\" comparison",
+          "\"AudioCodes\" \"Oracle SBC\" comparison",
+          "\"AudioCodes\" \"Microsoft-native options\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Contact center voice"
+        ],
+        "Administración pública": [
+          "Teams voice",
+          "SBC"
+        ],
+        "Industria y utilities": [
+          "Reduce el coste de telefonía corporativa hasta un 60% con VoIP cloud",
+          "Direct Routing simplificado: lleva la PSTN a Teams con control total"
+        ],
+        "Retail": [
+          "Teams voice",
+          "SBC"
+        ]
+      }
     },
     "Avaya": {
       "name": "Avaya",
@@ -1179,7 +3063,68 @@
         "\"Avaya\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de usuario y agente",
+        "Integración con telefonía y aplicaciones",
+        "Calidad, resiliencia y operación",
+        "Migración por fases",
+        "Analítica y automatización"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, resolución y calidad",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "La experiencia del cliente omnicanal que fideliza y diferencia. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Avaya\" Gartner",
+          "\"Avaya\" Forrester",
+          "\"Avaya\" IDC MarketScape",
+          "\"Avaya\" Omdia",
+          "\"Avaya\" GigaOm",
+          "\"Avaya\" ISG",
+          "\"Avaya\" Canalys",
+          "\"Avaya\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Avaya\" competitive differentiation",
+          "\"Avaya\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Avaya\" customer case study",
+          "\"Avaya\" deployment success story"
+        ],
+        "channel": [
+          "\"Avaya\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Avaya\" \"Genesys\" comparison",
+          "\"Avaya\" \"Cisco Webex Contact Center\" comparison",
+          "\"Avaya\" \"NICE CXone\" comparison",
+          "\"Avaya\" \"Five9\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Contact center modernization",
+          "CCaaS líder: gestión de interacciones en voz, email, chat, WhatsApp y redes sociales"
+        ],
+        "Administración pública": [
+          "Contact center modernization",
+          "Omnichannel CX"
+        ],
+        "Industria y utilities": [
+          "Omnichannel CX",
+          "CCaaS líder: gestión de interacciones en voz, email, chat, WhatsApp y redes sociales"
+        ],
+        "Retail": [
+          "Omnichannel CX"
+        ]
+      }
     },
     "AWS": {
       "name": "AWS",
@@ -1215,7 +3160,68 @@
         "\"AWS\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Arquitectura y portabilidad",
+        "Gobierno, seguridad y control de coste",
+        "Servicios gestionados e integración",
+        "Escalabilidad y resiliencia",
+        "Time-to-value"
+      ],
+      "proofThemes": [
+        "Piloto con KPI de experiencia, resolución y calidad",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Infraestructura cloud, servicios gestionados y marketplace. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"AWS\" Gartner",
+          "\"AWS\" Forrester",
+          "\"AWS\" IDC MarketScape",
+          "\"AWS\" Omdia",
+          "\"AWS\" GigaOm",
+          "\"AWS\" ISG",
+          "\"AWS\" Canalys",
+          "\"AWS\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"AWS\" competitive differentiation",
+          "\"AWS\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"AWS\" customer case study",
+          "\"AWS\" deployment success story"
+        ],
+        "channel": [
+          "\"AWS\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"AWS\" \"Microsoft Azure\" comparison",
+          "\"AWS\" \"Google Cloud\" comparison",
+          "\"AWS\" \"Oracle Cloud\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Resilience",
+          "Data platforms"
+        ],
+        "Administración pública": [
+          "Cloud modernization",
+          "Data platforms"
+        ],
+        "Industria y utilities": [
+          "Cloud modernization",
+          "Data platforms"
+        ],
+        "Retail": [
+          "Cloud modernization",
+          "Data platforms"
+        ]
+      }
     },
     "Microsoft": {
       "name": "Microsoft",
@@ -1252,7 +3258,68 @@
         "\"Microsoft\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Cobertura del riesgo prioritario",
+        "Precisión y reducción de ruido operativo",
+        "Integración con el stack de seguridad",
+        "Tiempo de despliegue y operación",
+        "Evidencia y trazabilidad"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Azure con Westcon Comstor: soporte, enablement y margen adicional. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Microsoft\" Gartner",
+          "\"Microsoft\" Forrester",
+          "\"Microsoft\" IDC MarketScape",
+          "\"Microsoft\" Omdia",
+          "\"Microsoft\" GigaOm",
+          "\"Microsoft\" ISG",
+          "\"Microsoft\" Canalys",
+          "\"Microsoft\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Microsoft\" competitive differentiation",
+          "\"Microsoft\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Microsoft\" customer case study",
+          "\"Microsoft\" deployment success story"
+        ],
+        "channel": [
+          "\"Microsoft\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Microsoft\" \"AWS\" comparison",
+          "\"Microsoft\" \"Google Cloud\" comparison",
+          "\"Microsoft\" \"Cisco collaboration\" comparison",
+          "\"Microsoft\" \"Salesforce in selected workloads\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Incentivos exclusivos para socios a través de Westcon Comstor: margen adicional garantizado",
+          "Data & AI"
+        ],
+        "Administración pública": [
+          "Licensing optimizado: reduce el coste de Azure con Microsoft EA/CSP gestionado"
+        ],
+        "Industria y utilities": [
+          "Azure modernization",
+          "Data & AI"
+        ],
+        "Retail": [
+          "Azure modernization",
+          "Data & AI"
+        ]
+      }
     },
     "Penguin Solutions": {
       "name": "Penguin Solutions",
@@ -1289,7 +3356,70 @@
         "\"Penguin Solutions\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Experiencia de usuario y agente",
+        "Integración con telefonía y aplicaciones",
+        "Calidad, resiliencia y operación",
+        "Migración por fases",
+        "Analítica y automatización"
+      ],
+      "proofThemes": [
+        "PoC/PoV con KPI acordados",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Cuando el tiempo de inactividad no es una opción. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"Penguin Solutions\" Gartner",
+          "\"Penguin Solutions\" Forrester",
+          "\"Penguin Solutions\" IDC MarketScape",
+          "\"Penguin Solutions\" Omdia",
+          "\"Penguin Solutions\" GigaOm",
+          "\"Penguin Solutions\" ISG",
+          "\"Penguin Solutions\" Canalys",
+          "\"Penguin Solutions\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"Penguin Solutions\" competitive differentiation",
+          "\"Penguin Solutions\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"Penguin Solutions\" customer case study",
+          "\"Penguin Solutions\" deployment success story"
+        ],
+        "channel": [
+          "\"Penguin Solutions\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"Penguin Solutions\" \"Stratus alternatives\" comparison",
+          "\"Penguin Solutions\" \"HPE edge\" comparison",
+          "\"Penguin Solutions\" \"Dell edge\" comparison",
+          "\"Penguin Solutions\" \"Lenovo edge\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Fault-tolerant edge",
+          "Industrial HA"
+        ],
+        "Administración pública": [
+          "Fault-tolerant edge",
+          "Industrial HA"
+        ],
+        "Industria y utilities": [
+          "Infraestructura AI-ready para inferencia en el edge con baja latencia",
+          "Industrial HA",
+          "Fault-tolerant edge"
+        ],
+        "Retail": [
+          "Fault-tolerant edge",
+          "Industrial HA"
+        ]
+      }
     },
     "UiPath": {
       "name": "UiPath",
@@ -1326,7 +3456,72 @@
         "\"UiPath\" GigaOm"
       ],
       "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal"
+      "sourceConfidence": "approved/internal",
+      "decisionCriteria": [
+        "Tiempo de implantación",
+        "Cobertura de procesos y aplicaciones",
+        "Gobierno y operación de automatizaciones",
+        "Medición de ahorro y calidad",
+        "Escalabilidad"
+      ],
+      "proofThemes": [
+        "Piloto antes/después con tiempo, error y coste del proceso",
+        "Integración con el stack real del partner/cliente",
+        "Referencia pública comparable",
+        "Operación y lifecycle medidos",
+        "Escalabilidad y coste total"
+      ],
+      "positioningFrame": "Automatiza lo repetitivo, libera el talento humano para lo que importa. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
+      "researchPlan": {
+        "analysts": [
+          "\"UiPath\" Gartner",
+          "\"UiPath\" Forrester",
+          "\"UiPath\" IDC MarketScape",
+          "\"UiPath\" Omdia",
+          "\"UiPath\" GigaOm",
+          "\"UiPath\" ISG",
+          "\"UiPath\" Canalys",
+          "\"UiPath\" KuppingerCole"
+        ],
+        "differentiation": [
+          "\"UiPath\" competitive differentiation",
+          "\"UiPath\" architecture benchmark integration"
+        ],
+        "customers": [
+          "\"UiPath\" customer case study",
+          "\"UiPath\" deployment success story"
+        ],
+        "channel": [
+          "\"UiPath\" partner program certification specialization channel incentives"
+        ],
+        "competitors": [
+          "\"UiPath\" \"Automation Anywhere\" comparison",
+          "\"UiPath\" \"Microsoft Power Automate\" comparison",
+          "\"UiPath\" \"SS&C Blue Prism\" comparison",
+          "\"UiPath\" \"ServiceNow automation\" comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Process automation",
+          "Integración con cualquier aplicación, incluyendo legado sin API disponible",
+          "Agentic automation"
+        ],
+        "Administración pública": [
+          "Process automation",
+          "Agentic automation",
+          "Agentic Automation: agentes IA que toman decisiones y actúan de forma autónoma"
+        ],
+        "Industria y utilities": [
+          "Process automation",
+          "Document processing"
+        ],
+        "Retail": [
+          "Process automation",
+          "Integración con cualquier aplicación, incluyendo legado sin API disponible",
+          "Agentic automation"
+        ]
+      }
     }
   },
   "verticalSignals": {

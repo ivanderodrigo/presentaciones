@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Westcon Meeting Intelligence · public evidence refresh (v1.0).
+"""Westcon Meeting Intelligence · public evidence refresh (v2.0).
 
 Deep, free, fail-soft research for every vendor in the FY27 portfolio.
 The output is safe to publish in GitHub Pages: public titles, sources, dates,
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VENDOR_FILE = ROOT / "data/vendor-intelligence.json"
 OUT_JSON = ROOT / "data/live-intelligence.json"
 OUT_JS = ROOT / "data/live-intelligence.js"
-UA = "Mozilla/5.0 (compatible; WestconMeetingIntelligence/1.0; +https://github.com/)"
+UA = "Mozilla/5.0 (compatible; WestconMeetingIntelligence/2.0; +https://github.com/)"
 CTX = ssl.create_default_context()
 
 ANALYSTS = ["Gartner", "Forrester", "IDC", "Omdia", "GigaOm", "ISG", "Canalys", "KuppingerCole"]
@@ -49,11 +49,16 @@ ANALYST_DOMAINS = {
     "isg-one.com": "ISG", "canalys.com": "Canalys", "kuppingercole.com": "KuppingerCole",
 }
 TRUSTED_MEDIA = {
+    # Global enterprise / channel / infrastructure
     "crn.com", "theregister.com", "techtarget.com", "computerweekly.com", "sdxcentral.com",
     "siliconangle.com", "venturebeat.com", "darkreading.com", "securityweek.com",
     "helpnetsecurity.com", "networkworld.com", "cio.com", "techradar.com",
     "infosecurity-magazine.com", "scmagazine.com", "channelweb.co.uk", "channelfutures.com",
-    "techrepublic.com", "zdnet.com", "blocksandfiles.com", "lightreading.com",
+    "techrepublic.com", "zdnet.com", "blocksandfiles.com", "lightreading.com", "rcrwireless.com",
+    "networkcomputing.com", "datacenterdynamics.com", "packetpushers.net", "thefastmode.com",
+    # Iberia technology / business signals
+    "computing.es", "computerworld.es", "redestelecom.es", "channelpartner.es", "muycomputerpro.com",
+    "ituser.es", "revistabyte.es", "expansion.com", "eleconomista.es", "cincodias.elpais.com",
 }
 OFFICIAL_DOMAINS = {
     "Anomali":"anomali.com","AttackIQ":"attackiq.com","Certes Networks":"certesnetworks.com","Cisco":"cisco.com",
@@ -69,10 +74,14 @@ OFFICIAL_DOMAINS = {
 }
 
 QUERY_FAMILIES = {
-    "analyst": '(Gartner OR Forrester OR "IDC MarketScape" OR Omdia OR GigaOm OR ISG OR Canalys OR KuppingerCole)',
-    "market": '(innovation OR launch OR acquisition OR partnership OR customer OR "case study" OR award OR expansion)',
-    "channel": '("partner program" OR channel OR certification OR specialization OR incentive OR MDF OR enablement)',
-    "technology": '(architecture OR integration OR benchmark OR deployment OR platform OR AI OR security OR cloud OR networking)',
+    "analyst": '(Gartner OR Forrester OR "IDC MarketScape" OR Omdia OR GigaOm OR ISG OR Canalys OR KuppingerCole OR "Magic Quadrant" OR "Forrester Wave")',
+    "cases": '(customer OR "case study" OR "success story" OR deployment OR reference OR "customer story")',
+    "market": '(innovation OR launch OR acquisition OR partnership OR award OR expansion OR roadmap OR strategy OR investment)',
+    "marketshare": '("market share" OR revenue OR growth OR adoption OR installed-base OR momentum)',
+    "channel": '("partner program" OR channel OR certification OR specialization OR incentive OR MDF OR rebate OR enablement OR distributor)',
+    "technology": '(architecture OR integration OR benchmark OR interoperability OR deployment OR platform OR performance OR "reference design" OR scalability)',
+    "competitive": '(competitor OR comparison OR versus OR alternative OR migration OR differentiation OR replacement)',
+    "trust": '(reliability OR resilience OR security OR vulnerability OR outage OR incident OR compliance)',
 }
 
 
@@ -257,10 +266,16 @@ def classify(e: dict, vendor: str, family: str = "") -> dict:
     official = OFFICIAL_DOMAINS.get(vendor, "")
     score, kind = 55, "media"
     analyst_direct = next((name for dom, name in ANALYST_DOMAINS.items() if d == dom or d.endswith("." + dom)), None)
+    analyst_publisher = next((name for name in ANALYSTS if name.lower() in pub), None)
     if analyst_direct:
         score, kind = 100, "analyst-direct"
         if analyst_direct not in tags:
             tags.append(analyst_direct)
+    elif analyst_publisher:
+        # Google News preserves the originating publisher even when the click URL is a redirect.
+        score, kind = 96, "analyst-publisher"
+        if analyst_publisher not in tags:
+            tags.append(analyst_publisher)
     elif official and (d == official or d.endswith("." + official)):
         score, kind = 94, "vendor-official"
     elif any(d == x or d.endswith("." + x) for x in TRUSTED_MEDIA) or any(x.split(".")[0] in pub for x in TRUSTED_MEDIA):
@@ -272,14 +287,31 @@ def classify(e: dict, vendor: str, family: str = "") -> dict:
     if re.search(r"\b(leader|leaders|leadership|magic quadrant|wave|marketscape|strong performer|challenger|visionary)\b", text):
         score += 3
     if family == "analyst": score += 2
-    if any(k in text for k in ["customer", "case study", "success story", "deployment"]): source_class = "case"
+    # Freshness is a secondary signal: authority remains dominant.
+    try:
+        dt = datetime.fromisoformat((e.get("publishedAt") or "").replace("Z","+00:00"))
+        age = (datetime.now(timezone.utc) - dt.astimezone(timezone.utc)).days
+        if age <= 45: score += 4
+        elif age <= 180: score += 2
+        elif age > 730: score -= 4
+    except Exception:
+        pass
+    if family == "competitive": source_class = "competitive"
+    elif any(k in text for k in ["customer", "case study", "success story", "deployment"]): source_class = "case"
     elif tags: source_class = "analyst"
     elif any(k in text for k in ["partner program", "channel", "certification", "specialization", "incentive", "mdf"]): source_class = "channel"
     elif any(k in text for k in ["architecture", "integration", "benchmark", "deployment", "reference design"]): source_class = "technical"
     elif any(k in text for k in ["launch", "innovation", "acquisition", "partnership", "award", "expansion"]): source_class = "market"
     else: source_class = family or "market"
     explicit_position = bool(tags and re.search(r"\b(named|recognized|positioned|ranked|leader|leaders|strong performer|challenger|visionary)\b", text))
-    return {**e, "analysts": sorted(set(tags)), "confidence": "high" if score >= 92 else "medium" if score >= 75 else "low", "authorityScore": min(score, 100), "kind": kind, "sourceClass": source_class, "explicitAnalystPositionClaim": explicit_position, "queryFamily": family}
+    risk_flags = []
+    if e.get("discovery") == "google-news-rss" and not analyst_publisher and kind == "news-discovery": risk_flags.append("discovery-link")
+    try:
+        dt = datetime.fromisoformat((e.get("publishedAt") or "").replace("Z", "+00:00")); age = (datetime.now(timezone.utc)-dt.astimezone(timezone.utc)).days
+        if age > 730: risk_flags.append("stale")
+    except Exception: pass
+    analyst_claim = e.get("title", "") if explicit_position else ""
+    return {**e, "analysts": sorted(set(tags)), "confidence": "high" if score >= 92 else "medium" if score >= 75 else "low", "authorityScore": min(score, 100), "kind": kind, "sourceClass": source_class, "explicitAnalystPositionClaim": explicit_position, "analystClaim": analyst_claim, "riskFlags": risk_flags, "queryFamily": family}
 
 
 def dedupe(items: list[dict], vendor: str) -> list[dict]:
@@ -315,10 +347,10 @@ def research_vendor(name: str, prior: dict, horizon: int = 365) -> tuple[str, di
     evidence = dedupe(evidence, name)
     # Keep a balanced evidence set rather than 20 variants of the same news story.
     selected = []
-    for cls, cap in [("analyst", 7), ("case", 4), ("channel", 3), ("technical", 3), ("market", 5)]:
+    for cls, cap in [("analyst", 10), ("case", 6), ("competitive", 5), ("channel", 5), ("technical", 5), ("market", 6), ("marketshare", 3), ("trust", 3)]:
         selected.extend([x for x in evidence if x.get("sourceClass") == cls][:cap])
-    selected.extend([x for x in evidence if x not in selected][:max(0, 24-len(selected))])
-    selected = dedupe(selected, name)[:24]
+    selected.extend([x for x in evidence if x not in selected][:max(0, 32-len(selected))])
+    selected = dedupe(selected, name)[:32]
     if not selected:
         selected = prior.get("evidence", [])
     data = {
@@ -330,9 +362,14 @@ def research_vendor(name: str, prior: dict, horizon: int = 365) -> tuple[str, di
         "coverage": {
             "analyst": sum(1 for x in selected if x.get("sourceClass") == "analyst"),
             "cases": sum(1 for x in selected if x.get("sourceClass") == "case"),
+            "competitive": sum(1 for x in selected if x.get("sourceClass") == "competitive"),
             "channel": sum(1 for x in selected if x.get("sourceClass") == "channel"),
             "technical": sum(1 for x in selected if x.get("sourceClass") == "technical"),
             "market": sum(1 for x in selected if x.get("sourceClass") == "market"),
+            "marketshare": sum(1 for x in selected if x.get("sourceClass") == "marketshare"),
+            "trust": sum(1 for x in selected if x.get("sourceClass") == "trust"),
+            "sourceDiversity": len({host(x.get("url", "")) or (x.get("publisher") or "").lower() for x in selected if x.get("url") or x.get("publisher")}),
+            "explicitAnalystClaims": sum(1 for x in selected if x.get("explicitAnalystPositionClaim")),
         },
     }
     return name, data, errors
@@ -347,7 +384,7 @@ def main():
     workers = max(2, min(int(os.environ.get("RESEARCH_WORKERS", "6")), 10))
     horizon = int(os.environ.get("RESEARCH_HORIZON_DAYS", "365"))
     result = {
-        "version": "1.0.0",
+        "version": "2.0.0",
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "methods": ["GDELT DOC 2.0", "Google News RSS", "official vendor sitemaps/pages", "prior-cache fallback"],
         "policy": "Evidence-first. Source/date/URL preserved. Analyst positions are never inferred from report inclusion.",

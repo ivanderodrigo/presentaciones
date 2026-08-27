@@ -23,4 +23,4 @@ jobs:
       - name: Structural quality gate
         run: python scripts/quality_gate.py
       - name: Compile research engine
-        run: python -m py_compile scripts/research_intelligence.py
+        run: python -m py_compile scripts/research_intelligence.py scripts/research_partner.py
