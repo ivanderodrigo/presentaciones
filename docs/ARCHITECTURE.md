@@ -1,4 +1,4 @@
-# Westcon Meeting Intelligence · arquitectura v2.0
+# Westcon Meeting Intelligence · arquitectura v2.1
 
 ## Principio
 

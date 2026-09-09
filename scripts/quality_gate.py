@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural and partner-facing quality gate for Westcon Meeting Intelligence v2."""
+"""Structural and partner-facing quality gate for Westcon Meeting Intelligence v2.1."""
 from pathlib import Path
 import json, re, sys
 ROOT=Path(__file__).resolve().parents[1]
@@ -27,7 +27,11 @@ if len(vert)!=12:errors.append(f'vertical slide assets: expected 12, found {len(
 partner=load('data/partner-intelligence.json')
 if 'partners' not in partner:errors.append('partner intelligence: missing partners object')
 
-required=['index.html','styles.css','app.js','vendor/pptxgen.bundle.js','data/knowledge.js','data/vendor-intelligence.js','data/live-intelligence.js','data/partner-intelligence.js','data/slide-index.js','scripts/research_intelligence.py','scripts/research_partner.py','.github/workflows/update-intelligence.yml','.github/workflows/research-partner.yml','.nojekyll']
+vertical_content=load('data/vertical-content.json').get('verticals',{})
+vertical_count=sum(len(v) for v in vertical_content.values())
+if vertical_count!=12:errors.append(f'vertical content: expected 12 combinations, found {vertical_count}')
+
+required=['index.html','styles.css','app.js','vendor/pptxgen.bundle.js','data/knowledge.js','data/vendor-intelligence.js','data/live-intelligence.js','data/partner-intelligence.js','data/slide-index.js','data/vertical-content.js','scripts/research_intelligence.py','scripts/research_partner.py','.github/workflows/update-intelligence.yml','.github/workflows/research-partner.yml','.nojekyll']
 for f in required:
     if not (ROOT/f).exists():errors.append(f'missing required file: {f}')
 
@@ -44,9 +48,9 @@ if re.search(r"addOriginal\('corporate',\s*x\.(playbook|message)",gen):errors.ap
 live=load('data/live-intelligence.json');coverage=sum(1 for x in live.get('vendors',{}).values() if x.get('evidence'))
 if coverage<36:warnings.append(f'public evidence cache currently covers {coverage}/36 vendors; runtime research + scheduled refresh will fill gaps')
 
-print('WESTCON MEETING INTELLIGENCE v2 · QUALITY GATE')
+print('WESTCON MEETING INTELLIGENCE v2.1 · QUALITY GATE')
 print(f'Vendor intelligence: {len(vendors)}/36 · Slide index: {len(slides)}/96')
-print(f'Corporate assets: {len(corp)}/84 · Vertical assets: {len(vert)}/12')
+print(f'Corporate assets: {len(corp)}/84 · Vertical assets: {len(vert)}/12 · Vertical 16:9 models: {vertical_count}/12')
 print(f'Public evidence cache: {coverage}/36 vendors with evidence · Shared partner dossiers: {len(partner.get("partners",{}))}')
 for w in warnings:print('WARN ·',w)
 for e in errors:print('ERROR ·',e)

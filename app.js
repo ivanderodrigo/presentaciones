@@ -1,10 +1,11 @@
-/* Westcon Meeting Intelligence v2.0 — Partner Intelligence + Vendor Intelligence + Presentation Director */
+/* Westcon Meeting Intelligence v2.1 — Vertical Experience + Partner Intelligence + Vendor Intelligence + Presentation Director */
 (() => {
   const K = window.WESTCON_KNOWLEDGE || {};
   const VI = window.WESTCON_VENDOR_INTELLIGENCE || {vendors:{},verticalSignals:{}};
   const LIVE = window.WESTCON_LIVE_INTELLIGENCE || {vendors:{},generatedAt:null};
   const PARTNERS = window.WESTCON_PARTNER_INTELLIGENCE || {partners:{},generatedAt:null};
   const SLIDES = window.WESTCON_SLIDE_INDEX || {slides:[]};
+  const VERTICAL_CONTENT = window.WESTCON_VERTICAL_CONTENT || {verticals:{}};
   const state = { primaryRole: null, supportRoles: new Set(), currentId: null, currentMeeting: null, meetingTypeTouched:false };
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -608,7 +609,7 @@
 
 
   // ---------- PowerPoint ----------
-  // v2.0: el PPTX reutiliza visualmente las slides corporativas/datasheets originales
+  // v2.1: el PPTX reutiliza slides corporativas y recompone los datasheets verticales FY27 en 16:9 sin deformarlos
   // y genera las slides variables con la misma gramática visual Westcon FY27.
   const _assetCache=new Map();
   async function assetData(url){
@@ -750,11 +751,60 @@
       if(m.outputs.notes)try{sl.addNotes(`Partner Intelligence · ${m.partner}\n`+profile.evidence.slice(0,10).map(e=>`- ${e.title} | ${e.publisher||evidenceDomain(e)} | ${e.publishedAt||''} | ${e.url}`).join('\n')+(profile.lastMeeting?`\nÚltima memoria: ${JSON.stringify(profile.lastMeeting)}`:''))}catch{}
       return sl;
     };
-    const addVerticalOpportunitySlide=(vertical,names)=>{
-      if(!vertical||!names.length)return null; const sl=pptx.addSlide();
-      addBrand(sl,'CASOS DE USO',`${vertical} · prioridades y oportunidades`,'Casos de uso seleccionados a partir del portfolio FY27 y el contexto de esta reunión.',C.amber);
-      names.slice(0,4).forEach((name,i)=>{const col=i%2,row=Math.floor(i/2),xx=.55+col*6.25,yy=1.95+row*2.15;const p=vendorIntel(name);const angle=vendorVerticalAngle(name,vertical);addCard(sl,xx,yy,5.95,1.85,name,`${p?.category||''}\n${(angle.length?angle:(p?.buyingTriggers||[]).slice(0,3)).map(x=>'• '+x).join('\n')}`,i%2?C.cyan:C.magenta);});
-      addSourceLine(sl,'Westcon Comstor FY2027 · playbooks y datasheets sectoriales.');
+    const _imgDimCache=new Map();
+    const imageDimensions=async(data)=>{
+      if(_imgDimCache.has(data))return _imgDimCache.get(data);
+      const size=await new Promise(resolve=>{const im=new Image();im.onload=()=>resolve({w:im.naturalWidth||1,h:im.naturalHeight||1});im.onerror=()=>resolve({w:1,h:1});im.src=data;});
+      _imgDimCache.set(data,size);return size;
+    };
+    const addLogoContained=async(sl,name,x,y,w,h,selected=false,accent=roleAccent)=>{
+      try{
+        const data=await assetData(vendorLogo(name)),dim=await imageDimensions(data),r=Math.max(.05,dim.w/dim.h);
+        let iw=w*.82,ih=iw/r;if(ih>h*.64){ih=h*.64;iw=ih*r;}
+        sl.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:.035,fill:{color:'FFFFFF'},line:{color:selected?accent:'D8E0E6',pt:selected?1.2:.55}});
+        sl.addImage({data,x:x+(w-iw)/2,y:y+(h-ih)/2,w:iw,h:ih});
+      }catch{}
+    };
+    const addVerticalLandscapeSlide=async(vertical,area)=>{
+      const vd=VERTICAL_CONTENT.verticals?.[vertical]?.[area];if(!vd)return null;
+      const accent=area==='cyber'?C.magenta:area==='network'?C.cyan:C.amber;
+      const header=area==='cyber'?'4A174F':area==='network'?'075B64':'515023';
+      const pale=area==='cyber'?'FCE5F1':area==='network'?'DFF7F5':'FFF1CC';
+      const dark='1D2C38',muted='667783',body='F4F7FA',line='D5DEE5';
+      const sl=pptx.addSlide();sl.background={color:body};
+      // Cabecera inspirada directamente en los datasheets FY27, pero adaptada a formato 16:9.
+      sl.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:1.55,fill:{color:header},line:{color:header}});
+      sl.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.055,fill:{color:accent},line:{color:accent}});
+      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:.24,w:2.35,h:.36,rectRadius:.04,fill:{color:C.navy3},line:{color:C.navy3}});
+      sl.addText(vd.areaLabel,{x:.67,y:.33,w:2.1,h:.12,fontFace:'Corbel',fontSize:7.8,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
+      sl.addText(vertical.toUpperCase(),{x:.55,y:.72,w:5.5,h:.18,fontFace:'Corbel',fontSize:9.5,bold:true,color:C.white,charSpacing:1.05,margin:0,fit:'shrink'});
+      sl.addText(vd.title,{x:.55,y:.98,w:10.55,h:.42,fontFace:'Corbel',fontSize:22.5,bold:true,color:C.white,margin:0,fit:'shrink'});
+      if(logoData){sl.addShape(pptx.ShapeType.roundRect,{x:11.15,y:.25,w:1.6,h:.48,rectRadius:.05,fill:{color:C.white},line:{color:C.white}});sl.addImage({data:logoData,x:11.34,y:.365,w:1.22,h:.20});}
+      // Por qué actuar ahora.
+      sl.addText('POR QUÉ ACTUAR AHORA',{x:.55,y:1.72,w:3.1,h:.18,fontFace:'Corbel',fontSize:9,bold:true,color:accent,margin:0});
+      vd.why.slice(0,3).forEach((it,i)=>{const x=.55+i*4.15;sl.addShape(pptx.ShapeType.roundRect,{x,y:1.96,w:3.86,h:.72,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.rect,{x,y:1.96,w:.055,h:.72,fill:{color:accent},line:{color:accent}});sl.addText(it[0],{x:x+.16,y:2.07,w:3.53,h:.17,fontFace:'Corbel',fontSize:8.7,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(it[1],{x:x+.16,y:2.29,w:3.53,h:.27,fontFace:'Corbel',fontSize:7.4,color:muted,margin:0,fit:'shrink'});});
+      // El reto.
+      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:2.84,w:12.23,h:.58,rectRadius:.04,fill:{color:pale},line:{color:pale}});
+      sl.addShape(pptx.ShapeType.ellipse,{x:.73,y:2.95,w:.32,h:.32,fill:{color:accent},line:{color:accent}});sl.addText('!',{x:.73,y:3.00,w:.32,h:.12,fontFace:'Corbel',fontSize:9,bold:true,color:C.white,align:'center',margin:0});
+      sl.addText('EL RETO',{x:1.17,y:2.92,w:.9,h:.15,fontFace:'Corbel',fontSize:7.6,bold:true,color:accent,margin:0});
+      sl.addText(vd.challenge,{x:1.17,y:3.08,w:11.15,h:.22,fontFace:'Corbel',fontSize:11.3,bold:true,color:dark,margin:0,fit:'shrink'});
+      // Casos de uso + impacto esperado.
+      sl.addText('CASOS DE USO QUE MUEVEN LA CONVERSACIÓN',{x:.55,y:3.58,w:5.2,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
+      vd.cases.slice(0,4).forEach((it,i)=>{const col=i%2,row=Math.floor(i/2),x=.55+col*4.12,y=3.83+row*.91;sl.addShape(pptx.ShapeType.roundRect,{x,y,w:3.83,h:.76,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.ellipse,{x:x+.14,y:y+.14,w:.29,h:.29,fill:{color:accent},line:{color:accent}});sl.addText(String(i+1),{x:x+.14,y:y+.205,w:.29,h:.08,fontFace:'Corbel',fontSize:6.6,bold:true,color:C.white,align:'center',margin:0});sl.addText(it[0],{x:x+.53,y:y+.12,w:3.1,h:.14,fontFace:'Corbel',fontSize:7.7,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(it[1],{x:x+.53,y:y+.34,w:3.1,h:.28,fontFace:'Corbel',fontSize:6.9,color:muted,margin:0,fit:'shrink'});});
+      sl.addText('IMPACTO ESPERADO',{x:8.88,y:3.58,w:2.6,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
+      sl.addShape(pptx.ShapeType.roundRect,{x:8.88,y:3.83,w:3.90,h:1.67,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});
+      vd.impacts.slice(0,4).forEach((it,i)=>{const y=3.99+i*.36,val=Math.max(0,Math.min(100,Number(it[1]||0)));sl.addText(it[0],{x:9.08,y,w:2.35,h:.11,fontFace:'Corbel',fontSize:7.4,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(String(val),{x:11.82,y,w:.55,h:.11,fontFace:'Corbel',fontSize:7.3,bold:true,color:accent,align:'right',margin:0});sl.addShape(pptx.ShapeType.roundRect,{x:9.08,y:y+.16,w:3.03,h:.08,rectRadius:.03,fill:{color:'E6ECF0'},line:{color:'E6ECF0'}});sl.addShape(pptx.ShapeType.roundRect,{x:9.08,y:y+.16,w:3.03*val/100,h:.08,rectRadius:.03,fill:{color:accent},line:{color:accent}});});
+      // Cómo lo resolvemos: conserva la taxonomía y los fabricantes del datasheet; los seleccionados se destacan.
+      sl.addText('CÓMO LO RESOLVEMOS',{x:.55,y:5.61,w:3.2,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
+      const selected=new Set(d.vendors||[]);
+      for(let i=0;i<Math.min(4,vd.solutions.length);i++){const group=vd.solutions[i],x=.55+i*3.07;sl.addShape(pptx.ShapeType.roundRect,{x,y:5.84,w:2.82,h:.80,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.rect,{x,y:5.84,w:2.82,h:.20,fill:{color:accent},line:{color:accent}});sl.addText(group[0],{x:x+.08,y:5.895,w:2.66,h:.08,fontFace:'Corbel',fontSize:6.9,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});const vendors=group[1].slice(0,4),cols=vendors.length>2?2:vendors.length,rows=vendors.length>2?2:1,cellW=2.54/Math.max(1,cols),cellH=.52/rows;for(let j=0;j<vendors.length;j++){const c=j%cols,r=Math.floor(j/cols);await addLogoContained(sl,vendors[j],x+.14+c*cellW,6.08+r*cellH,cellW-.08,cellH-.05,selected.has(vendors[j]),accent);}}
+      // Cómo empezar + siguiente paso, igual que el datasheet pero condensado para 16:9.
+      sl.addText('CÓMO EMPEZAR',{x:.55,y:6.76,w:1.8,h:.15,fontFace:'Corbel',fontSize:8.4,bold:true,color:accent,margin:0});
+      vd.start.slice(0,3).forEach((txt,i)=>{const x=2.12+i*2.64;sl.addShape(pptx.ShapeType.ellipse,{x,y:6.72,w:.27,h:.27,fill:{color:accent},line:{color:accent}});sl.addText(String(i+1),{x,y:6.785,w:.27,h:.07,fontFace:'Corbel',fontSize:6.3,bold:true,color:C.white,align:'center',margin:0});sl.addText(txt,{x:x+.36,y:6.71,w:2.17,h:.29,fontFace:'Corbel',fontSize:7.1,bold:true,color:dark,margin:0,fit:'shrink'});});
+      sl.addText('FUENTES',{x:10.23,y:6.74,w:.72,h:.12,fontFace:'Corbel',fontSize:6.5,bold:true,color:accent,margin:0});sl.addText(vd.references,{x:10.93,y:6.70,w:1.85,h:.28,fontFace:'Corbel',fontSize:5.4,color:muted,margin:0,fit:'shrink'});
+      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:7.10,w:12.23,h:.22,rectRadius:.03,fill:{color:accent},line:{color:accent}});sl.addText(`Próximo paso recomendado: ${vd.nextStep}`,{x:.72,y:7.155,w:11.9,h:.08,fontFace:'Corbel',fontSize:6.6,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
+      sl.addShape(pptx.ShapeType.rect,{x:0,y:7.40,w:13.333,h:.10,fill:{color:C.navy3},line:{color:C.navy3}});
+      if(m.outputs.notes)try{const page=verticalSourceMap?.[vertical]?.[area]?.datasheet;sl.addNotes(`Contenido y estructura derivados del datasheet FY27 ${page?`(página ${page})`:''}: ${vertical} · ${vd.areaLabel}.\nFuentes del datasheet: ${vd.references}\nFabricantes seleccionados destacados visualmente: ${(d.vendors||[]).join(', ')||'ninguno'}.`)}catch{}
       return sl;
     };
     let s=pptx.addSlide();s.background={color:C.navy};
@@ -828,7 +878,10 @@
 
     // Vendor Intelligence: la investigación interna se sintetiza en argumentos finales, evidencia y casos de uso.
     const intelVendors=d.vendors;
-    if(d.includeVertical&&canAdd(2))addVerticalOpportunitySlide(d.effectiveVertical,intelVendors);
+    if(d.includeVertical&&d.effectiveVertical&&d.effectiveVertical!=='Otros'){
+      const areas=vendorAreasForMeeting({...m,vertical:d.effectiveVertical}),areaLimit=deckDepth==='deep'?Math.min(2,areas.length):Math.min(1,areas.length);
+      for(const area of areas.slice(0,areaLimit)){if(!canAdd(2))break;await addVerticalLandscapeSlide(d.effectiveVertical,area);}
+    }
     for(const name of intelVendors){
       if(!canAdd(2))break;
       if(deckDepth==='deep'){
@@ -844,15 +897,8 @@
       }
     }
 
-    // Verticales: solo material partner-facing. Los playbooks/mensajes internos se usan como conocimiento, nunca se muestran.
-    const areas=vendorAreasForMeeting({...m,vertical:d.effectiveVertical});const vmap=verticalSourceMap[d.effectiveVertical];
-    if(vmap){
-      const areaLimit=deckDepth==='short'?1:deckDepth==='standard'?1:2;
-      for(const area of areas.slice(0,areaLimit)){
-        const x=vmap[area];if(!x)continue;
-        if(canAdd(2))await addOriginal('verticals',x.datasheet,`Datasheet vertical FY27 · ${d.effectiveVertical} · ${area}.`);
-      }
-    }
+    // Verticales FY27: ya se han sintetizado en 16:9 con la misma gramática visual del datasheet fuente.
+    // Los originales en formato vertical permanecen en la base de conocimiento, pero no se deforman dentro del PPT partner-facing.
 
     // Fichas originales FY27 de los fabricantes prioritarios; complementan, no duplican, la narrativa generada.
     const vendors=d.vendors;const maxVendorSlides=deckDepth==='short'?1:deckDepth==='standard'?Math.min(2,vendors.length):Math.min(4,vendors.length);let vendorCount=0;

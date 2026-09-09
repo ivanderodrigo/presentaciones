@@ -1,0 +1,1122 @@
+{
+  "verticals": {
+    "Banca y seguros": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Resiliencia digital y protección del dato para servicios financieros",
+        "why": [
+          [
+            "DORA ya aplica",
+            "Desde el 17 de enero de 2025, la resiliencia operativa digital se supervisa con más detalle."
+          ],
+          [
+            "Más terceros, más exposición",
+            "Cloud, SaaS, APIs y proveedores amplían las dependencias de los servicios críticos."
+          ],
+          [
+            "La confianza es negocio",
+            "Una interrupción o fuga afecta a clientes, regulador, reputación y crecimiento digital."
+          ]
+        ],
+        "challenge": "El reto no es solo evitar un incidente: es demostrar que el banco puede seguir operando, proteger los datos y responder con evidencias.",
+        "cases": [
+          [
+            "CONTINUIDAD Y DORA",
+            "Mapear servicios críticos, probar controles y reunir evidencias para auditoría e incidentes."
+          ],
+          [
+            "IDENTIDAD Y TERCEROS",
+            "MFA, ZTNA y gobierno de accesos para empleados, clientes y proveedores."
+          ],
+          [
+            "DATO SENSIBLE",
+            "Cifrado, tokenización y control de claves para reducir exposición y simplificar auditorías."
+          ],
+          [
+            "APPS, APIs Y FRAUDE",
+            "WAAP, descubrimiento de APIs y defensa frente a bots y abuso de lógica de negocio."
+          ]
+        ],
+        "impacts": [
+          [
+            "Continuidad",
+            94
+          ],
+          [
+            "Cumplimiento",
+            91
+          ],
+          [
+            "Protección del dato",
+            92
+          ],
+          [
+            "Confianza digital",
+            86
+          ]
+        ],
+        "solutions": [
+          [
+            "Acceso seguro",
+            [
+              "Okta",
+              "Cisco",
+              "Ping Identity",
+              "1Password"
+            ]
+          ],
+          [
+            "Dato protegido",
+            [
+              "Fortanix",
+              "Proofpoint"
+            ]
+          ],
+          [
+            "Apps y APIs",
+            [
+              "F5",
+              "Noname / Akamai API Security",
+              "Palo Alto Networks"
+            ]
+          ],
+          [
+            "Detección y respuesta",
+            [
+              "CrowdStrike",
+              "Anomali",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un servicio crítico",
+          "Reunir evidencias y dependencias",
+          "Lanzar un assessment o piloto acotado"
+        ],
+        "references": "EUR-Lex Reglamento (UE) 2022/2554; EBA DORA; casos públicos de Fortanix, Okta y F5.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Red resiliente para banca digital, sedes, cajeros y centros de datos",
+        "why": [
+          [
+            "La red forma parte del servicio crítico",
+            "DORA obliga a entender dependencias TIC, pruebas y recuperación de extremo a extremo."
+          ],
+          [
+            "Sedes y cajeros no pueden esperar",
+            "Una caída de conectividad afecta a empleados, clientes y operaciones distribuidas."
+          ],
+          [
+            "DNS es una dependencia silenciosa",
+            "Cuando falla, la aplicación parece caída aunque el resto de la infraestructura funcione."
+          ]
+        ],
+        "challenge": "La continuidad depende de que WAN, DNS, campus y CPD sigan respondiendo cuando falla un enlace, un equipo o un proveedor.",
+        "cases": [
+          [
+            "WAN RESILIENTE",
+            "SD-WAN y respaldo 4G/5G para mantener oficinas, cajeros y centros de atención operativos."
+          ],
+          [
+            "DDI Y DNS",
+            "Alta disponibilidad, visibilidad y automatización de servicios DNS, DHCP e IPAM."
+          ],
+          [
+            "CAMPUS Y NAC",
+            "Segmentar usuarios, dispositivos y terceros con políticas consistentes entre sedes."
+          ],
+          [
+            "DCI Y RECUPERACIÓN",
+            "Conectar CPD y DR con capacidad, baja latencia y operación automatizada."
+          ]
+        ],
+        "impacts": [
+          [
+            "Disponibilidad",
+            97
+          ],
+          [
+            "Tiempo de recuperación",
+            92
+          ],
+          [
+            "Visibilidad",
+            89
+          ],
+          [
+            "Escalabilidad",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Sedes y WAN",
+            [
+              "Cisco",
+              "Ericsson",
+              "Juniper Networks"
+            ]
+          ],
+          [
+            "DNS y DDI",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "Campus seguro",
+            [
+              "Cisco",
+              "Juniper Networks",
+              "Extreme Networks"
+            ]
+          ],
+          [
+            "DCI y transporte",
+            [
+              "Ciena",
+              "Nokia"
+            ]
+          ]
+        ],
+        "start": [
+          "Seleccionar dos sedes críticas",
+          "Probar fallo de enlace y DNS",
+          "Replicar el diseño por tipología de sede"
+        ],
+        "references": "EUR-Lex DORA; casos públicos de Cisco y EfficientIP.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Automatización, cloud y atención omnicanal para reducir riesgo operativo",
+        "why": [
+          [
+            "El riesgo operativo también está en el proceso",
+            "Errores, retrabajos y falta de trazabilidad dificultan cumplir SLA y responder a auditoría."
+          ],
+          [
+            "El cliente espera continuidad entre canales",
+            "Voz, chat, autoservicio y oficina deben compartir contexto y una experiencia consistente."
+          ],
+          [
+            "Cloud permite escalar con control",
+            "La modernización por fases evita grandes migraciones y facilita gobierno y coste variable."
+          ]
+        ],
+        "challenge": "KYC, siniestros, reporting y atención al cliente se vuelven costosos y lentos cuando dependen de tareas manuales y sistemas aislados.",
+        "cases": [
+          [
+            "KYC, SINIESTROS Y REPORTING",
+            "Automatizar validaciones, documentos y tareas repetitivas con trazabilidad."
+          ],
+          [
+            "CONTACT CENTER",
+            "Unificar canales, mejorar autoservicio y ayudar al agente con contexto e IA."
+          ],
+          [
+            "CLOUD Y DATOS",
+            "Modernizar cargas, analítica e IA con gobierno, seguridad y consumo controlado."
+          ],
+          [
+            "ALTA DISPONIBILIDAD",
+            "Proteger aplicaciones de negocio que no pueden parar en CPD o edge."
+          ]
+        ],
+        "impacts": [
+          [
+            "Eficiencia operativa",
+            94
+          ],
+          [
+            "Trazabilidad",
+            92
+          ],
+          [
+            "Experiencia cliente",
+            90
+          ],
+          [
+            "Continuidad",
+            91
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "CX y voz",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Alta disponibilidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un proceso de alto volumen",
+          "Medir tiempo, error y coste actual",
+          "Piloto con KPI antes/después"
+        ],
+        "references": "Casos públicos de UiPath, Avaya y AWS.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      }
+    },
+    "Administración pública": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Trámites disponibles, acceso controlado y datos ciudadanos protegidos",
+        "why": [
+          [
+            "ENS como marco de referencia",
+            "El ENS exige una gestión integral y basada en riesgos, con medidas proporcionales y auditables."
+          ],
+          [
+            "NIS2 amplía la exigencia",
+            "La directiva refuerza gestión de riesgos, cadena de suministro y notificación de incidentes."
+          ],
+          [
+            "El ciudadano nota la caída",
+            "La indisponibilidad de un trámite se convierte rápidamente en queja, retraso y pérdida de confianza."
+          ]
+        ],
+        "challenge": "Un servicio público digital debe funcionar, dejar trazabilidad y proteger el dato, incluso con usuarios, sedes y proveedores muy distintos.",
+        "cases": [
+          [
+            "ACCESO SEGURO",
+            "Controlar quién accede, desde dónde y con qué dispositivo, sin depender de VPN tradicionales."
+          ],
+          [
+            "DATO Y CIFRADO",
+            "Proteger expedientes, credenciales y claves sin rehacer todas las aplicaciones."
+          ],
+          [
+            "SERVICIO DISPONIBLE",
+            "Reducir el impacto de incidentes en trámites, registros y servicios esenciales."
+          ],
+          [
+            "CUMPLIMIENTO Y EVIDENCIA",
+            "Generar trazabilidad útil para ENS, auditoría, pliegos y respuesta ante incidentes."
+          ]
+        ],
+        "impacts": [
+          [
+            "Disponibilidad",
+            92
+          ],
+          [
+            "Trazabilidad",
+            95
+          ],
+          [
+            "Protección del dato",
+            91
+          ],
+          [
+            "Servicio al ciudadano",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Identidad y acceso",
+            [
+              "Zscaler",
+              "Okta",
+              "Cisco"
+            ]
+          ],
+          [
+            "Datos y claves",
+            [
+              "Fortanix",
+              "Proofpoint"
+            ]
+          ],
+          [
+            "Cloud y aplicaciones",
+            [
+              "Palo Alto Networks",
+              "F5"
+            ]
+          ],
+          [
+            "SOC y respuesta",
+            [
+              "CrowdStrike",
+              "LevelBlue",
+              "Anomali"
+            ]
+          ]
+        ],
+        "start": [
+          "Seleccionar un trámite crítico",
+          "Mapear accesos, datos y terceros",
+          "Priorizar controles con impacto visible"
+        ],
+        "references": "BOE RD 311/2022 (ENS); INCIBE NIS2; casos públicos de Zscaler.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Redes públicas sencillas de operar, seguras y preparadas para nuevos servicios",
+        "why": [
+          [
+            "Más trámites, más dependencia de red",
+            "La administración digital y el trabajo híbrido elevan la exigencia sobre campus y WAN."
+          ],
+          [
+            "IoT y visitantes necesitan separación",
+            "No todo dispositivo ni usuario debe compartir la misma confianza o política."
+          ],
+          [
+            "Presupuesto y operación importan",
+            "La automatización permite mejorar servicio sin multiplicar complejidad ni tareas manuales."
+          ]
+        ],
+        "challenge": "Las quejas por lentitud, Wi-Fi, cortes o sedes aisladas terminan afectando al servicio al ciudadano y consumiendo recursos de TI.",
+        "cases": [
+          [
+            "WIFI Y CAMPUS",
+            "Mejorar cobertura, experiencia y operación en edificios públicos y centros de atención."
+          ],
+          [
+            "SEGMENTACIÓN Y NAC",
+            "Separar funcionario, invitado, IoT y servicios críticos con políticas centralizadas."
+          ],
+          [
+            "DDI Y DNS",
+            "Reducir incidencias invisibles, mejorar trazabilidad y automatizar direccionamiento."
+          ],
+          [
+            "SEDES REMOTAS",
+            "SD-WAN y 4G/5G para conectar centros pequeños con despliegues rápidos y repetibles."
+          ]
+        ],
+        "impacts": [
+          [
+            "Experiencia del usuario",
+            91
+          ],
+          [
+            "Continuidad",
+            90
+          ],
+          [
+            "Control y seguridad",
+            92
+          ],
+          [
+            "Eficiencia operativa",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Campus y Wi-Fi",
+            [
+              "Cisco",
+              "Juniper Networks",
+              "Extreme Networks",
+              "Ruckus Networks"
+            ]
+          ],
+          [
+            "NAC y segmentación",
+            [
+              "Cisco",
+              "Extreme Networks"
+            ]
+          ],
+          [
+            "DNS y DDI",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "Sedes y acceso",
+            [
+              "Ericsson",
+              "Cisco",
+              "Weblib"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir el edificio con más incidencias",
+          "Medir cobertura, DNS y segmentación",
+          "Piloto visible para usuarios y TI"
+        ],
+        "references": "BOE ENS; casos públicos de EfficientIP y fabricantes de networking.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Trámites más ágiles y atención ciudadana sin romper los sistemas existentes",
+        "why": [
+          [
+            "El volumen digital crece más rápido que el back-office",
+            "Más formularios y canales pueden generar colas si las validaciones siguen siendo manuales."
+          ],
+          [
+            "La modernización debe mantener gobierno",
+            "Cloud y automatización necesitan trazabilidad, seguridad y control presupuestario."
+          ],
+          [
+            "El impacto se entiende fuera de TI",
+            "Reducir espera, llamadas y retrabajo mejora directamente el servicio público."
+          ]
+        ],
+        "challenge": "El ciudadano percibe la tecnología cuando un expediente se atasca, una llamada no se resuelve o un sistema no responde.",
+        "cases": [
+          [
+            "TRÁMITES Y EXPEDIENTES",
+            "Automatizar comprobaciones, documentos y movimientos entre sistemas existentes."
+          ],
+          [
+            "ATENCIÓN CIUDADANA",
+            "Unificar teléfono, web y mensajería con mejor contexto y autoservicio."
+          ],
+          [
+            "CLOUD CONTROLADO",
+            "Modernizar aplicaciones y datos con gobierno, seguridad y arquitectura híbrida."
+          ],
+          [
+            "SERVICIOS CRÍTICOS",
+            "Asegurar disponibilidad en registros, atención y sistemas esenciales."
+          ]
+        ],
+        "impacts": [
+          [
+            "Tiempo de resolución",
+            93
+          ],
+          [
+            "Calidad del servicio",
+            92
+          ],
+          [
+            "Eficiencia interna",
+            94
+          ],
+          [
+            "Disponibilidad",
+            89
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "Atención y colaboración",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Alta disponibilidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir el trámite con más volumen",
+          "Mapear tareas repetitivas y llamadas",
+          "Automatizar una validación concreta"
+        ],
+        "references": "BOE ENS; casos públicos de UiPath, Avaya y AWS.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      }
+    },
+    "Industria y utilities": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Ciberseguridad que protege la producción sin interferir en la planta",
+        "why": [
+          [
+            "NIS2 eleva la responsabilidad",
+            "Energía y múltiples actividades industriales están dentro del marco europeo de sectores críticos."
+          ],
+          [
+            "OT y XIoT ya están conectados",
+            "Más sensores, proveedores y sistemas legacy aumentan la superficie de ataque."
+          ],
+          [
+            "La parada se mide en negocio",
+            "Una hora sin producción puede superar ampliamente el coste de prevenir el incidente."
+          ]
+        ],
+        "challenge": "La prioridad es evitar que un acceso remoto, un activo legacy o una amenaza lateral detenga la producción o afecte a la seguridad operacional.",
+        "cases": [
+          [
+            "VISIBILIDAD OT/XIoT",
+            "Descubrir activos y vulnerabilidades de forma pasiva, sin interrumpir la operación."
+          ],
+          [
+            "ACCESO REMOTO SEGURO",
+            "Dar entrada a proveedores con mínimo privilegio, trazabilidad y sesiones controladas."
+          ],
+          [
+            "SEGMENTACIÓN Y CIFRADO",
+            "Limitar el movimiento lateral y proteger datos industriales entre plantas y sistemas."
+          ],
+          [
+            "DETECCIÓN Y RESPUESTA",
+            "Identificar comportamientos anómalos antes de que afecten a una línea o servicio crítico."
+          ]
+        ],
+        "impacts": [
+          [
+            "Continuidad de planta",
+            97
+          ],
+          [
+            "Visibilidad OT",
+            95
+          ],
+          [
+            "Control de terceros",
+            92
+          ],
+          [
+            "Reducción del riesgo",
+            90
+          ]
+        ],
+        "solutions": [
+          [
+            "Visibilidad OT",
+            [
+              "Claroty",
+              "Vectra AI"
+            ]
+          ],
+          [
+            "Acceso y segmentación",
+            [
+              "Cisco",
+              "Palo Alto Networks",
+              "Zscaler"
+            ]
+          ],
+          [
+            "Cifrado industrial",
+            [
+              "Fortanix",
+              "Certes Networks"
+            ]
+          ],
+          [
+            "Detección y respuesta",
+            [
+              "CrowdStrike",
+              "NETSCOUT",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir una línea o planta",
+          "Inventario pasivo y accesos externos",
+          "Piloto sin impacto en producción"
+        ],
+        "references": "INCIBE NIS2; casos públicos de Claroty y Fortanix.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Conectividad industrial fiable para IoT, movilidad, automatización y edge",
+        "why": [
+          [
+            "La planta genera más datos en tiempo real",
+            "Sensores, visión artificial, terminales y vehículos autónomos exigen conectividad constante."
+          ],
+          [
+            "El Wi-Fi no siempre cubre el caso",
+            "Entornos metálicos, exteriores o de gran extensión pueden requerir private 5G."
+          ],
+          [
+            "La red debe crecer por casos de uso",
+            "Conviene demostrar valor en una zona y escalar por línea, planta o grupo."
+          ]
+        ],
+        "challenge": "Una zona sin cobertura o una red no determinista frena datos de planta, AGVs, mantenimiento, seguridad y productividad.",
+        "cases": [
+          [
+            "PRIVATE 5G / LTE",
+            "Cobertura industrial, movilidad y baja latencia en zonas donde el Wi-Fi no resulta suficiente."
+          ],
+          [
+            "WIFI INDUSTRIAL",
+            "Conectar almacenes, terminales y trabajadores con diseño RF adaptado al entorno."
+          ],
+          [
+            "DDI E IPAM",
+            "Controlar direccionamiento, DNS y DHCP de activos distribuidos y nuevos dispositivos."
+          ],
+          [
+            "TRANSPORTE CRÍTICO",
+            "Unir plantas, CPD y centros de control con resiliencia y capacidad predecible."
+          ]
+        ],
+        "impacts": [
+          [
+            "Cobertura",
+            96
+          ],
+          [
+            "Latencia y movilidad",
+            93
+          ],
+          [
+            "Productividad",
+            90
+          ],
+          [
+            "Escalabilidad",
+            89
+          ]
+        ],
+        "solutions": [
+          [
+            "Private 5G",
+            [
+              "Ericsson"
+            ]
+          ],
+          [
+            "Wi-Fi industrial",
+            [
+              "Ruckus Networks",
+              "Extreme Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "DDI e IPAM",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "Transporte",
+            [
+              "Ciena",
+              "Nokia",
+              "Juniper Networks"
+            ]
+          ]
+        ],
+        "start": [
+          "Medir el punto ciego",
+          "Vincularlo a un caso de uso",
+          "Piloto 5G o Wi-Fi con KPI operativo"
+        ],
+        "references": "Casos públicos de Ericsson, Cisco y EfficientIP.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Edge, alta disponibilidad e IA para que las aplicaciones críticas no paren",
+        "why": [
+          [
+            "Más inteligencia se ejecuta cerca de la planta",
+            "Visión, analítica e IA requieren capacidad local y respuesta en tiempo real."
+          ],
+          [
+            "Las aplicaciones críticas no admiten recuperación lenta",
+            "La alta disponibilidad debe ser simple de operar y probar."
+          ],
+          [
+            "Muchos procesos siguen siendo manuales",
+            "Mantenimiento, calidad y documentación ofrecen quick wins de automatización."
+          ]
+        ],
+        "challenge": "Cuando MES, SCADA o una aplicación de calidad se detiene, el impacto llega a producción, mantenimiento y cuenta de resultados.",
+        "cases": [
+          [
+            "EDGE DE ALTA DISPONIBILIDAD",
+            "Mantener MES, SCADA y aplicaciones locales operativas ante fallos de hardware o red."
+          ],
+          [
+            "AUTOMATIZACIÓN OPERATIVA",
+            "Reducir tareas manuales en calidad, mantenimiento, compras y documentación."
+          ],
+          [
+            "CLOUD E IA",
+            "Analizar datos de planta, entrenar modelos y desplegar inferencia cerca de la operación."
+          ],
+          [
+            "COMUNICACIONES CRÍTICAS",
+            "Conectar equipos, expertos y centros de control con voz y colaboración fiables."
+          ]
+        ],
+        "impacts": [
+          [
+            "Disponibilidad",
+            98
+          ],
+          [
+            "Productividad",
+            92
+          ],
+          [
+            "Calidad",
+            90
+          ],
+          [
+            "Escalabilidad de IA",
+            87
+          ]
+        ],
+        "solutions": [
+          [
+            "Edge y HA",
+            [
+              "Penguin Solutions"
+            ]
+          ],
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "Cloud e IA",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Comunicaciones",
+            [
+              "AudioCodes",
+              "Avaya"
+            ]
+          ]
+        ],
+        "start": [
+          "Cuantificar una hora de parada",
+          "Elegir una aplicación crítica",
+          "Piloto HA o automatización con KPI operativo"
+        ],
+        "references": "Casos públicos de UiPath, AWS y fabricantes de edge crítico.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      }
+    },
+    "Retail": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Protege pagos, identidad y ecommerce sin añadir fricción a la compra",
+        "why": [
+          [
+            "PCI DSS 4.0.1 ya exige nuevos controles",
+            "Los requisitos con fecha futura pasaron a ser aplicables el 31 de marzo de 2025."
+          ],
+          [
+            "El checkout depende de terceros",
+            "Scripts, APIs, proveedores de pago y promociones amplían el riesgo de ecommerce."
+          ],
+          [
+            "La seguridad debe ser invisible",
+            "El cliente espera autenticarse y pagar rápido, sin renunciar a la protección."
+          ]
+        ],
+        "challenge": "Cada fraude, caída del pago o abuso de una API afecta directamente a ventas, margen y confianza del cliente.",
+        "cases": [
+          [
+            "PAGO Y ALCANCE PCI",
+            "Tokenizar PAN y reducir la exposición de datos de tarjeta en sistemas y procesos."
+          ],
+          [
+            "IDENTIDAD DE CLIENTE",
+            "Unificar login y MFA adaptativo para proteger cuentas sin empeorar la conversión."
+          ],
+          [
+            "WAAP, APIs Y BOTS",
+            "Proteger checkout, inventario, fidelización y promociones frente a abuso y automatización maliciosa."
+          ],
+          [
+            "TIENDA ZERO TRUST",
+            "Controlar accesos de personal, POS, dispositivos y proveedores en un entorno distribuido."
+          ]
+        ],
+        "impacts": [
+          [
+            "Protección de ingresos",
+            95
+          ],
+          [
+            "Reducción del fraude",
+            92
+          ],
+          [
+            "Cumplimiento PCI",
+            94
+          ],
+          [
+            "Experiencia de compra",
+            87
+          ]
+        ],
+        "solutions": [
+          [
+            "Identidad cliente",
+            [
+              "Okta",
+              "Ping Identity"
+            ]
+          ],
+          [
+            "Pago y datos",
+            [
+              "Fortanix",
+              "Proofpoint"
+            ]
+          ],
+          [
+            "Ecommerce y APIs",
+            [
+              "F5",
+              "Noname / Akamai API Security",
+              "Palo Alto Networks"
+            ]
+          ],
+          [
+            "Tienda y respuesta",
+            [
+              "Zscaler",
+              "CrowdStrike",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Seleccionar checkout o flujo de pago",
+          "Descubrir APIs y datos de tarjeta",
+          "Piloto en ecommerce o tres tiendas"
+        ],
+        "references": "PCI Security Standards Council v4.0.1; casos públicos de Okta, F5 y Fortanix.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Una tienda conectada, repetible y preparada para vender en todo momento",
+        "why": [
+          [
+            "Las campañas no esperan a la red",
+            "Aperturas, pop-ups y temporadas necesitan conectividad desde el primer día."
+          ],
+          [
+            "Cada corte afecta a la venta",
+            "POS, inventario, picking y atención dependen de enlaces y Wi-Fi estables."
+          ],
+          [
+            "La conectividad puede generar datos",
+            "Portal, analítica y CRM convierten el Wi-Fi en una herramienta de experiencia y marketing."
+          ]
+        ],
+        "challenge": "Abrir una tienda rápido, mantener el pago disponible y convertir el Wi-Fi en un activo de negocio exige una arquitectura sencilla de repetir.",
+        "cases": [
+          [
+            "SD-WAN Y BACKUP 5G",
+            "Mantener venta y operación cuando falla el enlace principal."
+          ],
+          [
+            "WIFI DE TIENDA",
+            "Cobertura para empleados, handhelds, inventario y experiencia de cliente."
+          ],
+          [
+            "PORTAL Y ANALÍTICA",
+            "Captar consentimiento, entender visitas e integrar datos con CRM y campañas."
+          ],
+          [
+            "STAGING Y DDI",
+            "Desplegar muchas tiendas con plantillas, direccionamiento y configuración repetibles."
+          ]
+        ],
+        "impacts": [
+          [
+            "Disponibilidad de tienda",
+            95
+          ],
+          [
+            "Velocidad de apertura",
+            92
+          ],
+          [
+            "Experiencia cliente",
+            88
+          ],
+          [
+            "Eficiencia de despliegue",
+            93
+          ]
+        ],
+        "solutions": [
+          [
+            "WAN y respaldo",
+            [
+              "Cisco",
+              "Ericsson"
+            ]
+          ],
+          [
+            "Wi-Fi y switching",
+            [
+              "Ruckus Networks",
+              "Extreme Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "Portal y engagement",
+            [
+              "Weblib"
+            ]
+          ],
+          [
+            "DDI y operación",
+            [
+              "EfficientIP"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir tres tiendas representativas",
+          "Medir red, operación y experiencia",
+          "Crear una plantilla para despliegue masivo"
+        ],
+        "references": "Casos públicos de Cisco, Extreme Networks y Ruckus.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Tecnología que reduce fricción y protege margen en cada interacción",
+        "why": [
+          [
+            "Cada fricción resta conversión y margen",
+            "Esperas, errores y repetición de datos afectan al cliente y al equipo de tienda."
+          ],
+          [
+            "Los picos exigen elasticidad",
+            "Campañas y temporadas necesitan capacidad sin sobredimensionar todo el año."
+          ],
+          [
+            "La IA ya puede ayudar al agente",
+            "Resumen, búsqueda de conocimiento y automatización reducen tareas posteriores a cada interacción."
+          ]
+        ],
+        "challenge": "Devoluciones, stock, atención y campañas pierden valor cuando los procesos son lentos, manuales o no escalan en los picos de demanda.",
+        "cases": [
+          [
+            "DEVOLUCIONES Y CONCILIACIÓN",
+            "Automatizar comprobaciones, reembolsos, incidencias y tareas de back-office."
+          ],
+          [
+            "EXPERIENCIA DE CLIENTE",
+            "Dar al agente contexto, canales unificados y asistencia con IA."
+          ],
+          [
+            "CLOUD Y DATOS",
+            "Escalar ecommerce, analítica y personalización en campañas y temporadas."
+          ],
+          [
+            "EDGE EN TIENDA",
+            "Mantener servicios locales disponibles aunque haya cortes o problemas de conectividad."
+          ]
+        ],
+        "impacts": [
+          [
+            "Conversión y margen",
+            93
+          ],
+          [
+            "Tiempo de atención",
+            94
+          ],
+          [
+            "Escalabilidad",
+            92
+          ],
+          [
+            "Continuidad de tienda",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "CX y voz",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Edge y continuidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un journey de alto volumen",
+          "Medir tiempo, coste y abandono",
+          "Piloto con KPI de conversión y servicio"
+        ],
+        "references": "Casos públicos de AWS, UiPath y Avaya.",
+        "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
+      }
+    }
+  },
+  "source": "Westcon_Datasheets_Verticales_FY27",
+  "version": "FY2027"
+}

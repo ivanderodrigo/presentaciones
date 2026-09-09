@@ -1,4 +1,4 @@
-# Westcon Meeting Intelligence · v2.0
+# Westcon Meeting Intelligence · v2.1
 
 Aplicación estática para **GitHub Pages** que prepara reuniones con partners/integradores y genera un PowerPoint FY27 final, pensado para enseñarlo directamente al partner.
 
@@ -151,13 +151,21 @@ Introduce partner, país y horizonte. Genera/refresca:
 - `data/partner-intelligence.json`
 - `data/partner-intelligence.js`
 
+## Mejora v2.1 · experiencia vertical
+
+La presentación `Westcon_Datasheets_Verticales_FY27` es ahora la **fuente maestra de contenido y diseño para verticales**. Sus 12 combinaciones (4 sectores × 3 áreas) se han estructurado en `data/vertical-content.*`.
+
+La aplicación ya **no estira un datasheet vertical dentro de una slide 16:9** ni genera la antigua slide genérica de tarjetas por fabricante. En su lugar recompone el contenido en formato panorámico conservando la gramática del datasheet: cabecera sectorial, “Por qué actuar ahora”, reto, cuatro casos de uso, impacto esperado, “Cómo lo resolvemos”, “Cómo empezar” y siguiente paso.
+
+Los fabricantes elegidos por el usuario se resaltan visualmente dentro del ecosistema del caso vertical. Los originales verticales siguen formando parte de la base de conocimiento, pero no se deforman en la presentación partner-facing.
+
 ## Instalación / actualización en GitHub Pages
 
 Si ya tienes el repositorio, conserva únicamente `.git`, sustituye el resto por el contenido de esta versión y ejecuta:
 
 ```powershell
 git add -A
-git commit -m "Westcon Meeting Intelligence v2.0"
+git commit -m "Westcon Meeting Intelligence v2.1"
 git push origin main
 ```
 
