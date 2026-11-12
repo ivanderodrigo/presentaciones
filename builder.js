@@ -385,8 +385,43 @@ async function generatePptx(){
   pptx.theme={headFontFace:'Arial',bodyFontFace:'Arial',lang:'es-ES'};
   var westconLogo=null,hero=null;try{westconLogo=await assetData('assets/westcon-comstor.png')}catch(e){}try{hero=await assetData('assets/hero.jpeg')}catch(e){}
 
+  async function patchSourceSlide(s,page){
+    var S=4/3,sc=function(v){return v*S};
+    if(Number(page)===5){
+      s.addShape(pptx.ShapeType.rect,{x:sc(8.51),y:sc(1.68),w:sc(1.05),h:sc(.40),fill:{color:'1A2E44'},line:{color:'1A2E44'}});
+      for(const spec of [
+        {name:'Cloudflare',x:3.17},
+        {name:'Sonar (SonarQube)',x:4.59}
+      ]){
+        s.addShape(pptx.ShapeType.roundRect,{x:sc(spec.x),y:sc(3.41),w:sc(1.34),h:sc(.37),rectRadius:.03,fill:{color:C.white},line:{color:'3CAABE',pt:.5}});
+        await addLogo(s,spec.name,sc(spec.x+.10),sc(3.45),sc(1.14),sc(.29));
+      }
+    }
+    if(Number(page)===7){
+      var patches=[
+        {x:5.325,y:1.71,w:1.823,h:.585,text:'• Palo Alto, Cisco, Zscaler, F5 y Cloudflare\n• NGFW, SSE/SASE, ZTNA, DDoS\n• Certes: cifrado persistente'},
+        {x:7.62,y:1.71,w:1.823,h:.585,text:'• F5/Cloudflare/Noname: WAAP, WAF y API Security\n• Sonar: SAST, quality gates y DevSecOps\n• Menlo: Secure Browser / RBI'}
+      ];
+      patches.forEach(function(p){
+        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'113A50'},line:{color:'113A50'}});
+        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:9.4,color:C.white,margin:0,fit:'shrink',breakLine:false});
+      });
+    }
+    if(Number(page)===39){
+      var patches=[
+        {x:2.985,y:1.932,w:1.855,h:.326,text:'• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G'},
+        {x:5.24,y:1.819,w:1.855,h:.552,text:'• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN\n• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt\n• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One'},
+        {x:7.495,y:1.875,w:1.855,h:.439,text:'• Cisco: Nexus, ACI, NDFC y switching DC\n• Extreme: SLX, VSP/Universal Switching y Fabric Connect'},
+        {x:.73,y:3.727,w:2.553,h:.337,text:'• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing\n• Extreme: ExtremeCloud SD‑WAN\n• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular'}
+      ];
+      patches.forEach(function(p){
+        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'173E5C'},line:{color:'173E5C'}});
+        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:8.9,color:C.white,margin:0,fit:'shrink'});
+      });
+    }
+  }
   async function addOriginal(page){
-    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});return s;
+    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});await patchSourceSlide(s,page);return s;
   }
   function addNotes(s,lines){try{s.addNotes(lines.filter(Boolean).join('\n'))}catch(e){}}
   var logoDimCache={};
