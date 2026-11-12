@@ -49,3 +49,82 @@ button{cursor:pointer}
 .portfolio-new-card img{width:auto;height:auto}
 .vertical-fy27 .vs-logo-row img{width:auto}
 .source-visual .taxonomy-patch{white-space:normal}
+
+
+/* v5.4 — exact FY27 visual system */
+.source-special{position:relative;width:100%;height:100%;overflow:hidden}
+.source-special>.special-portfolio,.source-special>.special-taxonomy{width:100%;height:100%}
+.special-portfolio,.special-taxonomy{position:relative;aspect-ratio:16/9;background:#1a2e44;color:#fff;overflow:hidden;container-type:inline-size;font-family:Corbel,Carlito,Arial,sans-serif}
+.special-portfolio>h3,.special-taxonomy>h3{position:absolute;left:3.3%;top:2.8%;margin:0;font-size:2.55cqw;line-height:1;color:#fff;font-weight:700}
+.special-portfolio>p,.special-taxonomy>.subtitle{position:absolute;left:3.3%;top:9.2%;margin:0;font-size:1.24cqw;color:#d9e4e8}
+.special-portfolio>footer,.special-taxonomy>footer{position:absolute;left:3.3%;bottom:2.4%;font-size:.82cqw;color:#d9e4e8}
+
+.special-portfolio section{position:absolute}
+.special-portfolio section>h4{margin:0;color:#fff;font-size:1.18cqw;letter-spacing:.06em;border-bottom:2px solid #3caabe;padding-bottom:.55cqw}
+.special-portfolio .sp-cyber{left:3.3%;top:15.3%;width:55.2%;height:76%}
+.special-portfolio .sp-network{left:61.5%;top:15.3%;width:35.2%;height:34%}
+.special-portfolio .sp-cloud{left:61.5%;top:54.0%;width:35.2%;height:34%}
+.sp-logo-grid{display:grid;align-content:start;gap:.58cqw .72cqw;margin-top:1.0cqw}
+.sp-logo-grid.cyber{grid-template-columns:repeat(4,1fr)}
+.sp-logo-grid.network,.sp-logo-grid.cloud{grid-template-columns:repeat(3,1fr)}
+.sp-logo-card{height:3.55cqw;background:#fff;border:1px solid #3caabe;border-radius:.48cqw;display:flex;align-items:center;justify-content:center;padding:.55cqw;overflow:hidden}
+.sp-logo-card img{max-width:88%;max-height:78%;object-fit:contain}
+.sp-logo-card span{font-size:.72cqw;color:#173744;font-weight:700;text-align:center;line-height:1.05}
+
+.special-taxonomy{background:#163a50}
+.special-taxonomy:before{content:"";position:absolute;left:0;right:0;top:0;height:.8%;background:#12c7c0}
+.special-taxonomy.cyber:before{background:#d40a82}.special-taxonomy.cloud:before{background:#f5ae2d}
+.tax-grid{position:absolute;left:5.2%;right:5.2%;top:22.7%;bottom:9.5%;display:grid;gap:2.2cqw}
+.tax-grid.count-7{grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr}
+.tax-grid.count-7 article:nth-child(n+5){transform:translateX(52%);width:128%}
+.tax-grid.count-6{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}
+.tax-grid article{position:relative;background:#113a50;border:1px solid #12c7c0;border-radius:.7cqw;padding:1.0cqw 1.05cqw;overflow:hidden}
+.special-taxonomy.cyber .tax-grid article{border-color:#d40a82}.special-taxonomy.cloud .tax-grid article{border-color:#f5ae2d}
+.tax-grid article h4{margin:0;font-size:1.18cqw;line-height:1.05;color:#fff}
+.tax-grid article p{margin:.75cqw 0 .45cqw;font-size:.87cqw;line-height:1.18;color:#fff;font-weight:700}
+.tax-grid article small{display:block;font-size:.73cqw;line-height:1.2;color:#d4e1e5}
+.special-taxonomy.cyber .tax-grid article h4{color:#ff4fac}.special-taxonomy.network .tax-grid article h4{color:#37ded7}.special-taxonomy.cloud .tax-grid article h4{color:#ffd167}
+
+/* exact nested geometry of FY27 manufacturer card */
+.vendor-fy27 .vf-category{left:8.97%;top:3.55%;width:82.05%;height:4.98%;font-size:1.20cqw;padding:0;background:transparent;border:0;letter-spacing:.16em}
+.vendor-fy27 .vf-logo{left:6.41%;top:11.02%;width:88.46%;height:25.78%;padding:2.7%}
+.vendor-fy27 .vf-tagline{left:6.41%;top:39.11%;width:89.74%;height:11.56%;font-size:1.66cqw;line-height:1.12}
+.vendor-fy27 .vf-opportunity{left:5.13%;top:54.22%;width:91.03%;height:40.44%;padding:17.4% 4.0% 2.0%;font-size:.92cqw;line-height:1.13}
+.vendor-fy27 .vf-opportunity>strong{height:16.7%;padding:1.5% 3%;font-size:1.05cqw}
+.vendor-fy27 .vf-opportunity div{margin:.31cqw 0}
+.vendor-fy27 .vf-value{left:0;top:2.67%;width:97.5%;height:42.31%}
+.vendor-fy27 .vf-value h4{left:2.5%;top:4.2%;width:92%;font-size:1.60cqw}
+.vendor-fy27 .vf-value p{left:2.5%;top:35.5%;width:92%;height:51%;font-size:1.42cqw;line-height:1.16}
+.vendor-fy27 .vf-right>h5{left:0;top:47.1%;font-size:1.20cqw}
+.vendor-fy27 .vf-right ul{left:0;top:54.0%;width:96.6%;height:39%;padding-left:1.5cqw}
+.vendor-fy27 .vf-right li{font-size:1.40cqw;line-height:1.10;margin:0}
+.vendor-fy27 .vf-bottom{height:4%}
+
+/* sector playbook clone — larger text, two logos per use case */
+.vertical-fy27 .vs-left>h3{font-size:var(--left-size,2.45cqw)!important;line-height:1.00;top:9.6%;height:18.2%;overflow:hidden}
+.vertical-fy27 .vs-left>strong{top:26.0%;font-size:1.14cqw}
+.vertical-fy27 .vs-challenge{top:64.5%;height:18.0%;padding:6.5% 7%}
+.vertical-fy27 .vs-challenge b{font-size:.88cqw;margin-bottom:.8cqw}
+.vertical-fy27 .vs-challenge span{font-size:1.27cqw;line-height:1.12}
+.vertical-fy27 .vs-proof{top:84.0%;height:10.5%}
+.vertical-fy27 .vs-proof b{font-size:.68cqw;margin-bottom:.38cqw}
+.vertical-fy27 .vs-proof span{font-size:.60cqw;line-height:1.12}
+.vertical-fy27 .vs-main>h3{font-size:var(--main-size,2.65cqw)!important;line-height:1.0;top:7.0%;height:6.5%;overflow:hidden}
+.vertical-fy27 .vs-main>h5{top:14.8%;font-size:.95cqw}
+.vertical-fy27 .vs-signals{top:18.0%;height:5.8%}
+.vertical-fy27 .vs-signal{padding:0 .55cqw}
+.vertical-fy27 .vs-signal{font-size:1.02cqw;font-weight:700}
+.vertical-fy27 .vs-cases{top:25.5%;height:44%;gap:3.2% 4.3%}
+.vertical-fy27 .vs-case{padding:5.5% 5.0% 3.8%}
+.vertical-fy27 .vs-case b{font-size:1.22cqw;line-height:1.02}
+.vertical-fy27 .vs-case p{display:block;font-size:1.02cqw;line-height:1.14;margin:.75cqw 0 0;color:#fff}
+.vertical-fy27 .vs-logo-row{left:5%;right:5%;bottom:5.2%;height:18%;gap:4%}
+.vertical-fy27 .vs-logo-row span{height:100%;width:48%;background:#fff;border:1px solid var(--accent);border-radius:4px;padding:2%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vertical-fy27 .vs-logo-row span img{max-width:88%;max-height:80%;object-fit:contain}
+.vertical-fy27 .vs-logo-row span.name{font-size:.62cqw;color:#173744;font-weight:700;text-align:center}
+.vertical-fy27 .vs-bottom{top:71.1%;height:17.5%;gap:4.3%}
+.vertical-fy27 .vs-bottom>div{padding:5.2%}
+.vertical-fy27 .vs-bottom b{font-size:1.02cqw}
+.vertical-fy27 .vs-bottom span{font-size:.84cqw;line-height:1.18;margin-top:.5cqw}
+.vertical-fy27 .vs-next{bottom:3.0%;height:5.0%;font-size:.88cqw}
+.vertical-fy27 .vs-next b{width:19%;font-size:.78cqw}
