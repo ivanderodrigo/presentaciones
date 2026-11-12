@@ -1,100 +1,111 @@
 #!/usr/bin/env python3
-"""Structural and partner-facing quality gate for Westcon Presentation Studio v4."""
+"""Structural quality gate for Westcon Presentation Builder v5."""
 from pathlib import Path
-import json, re, sys
+import json, sys
 
 ROOT=Path(__file__).resolve().parents[1]
 errors=[]; warnings=[]
 
-def load(name):
+def load(path):
     try:
-        return json.loads((ROOT/name).read_text(encoding='utf-8'))
+        return json.loads((ROOT/path).read_text(encoding="utf-8"))
     except Exception as e:
-        errors.append(f'{name}: invalid JSON: {e}')
+        errors.append(f"{path}: invalid JSON: {e}")
         return {}
 
-vi=load('data/vendor-intelligence.json')
-vendors=vi.get('vendors',{})
-if len(vendors)!=36:
-    errors.append(f'vendor intelligence: expected 36 vendors, found {len(vendors)}')
-for name,x in vendors.items():
-    if not x.get('valueProposition'):
-        errors.append(f'{name}: missing valueProposition')
-    if len(x.get('approvedAdvantages',[]))<3:
-        errors.append(f'{name}: fewer than 3 approvedAdvantages')
-    if len(x.get('decisionCriteria',[]))<3:
-        warnings.append(f'{name}: weak decisionCriteria coverage')
-    if len(x.get('proofThemes',[]))<3:
-        warnings.append(f'{name}: weak proofThemes coverage')
+knowledge=load("data/knowledge.json")
+vendors=knowledge.get("vendors",[])
+vendor_names={v.get("name") for v in vendors}
+if len(vendors)!=37:
+    errors.append(f"knowledge: expected 37 active vendors, found {len(vendors)}")
+for required in ["Cloudflare","Sonar (SonarQube)"]:
+    if required not in vendor_names:
+        errors.append(f"knowledge: missing {required}")
+if "Juniper Networks" in vendor_names:
+    errors.append("knowledge: Juniper Networks must not be in active portfolio")
 
-slides=load('data/slide-index.json').get('slides',[])
-if len(slides)!=96:
-    errors.append(f'slide index: expected 96 slides, found {len(slides)}')
+vi=load("data/vendor-intelligence.json")
+intel=vi.get("vendors",{})
+if len(intel)!=37:
+    errors.append(f"vendor intelligence: expected 37 active vendors, found {len(intel)}")
+for required in ["Cloudflare","Sonar (SonarQube)"]:
+    x=intel.get(required,{})
+    if not x.get("valueProposition") or len(x.get("approvedAdvantages",[]))<4:
+        errors.append(f"{required}: curated slide content incomplete")
+if "Juniper Networks" in intel:
+    errors.append("vendor intelligence: Juniper Networks must not be active")
 
-corp=list((ROOT/'assets/source-slides/corporate').glob('slide-*.png'))
-vert=list((ROOT/'assets/source-slides/verticals').glob('slide-*.png'))
+slides=load("data/slide-index.json").get("slides",[])
+if len(slides)!=97:
+    errors.append(f"slide index: expected 97 visible/indexed items, found {len(slides)}")
+if any("Juniper Networks" in (s.get("vendors") or []) for s in slides):
+    errors.append("slide index: Juniper slide must be excluded")
+for sid in ["curated-cloudflare","curated-sonar"]:
+    if not any(s.get("id")==sid for s in slides):
+        errors.append(f"slide index: missing {sid}")
+
+corp=list((ROOT/"assets/source-slides/corporate").glob("slide-*.png"))
+vert=list((ROOT/"assets/source-slides/verticals").glob("slide-*.png"))
 if len(corp)!=84:
-    errors.append(f'corporate slide assets: expected 84, found {len(corp)}')
+    errors.append(f"corporate assets: expected 84, found {len(corp)}")
 if len(vert)!=12:
-    errors.append(f'vertical slide assets: expected 12, found {len(vert)}')
+    errors.append(f"vertical source assets: expected 12, found {len(vert)}")
 
-vertical_content=load('data/vertical-content.json').get('verticals',{})
-vertical_count=sum(len(v) for v in vertical_content.values())
-if vertical_count!=12:
-    errors.append(f'vertical content: expected 12 combinations, found {vertical_count}')
-
-partner=load('data/partner-intelligence.json')
-if 'partners' not in partner:
-    errors.append('partner intelligence: missing partners object')
+vc=load("data/vertical-content.json").get("verticals",{})
+if len(vc)!=9:
+    errors.append(f"vertical content: expected 9 sectors, found {len(vc)}")
+models=sum(len(x) for x in vc.values())
+if models!=27:
+    errors.append(f"vertical content: expected 27 sector/area models, found {models}")
+for v in ["Sanidad","Educación","Transporte y logística","Hostelería y turismo","Software y servicios digitales"]:
+    if v not in vc:
+        errors.append(f"vertical content: missing {v}")
+if "Juniper Networks" in json.dumps(vc,ensure_ascii=False):
+    errors.append("vertical content: Juniper Networks reference remains")
 
 required=[
-    'index.html','builder.css','builder.js','vendor/pptxgen.bundle.js',
-    'data/knowledge.js','data/vendor-intelligence.js','data/live-intelligence.js',
-    'data/partner-intelligence.js','data/slide-index.js','data/vertical-content.js',
-    'scripts/research_intelligence.py','scripts/research_partner.py',
-    '.github/workflows/update-intelligence.yml','.github/workflows/research-partner.yml',
-    '.github/workflows/quality.yml','.nojekyll'
+    "index.html","builder.css","builder.js","vendor/pptxgen.bundle.js",
+    "data/knowledge.js","data/vendor-intelligence.js","data/slide-index.js",
+    "data/vertical-content.js","scripts/research_intelligence.py",
+    ".github/workflows/quality.yml",".github/workflows/update-intelligence.yml",".nojekyll"
 ]
-for f in required:
-    if not (ROOT/f).exists():
-        errors.append(f'missing required file: {f}')
+for p in required:
+    if not (ROOT/p).exists():
+        errors.append(f"missing required file: {p}")
 
-index=(ROOT/'index.html').read_text(encoding='utf-8')
-if 'builder.js' not in index or 'builder.css' not in index:
-    errors.append('index.html does not load Presentation Studio assets')
+index=(ROOT/"index.html").read_text(encoding="utf-8")
+builder=(ROOT/"builder.js").read_text(encoding="utf-8")
+if "data-role" in index or "¿Qué enfoque quieres?" in index or "PSM" in index or "VSM" in index:
+    errors.append("interface: role selector or role language still present")
+for text in ["searchSlides","themeBlocks","libraryGrid","deckList"]:
+    if text not in index:
+        errors.append(f"interface: missing {text}")
+for fn in ["themeBlocks","renderLibrary","renderDeck","addVendorSlide","addVerticalSlide","generatePptx"]:
+    if f"function {fn}" not in builder:
+        errors.append(f"builder: missing {fn}")
+for old in ["vendorStoryModel","vendorProofModel","vendorMarketModel","ROLE_META"]:
+    if old in builder:
+        errors.append(f"builder: obsolete AI/role logic remains: {old}")
+if "Juniper Networks" in builder:
+    errors.append("builder: Juniper reference remains")
+for required in ["Cloudflare","Sonar (SonarQube)"]:
+    if required not in builder:
+        errors.append(f"builder: missing curated {required} slide")
 
-builder=(ROOT/'builder.js').read_text(encoding='utf-8')
-for fn in ['vendorStoryModel','vendorProofModel','renderContextImpact','renderQuickBlocks','openPreview','proposeDeck','generatePptx']:
-    if f'function {fn}' not in builder:
-        errors.append(f'Presentation Studio missing {fn}')
+research=(ROOT/"scripts/research_intelligence.py").read_text(encoding="utf-8")
+if '"Cloudflare":"cloudflare.com"' not in research or '"Sonar (SonarQube)":"sonarsource.com"' not in research:
+    errors.append("research engine: new vendor official domains missing")
+if '"Juniper Networks":"juniper.net"' in research:
+    errors.append("research engine: Juniper still active")
 
-if "density>=8" not in builder or "density>=9" not in builder:
-    errors.append('generated-slide content density gates are missing')
-
-if 'ROLE_META' not in builder or 'VERTICAL_META' not in builder:
-    errors.append('role/vertical explanatory logic missing')
-
-gen=builder[builder.find('async function generatePptx'):]
-for phrase in ['CÓMO VENDER','WHITESPACE','SCORING INTERNO','RESEARCH PENDING','COLA DE BÚSQUEDAS']:
-    if phrase in gen.upper():
-        errors.append(f'partner-facing generator contains prohibited internal phrase: {phrase}')
-
-if re.search(r"sourceByPage\((?:6[0-9]|70|71|72)\)", builder):
-    warnings.append('review any hard-coded sector/playbook page added to a partner-facing deck')
-
-live=load('data/live-intelligence.json')
-coverage=sum(1 for x in live.get('vendors',{}).values() if x.get('evidence'))
-if coverage<20:
-    warnings.append(f'public evidence cache currently covers {coverage}/36 vendors; scheduled refresh can improve this')
-
-print('WESTCON PRESENTATION STUDIO v4 · QUALITY GATE')
-print(f'Vendor intelligence: {len(vendors)}/36 · Slide index: {len(slides)}/96')
-print(f'Corporate assets: {len(corp)}/84 · Vertical assets: {len(vert)}/12 · Vertical models: {vertical_count}/12')
-print(f'Public evidence cache: {coverage}/36 vendors · Shared partner dossiers: {len(partner.get("partners",{}))}')
+print("WESTCON PRESENTATION BUILDER v5 · QUALITY GATE")
+print(f"Active vendors: {len(vendors)}/37 · Slide index: {len(slides)}/97")
+print(f"Corporate assets: {len(corp)}/84 · Source vertical assets: {len(vert)}/12")
+print(f"Vertical sectors: {len(vc)}/9 · Vertical models: {models}/27")
 for w in warnings:
-    print('WARN ·',w)
+    print("WARN ·",w)
 for e in errors:
-    print('ERROR ·',e)
+    print("ERROR ·",e)
 if errors:
     sys.exit(1)
-print('OK · structural and partner-facing quality gate passed')
+print("OK · simple ad-hoc builder quality gate passed")
