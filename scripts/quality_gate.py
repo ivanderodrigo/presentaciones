@@ -156,7 +156,7 @@ for token in [
         errors.append(f"builder: vertical fixed-grid invariant missing: {token}")
 if "for(var j=0;j<4;j++)" in builder:
     errors.append("builder: verticals must not draw four logo boxes unconditionally")
-if "catch(e){r.text(name" not in builder or "}else{\n          r.text(name" not in builder:
+if "r.text(name,bx+.03,cc.y+.842" not in builder or "var name=names[j]" not in builder:
     errors.append("builder: missing vendor-name fallback when a vertical logo cannot load")
 
 # Curated vendor advantages must match FY27 compact spacing.
