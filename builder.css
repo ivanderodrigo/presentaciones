@@ -44,3 +44,8 @@ button{cursor:pointer}
 @media(max-width:1180px){.workspace{grid-template-columns:1fr}.deck{position:static;max-height:none}.library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:900px){.page{padding:18px}.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.search-row{flex-direction:column}.theme-block{flex-basis:220px}}
 @media(max-width:640px){.topbar{padding:0 14px}.brand div{display:none}.brand img{width:92px}.top-actions .ghost{display:none}.intro{padding:24px}.intro h1{font-size:26px}.deck-counter{display:none}.library-grid{grid-template-columns:1fr}.deck-item{grid-template-columns:22px 96px minmax(0,1fr)}.deck-actions{grid-column:2/4;justify-content:flex-end}.filters{overflow:auto;flex-wrap:nowrap}.filters button{white-space:nowrap}}
+
+.vendor-fy27 .vf-logo img{width:auto;height:auto}
+.portfolio-new-card img{width:auto;height:auto}
+.vertical-fy27 .vs-logo-row img{width:auto}
+.source-visual .taxonomy-patch{white-space:normal}
