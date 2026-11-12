@@ -130,3 +130,12 @@ button{cursor:pointer}
 .tax-grid.count-7 article{grid-column:span 3}
 .tax-grid.count-7 article:nth-child(n+5){grid-column:span 4;transform:none;width:auto}
 .preview-source .source-special{width:100%;height:100%}
+
+/* v5.4 exact manufacturer transparency model */
+.vendor-fy27 .vf-left{background:#1a2e44;border:1px solid var(--accent)}
+.vendor-fy27 .vf-left:before{content:"";position:absolute;inset:0;background:var(--accent);opacity:.12;pointer-events:none}
+.vendor-fy27 .vf-left>*{z-index:1}
+.vendor-fy27 .vf-category{background:color-mix(in srgb,var(--accent) 40%,#1a2e44);border:1px solid var(--accent)}
+.vendor-fy27 .vf-value{background:color-mix(in srgb,var(--accent) 7%,#1a2e44)}
+.vendor-fy27 .vf-opportunity{background:color-mix(in srgb,#1a2e44 60%,transparent)}
+.vendor-fy27 .vf-opportunity>strong{background:color-mix(in srgb,#f09e0d 30%,transparent)}
