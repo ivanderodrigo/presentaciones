@@ -29,6 +29,8 @@ if "Ruckus Networks" in vendor_by:
     errors.append("knowledge: Ruckus Networks must not be active")
 
 vi=load("data/vendor-intelligence.json").get("vendors",{})
+if "Ruckus Networks" in vi:
+    errors.append("vendor intelligence: Ruckus must not remain as an active research vendor")
 for name in ["Cloudflare","Sonar (SonarQube)"]:
     x=vi.get(name,{})
     if len(x.get("approvedAdvantages",[]))!=4:
@@ -44,6 +46,8 @@ for name in ["Cloudflare","Sonar (SonarQube)"]:
             errors.append(f"{name}: advantage too long: {adv[:40]}...")
 
 logos=load("data/vendor-logo-map.json")
+if "Ruckus Networks" in logos:
+    errors.append("logo map: Ruckus must not remain in the active portfolio map")
 for name,path in {"Cloudflare":"assets/vendors/cloudflare.svg","Sonar (SonarQube)":"assets/vendors/sonar.svg"}.items():
     if logos.get(name)!=path:
         errors.append(f"{name}: logo mapping missing")
@@ -65,6 +69,8 @@ if len(corp)!=84:
     errors.append(f"corporate assets: expected 84, found {len(corp)}")
 
 taxonomy=load("data/taxonomy.json")
+if "Ruckus" in json.dumps(taxonomy,ensure_ascii=False):
+    errors.append("taxonomy: Ruckus reference remains")
 areas=taxonomy.get("areas",{})
 if set(areas)!={"cyber","network","cloud"}:
     errors.append("taxonomy: cyber/network/cloud required")
