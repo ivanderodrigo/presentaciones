@@ -12,7 +12,7 @@ var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelect
 var esc=function(s){return String(s==null?'':s).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})};
 var norm=function(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')};
 var slug=function(s){return norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'westcon-presentacion'};
-var STORAGE='westcon.presentationBuilder.v5.2';
+var STORAGE='westcon.presentationBuilder.v5.3';
 
 var C={
   navy:'082C3A',navy2:'17324A',navy3:'123F50',white:'FFFFFF',ink:'173744',
@@ -22,7 +22,7 @@ var C={
 
 var CURATED={
   'Cloudflare':{
-    accent:'#F48120',pptAccent:'F48120',
+    accent:'#24507B',pptAccent:'24507B',brandAccent:'#F48120',
     sources:[
       'https://www.cloudflare.com/products/',
       'https://developers.cloudflare.com/reference-architecture/architectures/sase/',
@@ -30,7 +30,7 @@ var CURATED={
     ]
   },
   'Sonar (SonarQube)':{
-    accent:'#D3121D',pptAccent:'D3121D',
+    accent:'#6C5CA3',pptAccent:'6C5CA3',brandAccent:'#D3121D',
     sources:[
       'https://www.sonarsource.com/products/sonarqube/',
       'https://www.sonarsource.com/resources/library/how-to-check-code-quality-using-sonarqube/'
@@ -95,9 +95,7 @@ function vendorName(item){
   return '';
 }
 function allItems(){
-  var base=sourceSlides().concat(Object.keys(CURATED).map(curatedItem));
-  if(state.filter==='vertical'||state.query.trim())base=base.concat(allVerticalItems());
-  return base;
+  return sourceSlides().concat(Object.keys(CURATED).map(curatedItem)).concat(allVerticalItems());
 }
 function itemText(x){
   var extra='';
@@ -106,7 +104,7 @@ function itemText(x){
   return norm([x.title,x.subtitle,x.area,x.vendor,x.vertical].concat(x.vendors||[],x.tags||[]).join(' ')+' '+extra);
 }
 function matchesFilter(x){
-  if(state.filter==='all')return x.kind!=='vertical';
+  if(state.filter==='all')return true;
   if(state.filter==='corporate')return x.kind==='source'&&['corporate','section','taxonomy'].indexOf(x.type)>=0;
   if(state.filter==='service')return x.kind==='source'&&x.type==='service';
   if(state.filter==='vendor')return x.type==='vendor';
@@ -116,21 +114,32 @@ function matchesFilter(x){
   if(state.filter==='cloud')return x.kind!=='vertical'&&x.type==='vendor'&&(norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0) || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cloud';
   return true;
 }
+function presentationOrder(item){
+  var p=Number(item.page||0),name=vendorName(item),vertical=String(item.vertical||'');
+  var vRank=Object.keys(VERTICAL.verticals||{}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})}).indexOf(vertical);
+  var cyberNames=vendorSlidesForArea('cyber').map(vendorName);
+  var networkNames=vendorSlidesForArea('network').map(vendorName);
+  var cloudNames=vendorSlidesForArea('cloud').map(vendorName);
+  if(item.kind==='source'&&p>=1&&p<=5)return p;
+  if(item.kind==='source'&&(p===6||p===7))return 100+p;
+  if(item.type==='vendor'&&norm(item.area).indexOf('ciber')>=0)return 200+Math.max(0,cyberNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='cyber')return 300+Math.max(0,vRank);
+  if(item.kind==='source'&&(p===38||p===39))return 400+p;
+  if(item.type==='vendor'&&norm(item.area).indexOf('network')>=0)return 500+Math.max(0,networkNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='network')return 600+Math.max(0,vRank);
+  if(item.kind==='source'&&(p===57||p===58))return 700+p;
+  if(item.type==='vendor'&&(norm(item.area).indexOf('cloud')>=0||norm(item.area).indexOf('automat')>=0||norm(item.area).indexOf('uc')>=0))return 800+Math.max(0,cloudNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='cloud')return 900+Math.max(0,vRank);
+  if(item.kind==='source'&&p>=73)return 1000+p;
+  return 1200+(p||999);
+}
 function filteredItems(){
   var q=norm(state.query);
   var items=allItems().filter(matchesFilter).filter(function(x){return !q||itemText(x).indexOf(q)>=0});
   return items.sort(function(a,b){
-    var aIntro=a.kind==='source'&&(a.type==='section'||a.type==='taxonomy');
-    var bIntro=b.kind==='source'&&(b.type==='section'||b.type==='taxonomy');
-    if(aIntro!==bIntro)return aIntro?-1:1;
-    if(aIntro&&bIntro)return (a.page||999)-(b.page||999);
+    var d=presentationOrder(a)-presentationOrder(b);
+    if(d)return d;
     if(a.type==='vendor'&&b.type==='vendor')return vendorName(a).localeCompare(vendorName(b),'es',{sensitivity:'base'});
-    if(a.kind==='vertical'&&b.kind==='vertical'){
-      var v=String(a.vertical).localeCompare(String(b.vertical),'es',{sensitivity:'base'});
-      if(v)return v;
-      return ['cyber','network','cloud'].indexOf(a.area)-['cyber','network','cloud'].indexOf(b.area);
-    }
-    if(a.kind==='source'&&b.kind==='source')return (a.page||999)-(b.page||999);
     return String(a.title).localeCompare(String(b.title),'es',{sensitivity:'base'});
   });
 }
@@ -155,7 +164,10 @@ function vendorSlidesForArea(area){
 function overviewItems(area){
   return (INDEX.slides||[]).filter(function(s){return s.source==='corporate'&&(s.type==='section'||s.type==='taxonomy')&&areaKey(s.area)===area}).map(sourceItem).sort(function(a,b){return (a.page||999)-(b.page||999)});
 }
-function areaBlockItems(area){return overviewItems(area).concat(vendorSlidesForArea(area))}
+function verticalAreaItems(area){
+  return Object.keys(VERTICAL.verticals||{}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})}).map(function(v){return verticalItem(v,area)}).filter(Boolean);
+}
+function areaBlockItems(area){return overviewItems(area).concat(vendorSlidesForArea(area)).concat(verticalAreaItems(area))}
 function serviceBlock(){return (INDEX.slides||[]).filter(function(s){return s.source==='corporate'&&s.type==='service'&&Number(s.page)!==82}).map(sourceItem).sort(function(a,b){return (a.page||999)-(b.page||999)})}
 function baseBlock(){return [1,2,3,4,5].map(sourceByPage).filter(Boolean)}
 
