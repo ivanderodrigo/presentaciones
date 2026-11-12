@@ -1,32 +1,33 @@
-# ChatGPT project context — Westcon Presentation Studio
+# ChatGPT project context — Westcon Presentation Builder
 
-Repository target: ivanderodrigo/presentaciones
+Repository: ivanderodrigo/presentaciones
 
-## Purpose
-Create ad-hoc, partner-facing Westcon Comstor presentations from the FY27 corporate deck, vertical datasheets and verified public market intelligence.
+## Product rule
+The application must remain **clean, simple and hyper-intuitive**. Its job is to construct ad-hoc presentations, not manage meetings.
 
-## Product principle
-Maximum intelligence underneath, minimum effort for the user.
+## Core interaction
+Search/filter slides → add individual slides or thematic blocks → reorder visually → generate PowerPoint.
 
-## Product direction
-- This is a presentation builder, not a meeting manager.
-- The user can start from a proposed deck or from an empty deck.
-- The builder exposes the original FY27 corporate slide library so slides can be added, removed, previewed and reordered.
-- Role and vertical are optional helpers. The interface must explain exactly what each selector changes.
-- Prefer original slides. Generate new slides only when they add depth the source deck does not already contain.
-- Generated vendor slides must pass content-density gates.
-- Do not add market/analyst slides automatically unless there is enough attributable evidence.
-- Internal reasoning, scoring, whitespace, research queues and seller instructions must never appear in the partner-facing PPT.
-- Generated PowerPoint slides should be editable and visually consistent with Westcon.
+## Do not reintroduce
+- role selectors (PSM/VSM/SA);
+- generic AI-generated vendor/market slides;
+- meeting-management flows;
+- internal scoring, whitespace, research queues or seller instructions in partner-facing output.
 
-## Core data
-- data/slide-index.* — semantic index of 84 corporate + 12 vertical source slides.
-- data/vertical-content.* — structured 4 verticals × 3 areas.
-- data/vendor-intelligence.* — structured intelligence for 36 vendors.
-- data/live-intelligence.* — refreshed public evidence.
-- data/partner-intelligence.* — public partner dossiers.
-- assets/source-slides/corporate/ — FY27 source slide renders.
-- assets/source-slides/verticals/ — vertical source renders.
+## Content strategy
+1. Prefer original FY27 slides.
+2. Add curated vendor slides only when they are intentionally designed in the same visual language.
+3. Generate vertical slides from structured vertical data using the FY27 sector-playbook aesthetic.
+4. Keep research as an invisible knowledge layer.
 
-## GitHub / ChatGPT
-Direct read/write access from ChatGPT to this repository is enabled. For substantial changes use a dedicated branch, validate through the Pull Request workflow, review the diff and merge to main. Preserve automatically refreshed intelligence files unless the task explicitly requires changing them.
+## Current portfolio rules
+- Juniper Networks is not an active Westcon portfolio vendor in this app.
+- Cloudflare and Sonar (SonarQube) are active curated additions.
+- The active vendor list contains 37 vendors.
+
+## Vertical strategy
+Nine sectors, each with Cybersecurity, Networking and Cloud/UC/Automation models:
+Banca y seguros; Administración pública; Industria y utilities; Retail; Sanidad; Educación; Transporte y logística; Hostelería y turismo; Software y servicios digitales.
+
+## GitHub workflow
+For substantial changes: create branch → validate → PR → merge to main. Preserve original assets and scheduled research workflows.
