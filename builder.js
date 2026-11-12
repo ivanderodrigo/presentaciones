@@ -487,78 +487,79 @@ async function generatePptx(){
     return s;
   }
 
-  function addPlaybookLeft(s,item,v,accent){
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:3.47,h:7.50,fill:{color:'092D3A'},line:{color:'092D3A'}});
-    if(hero){
-      s.addImage({data:hero,x:0,y:2.05,w:3.47,h:5.45});
-      s.addShape(pptx.ShapeType.rect,{x:0,y:2.05,w:3.47,h:5.45,fill:{color:'062B38',transparency:28},line:{color:'062B38',transparency:100}});
-    }
-    s.addShape(pptx.ShapeType.rect,{x:3.44,y:0,w:.04,h:7.50,fill:{color:accent},line:{color:accent}});
-    s.addText('SOLUCIÓN SECTORIAL',{x:.30,y:.36,w:2.25,h:.14,fontFace:'Arial',fontSize:9,bold:true,color:accent,charSpacing:1.1,margin:0});
-    s.addText(item.vertical.toUpperCase(),{x:.30,y:.81,w:2.85,h:.78,fontFace:'Arial',fontSize:25,bold:true,color:C.white,fit:'shrink',margin:0});
-    s.addText(areaName(item.area),{x:.30,y:1.64,w:2.65,h:.45,fontFace:'Arial',fontSize:13,bold:true,color:C.white,fit:'shrink',margin:0});
-
-    s.addShape(pptx.ShapeType.roundRect,{x:.23,y:4.70,w:2.96,h:1.56,rectRadius:.05,fill:{color:'082C3A',transparency:5},line:{color:accent,pt:1}});
-    s.addText('EL RETO',{x:.43,y:4.98,w:.85,h:.12,fontFace:'Arial',fontSize:8,bold:true,color:accent,margin:0});
-    s.addText(v.challenge,{x:.43,y:5.32,w:2.48,h:.65,fontFace:'Arial',fontSize:10.4,bold:true,color:C.white,fit:'shrink',margin:0});
-
-    if(westconLogo){
-      s.addShape(pptx.ShapeType.roundRect,{x:.31,y:6.65,w:2.50,h:.43,fill:{color:C.white},line:{color:accent,pt:.5}});
-      s.addImage({data:westconLogo,x:.74,y:6.75,w:1.65,h:.23});
-    }
+  function playbookQuestion(area){
+    if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
+    if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
+    return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
   }
-
+  function playbookWhyWin(){
+    return ['• Portfolio multi-fabricante alineado al caso de uso','• PoC, preventa y 3D Labs para demostrar valor','• Servicios, FLEX y lifecycle para ampliar la oportunidad'].join('\n');
+  }
   async function addVerticalSlide(item){
     var v=verticalModel(item.vertical,item.area),accent=pptAccent(item.area),s=pptx.addSlide();
-    s.background={color:C.navy};
-    addPlaybookLeft(s,item,v,accent);
+    var S=4/3,sc=function(v){return v*S};
+    s.background={color:'082335'};
 
-    s.addText(areaName(item.area),{x:3.86,y:.30,w:3.2,h:.15,fontFace:'Arial',fontSize:9.5,bold:true,color:accent,charSpacing:.5,margin:0});
-    s.addText(item.vertical.toUpperCase(),{x:3.86,y:.66,w:6.75,h:.40,fontFace:'Arial',fontSize:24,bold:true,color:C.white,margin:0,fit:'shrink'});
+    if(hero){
+      s.addImage({data:hero,x:0,y:0,w:sc(2.587),h:7.5});
+      s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(2.587),h:7.5,fill:{color:'082335',transparency:34},line:{color:'082335',transparency:100}});
+    }else{
+      s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(2.587),h:7.5,fill:{color:'0B3140'},line:{color:'0B3140'}});
+    }
+    s.addShape(pptx.ShapeType.rect,{x:sc(2.542),y:0,w:sc(.045),h:7.5,fill:{color:accent},line:{color:accent}});
+
+    s.addText('PLAYBOOK SECTORIAL',{x:sc(.225),y:sc(.255),w:sc(2.025),h:sc(.165),fontFace:'Arial',fontSize:10.9,bold:true,color:accent,margin:0});
+    s.addText(item.vertical.toUpperCase(),{x:sc(.225),y:sc(.540),w:sc(2.115),h:sc(.615),fontFace:'Arial',fontSize:28.7,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(areaName(item.area),{x:sc(.225),y:sc(1.170),w:sc(2.115),h:sc(.210),fontFace:'Arial',fontSize:13.5,bold:true,color:C.white,margin:0,fit:'shrink'});
+
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(.180),y:sc(3.615),w:sc(2.212),h:sc(1.005),rectRadius:.05,fill:{color:'082335',transparency:5},line:{color:accent,pt:1}});
+    s.addText('ABRE CON',{x:sc(.330),y:sc(3.765),w:sc(.750),h:sc(.135),fontFace:'Arial',fontSize:10.55,bold:true,color:accent,margin:0});
+    s.addText(playbookQuestion(item.area),{x:sc(.330),y:sc(3.975),w:sc(1.845),h:sc(.465),fontFace:'Arial',fontSize:15.8,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText('FABRICANTES CLAVE',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
+    s.addText(verticalVendors(v).join(' · '),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.8,color:C.white,margin:0,fit:'shrink'});
+
+    s.addText(areaName(item.area),{x:sc(2.835),y:sc(.210),w:sc(3.375),h:sc(.165),fontFace:'Arial',fontSize:11.47,bold:true,color:accent,margin:0,fit:'shrink'});
+    s.addText(item.vertical.toUpperCase(),{x:sc(2.835),y:sc(.412),w:sc(5.025),h:sc(.360),fontFace:'Arial',fontSize:29.8,bold:true,color:C.white,margin:0,fit:'shrink'});
     if(westconLogo){
-      s.addShape(pptx.ShapeType.roundRect,{x:11.20,y:.24,w:1.70,h:.58,fill:{color:C.white},line:{color:accent,pt:.6}});
-      s.addImage({data:westconLogo,x:11.51,y:.36,w:1.08,h:.29});
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(8.287),y:sc(.165),w:sc(1.462),h:sc(.540),fill:{color:C.white},line:{color:accent,pt:.7},rectRadius:.05});
+      s.addImage({data:westconLogo,x:sc(8.363),y:sc(.225),w:sc(1.312),h:sc(.420)});
     }
 
-    s.addText('SEÑALES DE OPORTUNIDAD',{x:3.86,y:1.18,w:2.35,h:.13,fontFace:'Arial',fontSize:8.5,bold:true,color:accent,margin:0});
+    s.addText('SEÑALES DE OPORTUNIDAD',{x:sc(2.835),y:sc(.840),w:sc(1.650),h:sc(.135),fontFace:'Arial',fontSize:10.9,bold:true,color:accent,margin:0});
     (v.why||[]).slice(0,3).forEach(function(it,i){
-      var x=3.86+i*3.07;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:1.39,w:2.84,h:.58,rectRadius:.04,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-      s.addText(it[0],{x:x+.12,y:1.47,w:2.60,h:.11,fontFace:'Arial',fontSize:7.8,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
-      s.addText(it[1],{x:x+.15,y:1.66,w:2.54,h:.14,fontFace:'Arial',fontSize:5.8,color:'D9E8EC',align:'center',margin:0,fit:'shrink'});
+      var x=[2.835,5.130,7.425][i];
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(x),y:sc(1.028),w:sc(2.175),h:sc(.315),rectRadius:.04,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+      s.addText(it[0],{x:sc(x+.060),y:sc(1.095),w:sc(2.055),h:sc(.135),fontFace:'Arial',fontSize:11.7,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
     });
 
+    var caseCoords=[
+      {x:2.835,y:1.485},{x:6.285,y:1.485},{x:2.835,y:2.768},{x:6.285,y:2.768}
+    ];
     for(var i=0;i<4;i++){
-      var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]];
-      var col=i%2,row=Math.floor(i/2),x=3.86+col*4.47,y=2.14+row*1.62;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:y,w:4.22,h:1.40,rectRadius:.06,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-      s.addText(ca[0],{x:x+.17,y:y+.16,w:3.75,h:.17,fontFace:'Arial',fontSize:10,bold:true,color:accent,margin:0,fit:'shrink'});
-      s.addText(ca[1],{x:x+.17,y:y+.48,w:3.75,h:.40,fontFace:'Arial',fontSize:8.5,color:C.white,margin:0,fit:'shrink'});
-      var names=(sol[1]||[]).slice(0,4),n=names.length,boxW=n<=2?1.70:n===3?1.13:.84,gap=.08,start=x+.17;
+      var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]],cc=caseCoords[i];
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(cc.x),y:sc(cc.y),w:sc(3.315),h:sc(1.147),rectRadius:.06,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+      s.addText(ca[0],{x:sc(cc.x+.120),y:sc(cc.y+.090),w:sc(3.075),h:sc(.180),fontFace:'Arial',fontSize:14.33,bold:true,color:accent,margin:0,fit:'shrink'});
+      s.addText(ca[1],{x:sc(cc.x+.120),y:sc(cc.y+.315),w:sc(3.075),h:sc(.315),fontFace:'Arial',fontSize:12.15,color:C.white,margin:0,fit:'shrink'});
+      var names=(sol[1]||[]).slice(0,4),n=names.length;
+      var x0=cc.x+.120,slotW=n>=4?.724:n===3?.985:n===2?1.508:2.2,gap=n>=4?.060:n===3?.060:.060;
       for(var j=0;j<n;j++){
-        var bx=start+j*(boxW+gap);
-        s.addShape(pptx.ShapeType.roundRect,{x:bx,y:y+.98,w:boxW,h:.27,rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.35}});
-        await addLogo(s,names[j],bx+.04,y+1.015,boxW-.08,.19);
+        var bx=x0+j*(slotW+gap);
+        s.addShape(pptx.ShapeType.roundRect,{x:sc(bx),y:sc(cc.y+.795),w:sc(slotW),h:sc(.240),rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.45}});
+        await addLogo(s,names[j],sc(bx+.045),sc(cc.y+.828),sc(slotW-.090),sc(.175));
       }
     }
 
-    s.addShape(pptx.ShapeType.roundRect,{x:3.86,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-    s.addText('CÓMO EMPEZAR',{x:4.02,y:5.61,w:1.30,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
-    s.addText((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),{x:4.02,y:5.88,w:3.78,h:.52,fontFace:'Arial',fontSize:8.2,color:C.white,margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(2.835),y:sc(4.020),w:sc(3.315),h:sc(.990),rectRadius:.05,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+    s.addText('QUICK WINS',{x:sc(2.955),y:sc(4.110),w:sc(.938),h:sc(.135),fontFace:'Arial',fontSize:12.0,bold:true,color:accent,margin:0});
+    s.addText((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),{x:sc(2.970),y:sc(4.298),w:sc(3.038),h:sc(.600),fontFace:'Arial',fontSize:11.7,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.roundRect,{x:8.33,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-    s.addText('IMPACTO ESPERADO',{x:8.49,y:5.61,w:1.62,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
-    var impacts=(v.impacts||[]).slice(0,4);
-    var ix=8.49,iy=5.93;
-    impacts.forEach(function(it,j){
-      var cx=ix+(j%2)*1.88,cy=iy+Math.floor(j/2)*.34;
-      s.addText(it[0],{x:cx,y:cy,w:1.28,h:.10,fontFace:'Arial',fontSize:6.5,color:C.white,margin:0,fit:'shrink'});
-      s.addText(String(it[1]),{x:cx+1.30,y:cy,w:.32,h:.10,fontFace:'Arial',fontSize:6.8,bold:true,color:accent,align:'right',margin:0});
-    });
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(6.285),y:sc(4.020),w:sc(3.315),h:sc(.990),rectRadius:.05,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+    s.addText('POR QUÉ GANAMOS',{x:sc(6.405),y:sc(4.110),w:sc(1.312),h:sc(.135),fontFace:'Arial',fontSize:12.0,bold:true,color:accent,margin:0});
+    s.addText(playbookWhyWin(),{x:sc(6.420),y:sc(4.298),w:sc(3.038),h:sc(.600),fontFace:'Arial',fontSize:11.7,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.rect,{x:3.86,y:6.82,w:8.69,h:.40,fill:{color:accent},line:{color:accent}});
-    s.addText('SIGUIENTE PASO',{x:4.02,y:6.95,w:1.22,h:.10,fontFace:'Arial',fontSize:7.2,bold:true,color:item.area==='cloud'?C.navy:C.white,margin:0});
-    s.addText(v.nextStep,{x:5.43,y:6.91,w:6.78,h:.17,fontFace:'Arial',fontSize:8.7,bold:true,color:item.area==='cloud'?C.navy:C.white,align:'center',margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.rect,{x:sc(2.835),y:sc(5.175),w:sc(6.765),h:sc(.285),fill:{color:accent},line:{color:accent}});
+    s.addText('SIGUIENTE PASO',{x:sc(2.940),y:sc(5.235),w:sc(1.238),h:sc(.120),fontFace:'Arial',fontSize:9.75,bold:true,color:'082335',margin:0});
+    s.addText(v.nextStep,{x:sc(4.200),y:sc(5.220),w:sc(5.213),h:sc(.142),fontFace:'Arial',fontSize:12.27,bold:true,color:'082335',align:'center',margin:0,fit:'shrink'});
 
     addNotes(s,['Contenido estructurado a partir de Westcon Datasheets Verticales FY27.',v.references||'']);
     return s;
