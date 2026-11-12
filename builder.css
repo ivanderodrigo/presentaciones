@@ -128,3 +128,10 @@ button{cursor:pointer}
 .vertical-fy27 .vs-bottom span{font-size:.84cqw;line-height:1.18;margin-top:.5cqw}
 .vertical-fy27 .vs-next{bottom:3.0%;height:5.0%;font-size:.88cqw}
 .vertical-fy27 .vs-next b{width:19%;font-size:.78cqw}
+
+/* v5.4 grid corrections */
+.sp-logo-grid.network{grid-template-columns:repeat(4,1fr)}
+.tax-grid.count-7{grid-template-columns:repeat(12,1fr);grid-template-rows:1fr 1fr}
+.tax-grid.count-7 article{grid-column:span 3}
+.tax-grid.count-7 article:nth-child(n+5){grid-column:span 4;transform:none;width:auto}
+.preview-source .source-special{width:100%;height:100%}
