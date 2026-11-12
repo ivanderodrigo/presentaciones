@@ -325,26 +325,50 @@ function themeBlocks(){
   ];
 }
 
-function sourceOverlayHtml(page){
-  if(Number(page)===5){
-    return '<div class="portfolio-hide-juniper"></div>'+
-      '<div class="portfolio-new-card cloudflare"><img src="'+esc(logoUrl('Cloudflare')||'')+'" alt="Cloudflare"></div>'+
-      '<div class="portfolio-new-card sonar"><img src="'+esc(logoUrl('Sonar (SonarQube)')||'')+'" alt="Sonar"></div>';
-  }
-  if(Number(page)===7){
-    return '<div class="taxonomy-patch cyber-sase">• Palo Alto, Cisco, Zscaler, F5 y Cloudflare<br>• NGFW, SSE/SASE, ZTNA, DDoS<br>• Certes: cifrado persistente</div>'+
-      '<div class="taxonomy-patch cyber-apps">• F5/Cloudflare/Noname: WAAP, WAF y API Security<br>• Sonar: SAST, quality gates y DevSecOps<br>• Menlo: Secure Browser / RBI</div>';
-  }
-  if(Number(page)===39){
-    return '<div class="taxonomy-patch network-routing">• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G</div>'+
-      '<div class="taxonomy-patch network-campus">• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN<br>• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt<br>• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One</div>'+
-      '<div class="taxonomy-patch network-dc">• Cisco: Nexus, ACI, NDFC y switching DC<br>• Extreme: SLX, VSP/Universal Switching y Fabric Connect</div>'+
-      '<div class="taxonomy-patch network-branch">• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing<br>• Extreme: ExtremeCloud SD‑WAN<br>• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular</div>';
-  }
+
+function specialPage(page){return [5,7,39,58].indexOf(Number(page))>=0}
+function vendorNamesForArea(area){
+  return (K.vendors||[]).filter(function(v){
+    var a=norm(v.area||'');
+    if(area==='cyber')return a.indexOf('ciber')>=0;
+    if(area==='network')return a.indexOf('network')>=0;
+    return a.indexOf('cloud')>=0||a.indexOf('automat')>=0||a.indexOf('uc')>=0;
+  }).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
+}
+function logoCardHtml(name){
+  var u=logoUrl(name);
+  return '<div class="sp-logo-card">'+(u?'<img src="'+esc(u)+'" alt="'+esc(name)+'">':'<span>'+esc(name)+'</span>')+'</div>';
+}
+function portfolioHtml(full){
+  var cyber=vendorNamesForArea('cyber').map(logoCardHtml).join('');
+  var network=vendorNamesForArea('network').map(logoCardHtml).join('');
+  var cloud=vendorNamesForArea('cloud').map(logoCardHtml).join('');
+  return '<div class="'+(full?'preview-generated ':'')+'special-portfolio">'+
+    '<h3>PORTFOLIO DE FABRICANTES</h3><p>Visión rápida del portfolio Westcon Comstor España por áreas de especialización</p>'+
+    '<section class="sp-cyber"><h4>CIBERSEGURIDAD</h4><div class="sp-logo-grid cyber">'+cyber+'</div></section>'+
+    '<section class="sp-network"><h4>NETWORKING</h4><div class="sp-logo-grid network">'+network+'</div></section>'+
+    '<section class="sp-cloud"><h4>CLOUD Y OTRAS SOLUCIONES</h4><div class="sp-logo-grid cloud">'+cloud+'</div></section>'+
+    '<footer>FY2027 — Westcon Comstor España</footer></div>';
+}
+function taxonomyHtml(area,full){
+  var t=TAXONOMY[area],cards=t.cards.map(function(card){
+    return '<article><h4>'+esc(card.title)+'</h4><p>'+esc(card.vendors.join(' · '))+'</p><small>'+esc(card.detail)+'</small></article>';
+  }).join('');
+  return '<div class="'+(full?'preview-generated ':'')+'special-taxonomy '+area+'">'+
+    '<h3>'+esc(t.title)+'</h3><p class="subtitle">'+esc(t.subtitle)+'</p><div class="tax-grid count-'+t.cards.length+'">'+cards+'</div>'+
+    '<footer>FY2027 — Westcon Comstor España</footer></div>';
+}
+function specialSourceHtml(item,full){
+  var p=Number(item.page);
+  if(p===5)return portfolioHtml(full);
+  if(p===7)return taxonomyHtml('cyber',full);
+  if(p===39)return taxonomyHtml('network',full);
+  if(p===58)return taxonomyHtml('cloud',full);
   return '';
 }
 function sourceVisualHtml(item,showPage){
-  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+sourceOverlayHtml(item.page)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+  if(specialPage(item.page))return '<div class="source-special">'+specialSourceHtml(item,false)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
 }
 
 function opportunityHtml(){
@@ -368,10 +392,11 @@ function curatedThumb(item,full){
   '</div>';
 }
 
-function verticalQuestion(area){
-  if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
-  if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
-  return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
+
+function verticalMeta(name){return VERTICAL_TITLE[name]||{left:String(name||'').toUpperCase(),main:String(name||'').toUpperCase(),lf:24,mf:26}}
+function verticalQuestionFor(item){
+  var x=VERTICAL_QUESTION[item.vertical]||{};
+  return x[item.area]||'¿Qué iniciativa prioritaria podemos convertir en un piloto medible?';
 }
 function verticalVendors(v){
   var out=[];
@@ -381,21 +406,26 @@ function verticalVendors(v){
 function verticalWhyWin(){
   return ['Portfolio multi-fabricante alineado al caso de uso','PoC, preventa y 3D Labs para demostrar valor','Servicios, FLEX y lifecycle para ampliar la oportunidad'];
 }
-
 function verticalThumb(item,full){
-  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82';
+  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82',meta=verticalMeta(item.vertical);
   var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal">'+esc(w[0])+'</div>'}).join('');
   var cases=(v.cases||[]).slice(0,4).map(function(c,i){
     var sol=(v.solutions||[])[i]||['',[]];
-    var logos=(sol[1]||[]).slice(0,4).map(function(name){var u=logoUrl(name);return u?'<img src="'+esc(u)+'" alt="'+esc(name)+'" title="'+esc(name)+'">':'<em>'+esc(name)+'</em>'}).join('');
-    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><div class="vs-logo-row">'+logos+'</div></div>';
+    var logos=(sol[1]||[]).slice(0,2).map(function(name){var u=logoUrl(name);return u?'<span><img src="'+esc(u)+'" alt="'+esc(name)+'"></span>':'<span class="name">'+esc(name)+'</span>'}).join('');
+    return '<div class="vs-case"><b>'+esc(c[0])+'</b><p>'+esc(c[1])+'</p><div class="vs-logo-row">'+logos+'</div></div>';
   }).join('');
   var quick=(v.start||[]).slice(0,3).map(function(x){return '• '+esc(x)}).join('<br>');
   var why=verticalWhyWin().map(function(x){return '• '+esc(x)}).join('<br>');
-  var vendors=verticalVendors(v).join(' · ');
   return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+'">'+
-    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestion(item.area))+'</span></div><div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(vendors)+'</span></div></div>'+
-    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div><h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div><div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
+    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3 style="font-size:'+meta.lf+'px">'+esc(meta.left).replace(/\n/g,'<br>')+'</h3><strong>'+esc(areaName(item.area))+'</strong>'+
+      '<div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestionFor(item))+'</span></div>'+
+      '<div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(verticalVendors(v).join(' · '))+'</span></div></div>'+
+    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3 style="font-size:'+meta.mf+'px">'+esc(meta.main)+'</h3>'+
+      '<div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div>'+
+      '<h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div>'+
+      '<div class="vs-cases">'+cases+'</div>'+
+      '<div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div>'+
+      '<div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
   '</div>';
 }
 
