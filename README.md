@@ -1,72 +1,76 @@
-# Westcon Presentation Builder · v3
+# Westcon Presentation Studio · v4
 
-Aplicación estática para GitHub Pages orientada a **crear presentaciones ad-hoc para partners e integradores**, no a gestionar reuniones.
+Aplicación estática para GitHub Pages orientada a **construir presentaciones ad-hoc** a partir del corpus FY27 de Westcon Comstor.
 
-## Principio
+## Principio de producto
 
-**La presentación original FY27 es la biblioteca. La inteligencia añade contexto; el usuario mantiene el control final del deck.**
+**Partir de la presentación original y añadir solo lo que aporta valor.**
 
-La experiencia se reduce a:
+La aplicación ya no funciona como gestor de reuniones. El usuario puede empezar vacío, reutilizar slides FY27, añadir bloques completos y dejar que el motor proponga una narrativa editable.
 
-1. partner (opcional);
-2. perfil PSM / VSM / Solution Architect (opcional, solo para orientar la propuesta);
-3. objetivo;
-4. fabricantes y vertical, cuando apliquen;
-5. botón **Proponer deck**.
+## Qué aporta v4
 
-Después el usuario puede **añadir, quitar, duplicar y reordenar** cualquier slide antes de generar el PowerPoint.
+### Biblioteca visual
+- miniaturas grandes de las slides FY27;
+- búsqueda por fabricante, tecnología o servicio;
+- filtros Corporativo / Fabricantes / Servicios / Verticales / IA útil;
+- previsualización a pantalla completa;
+- añadir, quitar, duplicar, arrastrar y reordenar.
 
-## Biblioteca incluida
+### Bloques rápidos
+- base Westcon;
+- bloque completo por fabricante;
+- bloque vertical;
+- servicios adaptados al perfil;
+- cierre.
 
-- 84 slides corporativas de Westcon Comstor España FY2027;
-- 12 verticales estructuradas (4 sectores × 3 áreas) adaptadas a 16:9;
-- 36 fabricantes con Vendor Intelligence;
-- evidencia pública actualizable mediante GitHub Actions;
-- servicios Westcon FY27.
+### Rol explicado, no impuesto
+El rol es opcional y únicamente modifica la propuesta automática:
+- **PSM**: conversación ejecutiva, valor conjunto, portfolio, verticales, servicios y crecimiento;
+- **VSM**: fabricante, diferenciación, evidencia y activación de canal;
+- **SA**: caso de uso, criterios, PoV/PoC y preventa.
 
-## Nuevas slides que puede generar
+La interfaz muestra explícitamente qué cambiará al elegir cada perfil.
 
-- portada personalizada;
-- objetivo / agenda;
-- contexto público del partner;
-- caso de uso verticalizado;
-- diferenciación de fabricante;
-- analistas y señales de mercado;
-- siguientes pasos;
-- slide libre.
+### Vertical explicado, no impuesto
+La vertical es opcional. Si se selecciona, activa contenido FY27 de:
+- Banca y seguros;
+- Administración pública;
+- Industria y utilities;
+- Retail.
 
-## Inteligencia invisible
+Los casos de uso se recomponen en 16:9 y se priorizan según las áreas de los fabricantes seleccionados.
 
-Los workflows de research siguen actualizando `data/live-intelligence.*` y `data/partner-intelligence.*`. El constructor utiliza esas evidencias para generar contenido, pero no muestra scoring, whitespace, colas de investigación ni lenguaje interno en el deck final.
+### IA con umbral de profundidad
+La aplicación ya no añade automáticamente slides vacías de “diferenciación” o “mercado”.
 
-## ChatGPT + GitHub
+Cada fabricante puede generar:
+1. **Historia de valor**: propuesta, por qué ahora, diferenciales, criterios de decisión y resultado buscado.
+2. **Prueba de valor**: PoV/PoC, qué medir, evidencia FY27 y validación externa.
+3. **Señales de mercado**: solo aparece cuando existen al menos tres evidencias públicas suficientemente sólidas.
 
-El repositorio `ivanderodrigo/presentaciones` está conectado a ChatGPT con acceso directo de lectura y escritura. `CHATGPT.md` conserva el contexto del proyecto para futuras iteraciones.
+Los motores usan data/vendor-intelligence.* y data/live-intelligence.*. Las afirmaciones externas se muestran únicamente con fuente atribuible.
 
-Las nuevas versiones pueden prepararse en una rama, validarse y fusionarse a `main` desde ChatGPT, sin necesidad de sustituir archivos manualmente en VS Code.
+## Corpus
 
-## Despliegue
+- 84 slides corporativas FY27;
+- 12 datasheets verticales;
+- 36 fabricantes;
+- 12 modelos verticales 16:9;
+- research periódico de fabricantes y partners.
 
-GitHub Pages publica desde `main` → `/(root)`.
+## Presentación generada
 
-Si alguna vez se trabaja en local, el flujo de respaldo es:
+Las slides originales se reutilizan como imagen completa para conservar fidelidad visual. Las slides nuevas se construyen como objetos PowerPoint editables y utilizan un sistema visual consistente con Westcon: tipografía amplia, más espacio en blanco, jerarquía clara y menos cajas de texto pequeñas.
 
-```powershell
-git pull --rebase origin main
-git add -A
-git commit -m "Actualización Presentation Builder"
-git push origin main
-```
+## Desarrollo
 
-## Research
+La calidad se valida en cada Pull Request y en main:
 
-- **Update public market intelligence**: refresca evidencia de fabricantes.
-- **Research partner dossier**: crea/actualiza dossier público de un partner.
+    node --check builder.js
+    python scripts/quality_gate.py
+    python -m py_compile scripts/research_intelligence.py scripts/research_partner.py
 
-## Calidad
+## GitHub Pages
 
-```bash
-python scripts/quality_gate.py
-```
-
-La validación comprueba 36 fabricantes, 96 slides indexadas, 84 assets corporativos, 12 verticales y los componentes básicos del Presentation Builder.
+La aplicación sigue siendo 100% estática y compatible con Pages desde main.
