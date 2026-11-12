@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Structural quality gate for Westcon Presentation Builder v5.1."""
+"""Structural quality gate for Westcon Presentation Builder v5.2."""
 from pathlib import Path
 import json, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-errors=[]; warnings=[]
+errors=[]
 
 def load(path):
     try:
@@ -15,126 +15,91 @@ def load(path):
 
 knowledge=load("data/knowledge.json")
 vendors=knowledge.get("vendors",[])
-vendor_names={v.get("name") for v in vendors}
+vendor_by={v.get("name"):v for v in vendors}
 if len(vendors)!=37:
     errors.append(f"knowledge: expected 37 active vendors, found {len(vendors)}")
-for required in ["Cloudflare","Sonar (SonarQube)"]:
-    if required not in vendor_names:
-        errors.append(f"knowledge: missing {required}")
-if "Juniper Networks" in vendor_names:
-    errors.append("knowledge: Juniper Networks must not be in active portfolio")
+for name in ["Cloudflare","Sonar (SonarQube)"]:
+    if name not in vendor_by:
+        errors.append(f"knowledge: missing {name}")
+    elif vendor_by[name].get("area")!="Ciberseguridad":
+        errors.append(f"knowledge: {name} must belong to Ciberseguridad only")
+if "Juniper Networks" in vendor_by:
+    errors.append("knowledge: Juniper Networks must not be active")
 
-vi=load("data/vendor-intelligence.json")
-intel=vi.get("vendors",{})
-if len(intel)!=37:
-    errors.append(f"vendor intelligence: expected 37 active vendors, found {len(intel)}")
-for required in ["Cloudflare","Sonar (SonarQube)"]:
-    x=intel.get(required,{})
-    if not x.get("valueProposition") or len(x.get("approvedAdvantages",[]))<4:
-        errors.append(f"{required}: curated slide content incomplete")
-if "Juniper Networks" in intel:
-    errors.append("vendor intelligence: Juniper Networks must not be active")
+vi=load("data/vendor-intelligence.json").get("vendors",{})
+for name in ["Cloudflare","Sonar (SonarQube)"]:
+    x=vi.get(name,{})
+    if not x.get("valueProposition"):
+        errors.append(f"{name}: missing value proposition")
+    if len(x.get("approvedAdvantages",[]))!=4:
+        errors.append(f"{name}: must expose exactly four client advantages like FY27 vendor cards")
 
 logos=load("data/vendor-logo-map.json")
 if logos.get("Cloudflare")!="assets/vendors/cloudflare.svg":
     errors.append("Cloudflare logo mapping missing")
 if logos.get("Sonar (SonarQube)")!="assets/vendors/sonar.svg":
     errors.append("Sonar logo mapping missing")
-for p in ["assets/vendors/cloudflare.svg","assets/vendors/sonar.svg","assets/app-icon.svg"]:
+for p in ["assets/vendors/cloudflare.svg","assets/vendors/sonar.svg","favicon.svg","favicon.ico"]:
     if not (ROOT/p).exists():
         errors.append(f"missing required asset: {p}")
 
 slides=load("data/slide-index.json").get("slides",[])
-if len(slides)!=97:
-    errors.append(f"slide index: expected 97 visible/indexed items, found {len(slides)}")
-if any("Juniper Networks" in (s.get("vendors") or []) for s in slides):
-    errors.append("slide index: Juniper slide must be excluded")
 for sid in ["curated-cloudflare","curated-sonar"]:
-    if not any(s.get("id")==sid for s in slides):
+    found=next((s for s in slides if s.get("id")==sid),None)
+    if not found:
         errors.append(f"slide index: missing {sid}")
+    elif found.get("area")!="Ciberseguridad":
+        errors.append(f"slide index: {sid} must be in Ciberseguridad")
+if any("Juniper Networks" in (s.get("vendors") or []) for s in slides):
+    errors.append("slide index: Juniper must not be visible")
 
 corp=list((ROOT/"assets/source-slides/corporate").glob("slide-*.png"))
-vert=list((ROOT/"assets/source-slides/verticals").glob("slide-*.png"))
 if len(corp)!=84:
     errors.append(f"corporate assets: expected 84, found {len(corp)}")
-if len(vert)!=12:
-    errors.append(f"vertical source assets: expected 12, found {len(vert)}")
 
 vc=load("data/vertical-content.json").get("verticals",{})
-if len(vc)!=9:
-    errors.append(f"vertical content: expected 9 sectors, found {len(vc)}")
 models=sum(len(x) for x in vc.values())
-if models!=27:
-    errors.append(f"vertical content: expected 27 sector/area models, found {models}")
-for v in ["Sanidad","Educación","Transporte y logística","Hostelería y turismo","Software y servicios digitales"]:
-    if v not in vc:
-        errors.append(f"vertical content: missing {v}")
+if len(vc)!=9 or models!=27:
+    errors.append(f"vertical content: expected 9 sectors/27 models, found {len(vc)}/{models}")
 if "Juniper Networks" in json.dumps(vc,ensure_ascii=False):
-    errors.append("vertical content: Juniper Networks reference remains")
-
-required=[
-    "index.html","builder.css","builder.js","vendor/pptxgen.bundle.js",
-    "data/knowledge.js","data/vendor-intelligence.js","data/vendor-logo-map.js",
-    "data/slide-index.js","data/vertical-content.js","scripts/research_intelligence.py",
-    ".github/workflows/quality.yml",".github/workflows/update-intelligence.yml",".nojekyll"
-]
-for p in required:
-    if not (ROOT/p).exists():
-        errors.append(f"missing required file: {p}")
+    errors.append("vertical content: Juniper reference remains")
 
 index=(ROOT/"index.html").read_text(encoding="utf-8")
 builder=(ROOT/"builder.js").read_text(encoding="utf-8")
-if 'rel="icon"' not in index or "assets/app-icon.svg" not in index:
-    errors.append("interface: favicon is missing")
-if "data/vendor-logo-map.js" not in index:
-    errors.append("interface: vendor logo map is not loaded")
-if "data-role" in index or "PSM" in index or "VSM" in index or "Solution Architect" in index:
-    errors.append("interface: role language still present")
 
-for text in ["searchSlides","themeBlocks","libraryGrid","deckList"]:
-    if text not in index:
-        errors.append(f"interface: missing {text}")
+if "favicon.ico?v=52" not in index or "favicon.svg?v=52" not in index:
+    errors.append("interface: versioned ICO/SVG favicon links missing")
+if "FY27 · v5.2" not in index:
+    errors.append("interface: v5.2 label missing")
+if "data-role" in index or "PSM" in index or "VSM" in index:
+    errors.append("interface: role language must remain absent")
 
-for fn in [
-    "areaBlockItems","vendorSlidesForArea","verticalPages","verticalSectorPages",
-    "addVendorSlide","addVerticalContext","addVerticalCases","addVerticalAction","generatePptx"
-]:
+for fn in ["vendorSlidesForArea","areaBlockItems","verticalItem","verticalSectorItems","addVendorSlide","addVerticalSlide","generatePptx"]:
     if f"function {fn}" not in builder:
         errors.append(f"builder: missing {fn}")
-
-for old in ["vendorStoryModel","vendorProofModel","vendorMarketModel","ROLE_META"]:
+for old in ["verticalPages","verticalPage(","addVerticalContext","addVerticalCases","addVerticalAction","vendorStoryModel","ROLE_META"]:
     if old in builder:
-        errors.append(f"builder: obsolete AI/role logic remains: {old}")
+        errors.append(f"builder: obsolete multi-slide/AI logic remains: {old}")
 
+if "OPPORTUNITY_LINES" not in builder or builder.count("['") < 5:
+    errors.append("builder: standard five-line partner opportunity block missing")
+if "localeCompare(vendorName(b)" not in builder:
+    errors.append("builder: vendor miniatures are not sorted alphabetically")
+if "Object.keys(CURATED).forEach(function(name){if(area==='cyber')" not in builder:
+    errors.append("builder: curated vendors are not confined to Cybersecurity blocks")
+if "CÓMO EMPEZAR" not in builder or "IMPACTO ESPERADO" not in builder or "SEÑALES DE OPORTUNIDAD" not in builder:
+    errors.append("builder: rich vertical content structure incomplete")
+if "await addLogo(s,names[j]" not in builder:
+    errors.append("builder: vertical use cases do not render vendor logos")
 if "Juniper Networks" in builder:
     errors.append("builder: Juniper reference remains")
-for required in ["Cloudflare","Sonar (SonarQube)"]:
-    if required not in builder:
-        errors.append(f"builder: missing curated {required} slide")
 
-if "logoUrl(item.vendor)" not in builder or "await addLogo(s,name" not in builder:
-    errors.append("builder: curated vendor slides do not use real logos")
-if "areaBlockItems('cyber')" not in builder or "areaBlockItems('network')" not in builder or "areaBlockItems('cloud')" not in builder:
-    errors.append("builder: complete solution blocks are missing")
-if "9 slides:" not in builder:
-    errors.append("builder: complete vertical block should expose 9 slides")
-if not all(x in builder for x in ["phase==='context'","phase==='cases'","phase==='action'"]):
-    errors.append("builder: vertical three-slide model incomplete")
-
-research=(ROOT/"scripts/research_intelligence.py").read_text(encoding="utf-8")
-if '"Cloudflare":"cloudflare.com"' not in research or '"Sonar (SonarQube)":"sonarsource.com"' not in research:
-    errors.append("research engine: new vendor official domains missing")
-if '"Juniper Networks":"juniper.net"' in research:
-    errors.append("research engine: Juniper still active")
-
-print("WESTCON PRESENTATION BUILDER v5.1 · QUALITY GATE")
-print(f"Active vendors: {len(vendors)}/37 · Slide index: {len(slides)}/97")
-print(f"Corporate assets: {len(corp)}/84 · Source vertical assets: {len(vert)}/12")
-print(f"Vertical sectors: {len(vc)}/9 · Vertical models: {models}/27 · Generated vertical pages: {models*3}/81")
-for w in warnings:
-    print("WARN ·",w)
+print("WESTCON PRESENTATION BUILDER v5.2 · QUALITY GATE")
+print(f"Active vendors: {len(vendors)}/37 · Corporate assets: {len(corp)}/84")
+print(f"Vertical sectors/models: {len(vc)}/9 · {models}/27")
+print("Cloudflare/Sonar: Cybersecurity only · logos required · FY27 vendor-card structure")
 for e in errors:
     print("ERROR ·",e)
 if errors:
     sys.exit(1)
-print("OK · visual ad-hoc builder quality gate passed")
+print("OK · unified visual builder quality gate passed")

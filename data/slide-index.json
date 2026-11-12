@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "5.2.0",
   "generatedAt": "2026-08-27",
   "slides": [
     {
@@ -2214,10 +2214,10 @@
       "id": "curated-cloudflare",
       "source": "curated",
       "page": null,
-      "title": "CONNECTIVITY CLOUD / SASE / APPLICATION SECURITY",
+      "title": "APPLICATION SECURITY / SASE / CONNECTIVITY CLOUD",
       "subtitle": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
       "type": "vendor",
-      "area": "Ciberseguridad / Networking",
+      "area": "Ciberseguridad",
       "vendors": [
         "Cloudflare"
       ],
@@ -2241,10 +2241,10 @@
       "id": "curated-sonar",
       "source": "curated",
       "page": null,
-      "title": "CODE QUALITY & APPLICATION SECURITY",
-      "subtitle": "Confianza en cada cambio de código, humano o generado por IA",
+      "title": "APPLICATION SECURITY / DEVSECOPS",
+      "subtitle": "Verifica cada cambio de código, humano o generado por IA",
       "type": "vendor",
-      "area": "Ciberseguridad / Cloud, UC y automatización",
+      "area": "Ciberseguridad",
       "vendors": [
         "Sonar (SonarQube)"
       ],

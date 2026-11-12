@@ -1,4 +1,4 @@
-# Westcon Presentation Builder · v5.1
+# Westcon Presentation Builder · v5.2
 
 Constructor visual de presentaciones ad-hoc para Westcon Comstor España FY27.
 
@@ -75,3 +75,11 @@ Cada Pull Request y cada push a main valida:
 
 La aplicación se publica desde main y sigue siendo completamente estática.
 \n\n## Verticales ricos\n\nCada combinación vertical/área genera 3 slides editables: contexto/reto/impacto, casos de uso + fabricantes, y activación/Westcon/siguiente paso. Un vertical completo añade 9 slides.\n\n## Bloques completos\n\nCiberseguridad, Networking y Cloud/UC/Automatización añaden sección + taxonomía + todas las fichas de fabricante asociadas.\n
+
+## Ajustes v5.2
+
+- Cloudflare y Sonar (SonarQube) quedan exclusivamente en Ciberseguridad.
+- Sus fichas replican la estructura FY27 de fabricante: categoría, logo, tagline, 5 líneas de oportunidad para el socio, propuesta de valor y 4 ventajas clave.
+- En Ciberseguridad las miniaturas de fabricantes se ordenan alfabéticamente.
+- Los verticales vuelven a una única slide rica por sector/área, inspirada directamente en los playbooks sectoriales FY27 y alimentada por el contenido de los datasheets: señales, reto, 4 casos de uso, fabricantes con logos, cómo empezar, impacto y siguiente paso.
+- Se añade favicon.ico real en la raíz más favicon.svg versionado para mejorar la identificación de la pestaña del navegador.
