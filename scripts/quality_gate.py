@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural quality gate for Westcon Presentation Builder v5."""
+"""Structural quality gate for Westcon Presentation Builder v5.1."""
 from pathlib import Path
 import json, sys
 
@@ -35,6 +35,15 @@ for required in ["Cloudflare","Sonar (SonarQube)"]:
 if "Juniper Networks" in intel:
     errors.append("vendor intelligence: Juniper Networks must not be active")
 
+logos=load("data/vendor-logo-map.json")
+if logos.get("Cloudflare")!="assets/vendors/cloudflare.svg":
+    errors.append("Cloudflare logo mapping missing")
+if logos.get("Sonar (SonarQube)")!="assets/vendors/sonar.svg":
+    errors.append("Sonar logo mapping missing")
+for p in ["assets/vendors/cloudflare.svg","assets/vendors/sonar.svg","assets/app-icon.svg"]:
+    if not (ROOT/p).exists():
+        errors.append(f"missing required asset: {p}")
+
 slides=load("data/slide-index.json").get("slides",[])
 if len(slides)!=97:
     errors.append(f"slide index: expected 97 visible/indexed items, found {len(slides)}")
@@ -65,8 +74,8 @@ if "Juniper Networks" in json.dumps(vc,ensure_ascii=False):
 
 required=[
     "index.html","builder.css","builder.js","vendor/pptxgen.bundle.js",
-    "data/knowledge.js","data/vendor-intelligence.js","data/slide-index.js",
-    "data/vertical-content.js","scripts/research_intelligence.py",
+    "data/knowledge.js","data/vendor-intelligence.js","data/vendor-logo-map.js",
+    "data/slide-index.js","data/vertical-content.js","scripts/research_intelligence.py",
     ".github/workflows/quality.yml",".github/workflows/update-intelligence.yml",".nojekyll"
 ]
 for p in required:
@@ -75,22 +84,42 @@ for p in required:
 
 index=(ROOT/"index.html").read_text(encoding="utf-8")
 builder=(ROOT/"builder.js").read_text(encoding="utf-8")
-if "data-role" in index or "¿Qué enfoque quieres?" in index or "PSM" in index or "VSM" in index:
-    errors.append("interface: role selector or role language still present")
+if 'rel="icon"' not in index or "assets/app-icon.svg" not in index:
+    errors.append("interface: favicon is missing")
+if "data/vendor-logo-map.js" not in index:
+    errors.append("interface: vendor logo map is not loaded")
+if "data-role" in index or "PSM" in index or "VSM" in index or "Solution Architect" in index:
+    errors.append("interface: role language still present")
+
 for text in ["searchSlides","themeBlocks","libraryGrid","deckList"]:
     if text not in index:
         errors.append(f"interface: missing {text}")
-for fn in ["themeBlocks","renderLibrary","renderDeck","addVendorSlide","addVerticalSlide","generatePptx"]:
+
+for fn in [
+    "areaBlockItems","vendorSlidesForArea","verticalPages","verticalSectorPages",
+    "addVendorSlide","addVerticalContext","addVerticalCases","addVerticalAction","generatePptx"
+]:
     if f"function {fn}" not in builder:
         errors.append(f"builder: missing {fn}")
+
 for old in ["vendorStoryModel","vendorProofModel","vendorMarketModel","ROLE_META"]:
     if old in builder:
         errors.append(f"builder: obsolete AI/role logic remains: {old}")
+
 if "Juniper Networks" in builder:
     errors.append("builder: Juniper reference remains")
 for required in ["Cloudflare","Sonar (SonarQube)"]:
     if required not in builder:
         errors.append(f"builder: missing curated {required} slide")
+
+if "logoUrl(item.vendor)" not in builder or "await addLogo(s,name" not in builder:
+    errors.append("builder: curated vendor slides do not use real logos")
+if "areaBlockItems('cyber')" not in builder or "areaBlockItems('network')" not in builder or "areaBlockItems('cloud')" not in builder:
+    errors.append("builder: complete solution blocks are missing")
+if "9 slides:" not in builder:
+    errors.append("builder: complete vertical block should expose 9 slides")
+if not all(x in builder for x in ["phase==='context'","phase==='cases'","phase==='action'"]):
+    errors.append("builder: vertical three-slide model incomplete")
 
 research=(ROOT/"scripts/research_intelligence.py").read_text(encoding="utf-8")
 if '"Cloudflare":"cloudflare.com"' not in research or '"Sonar (SonarQube)":"sonarsource.com"' not in research:
@@ -98,14 +127,14 @@ if '"Cloudflare":"cloudflare.com"' not in research or '"Sonar (SonarQube)":"sona
 if '"Juniper Networks":"juniper.net"' in research:
     errors.append("research engine: Juniper still active")
 
-print("WESTCON PRESENTATION BUILDER v5 · QUALITY GATE")
+print("WESTCON PRESENTATION BUILDER v5.1 · QUALITY GATE")
 print(f"Active vendors: {len(vendors)}/37 · Slide index: {len(slides)}/97")
 print(f"Corporate assets: {len(corp)}/84 · Source vertical assets: {len(vert)}/12")
-print(f"Vertical sectors: {len(vc)}/9 · Vertical models: {models}/27")
+print(f"Vertical sectors: {len(vc)}/9 · Vertical models: {models}/27 · Generated vertical pages: {models*3}/81")
 for w in warnings:
     print("WARN ·",w)
 for e in errors:
     print("ERROR ·",e)
 if errors:
     sys.exit(1)
-print("OK · simple ad-hoc builder quality gate passed")
+print("OK · visual ad-hoc builder quality gate passed")
