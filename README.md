@@ -1,4 +1,4 @@
-# Westcon Presentation Builder · v5
+# Westcon Presentation Builder · v5.1
 
 Constructor visual de presentaciones ad-hoc para Westcon Comstor España FY27.
 
@@ -36,7 +36,7 @@ La aplicación no es un gestor de reuniones y no obliga a seleccionar rol, perfi
   - Hostelería y turismo
   - Software y servicios digitales
 
-## Slides nuevas
+## Slides nuevas\n\nCloudflare y Sonar utilizan sus logos oficiales adjuntos y mantienen el formato de ficha de fabricante FY27.
 
 Las nuevas fichas de fabricante reproducen el patrón visual del deck FY27:
 - bloque de categoría;
@@ -74,3 +74,4 @@ Cada Pull Request y cada push a main valida:
 ## GitHub Pages
 
 La aplicación se publica desde main y sigue siendo completamente estática.
+\n\n## Verticales ricos\n\nCada combinación vertical/área genera 3 slides editables: contexto/reto/impacto, casos de uso + fabricantes, y activación/Westcon/siguiente paso. Un vertical completo añade 9 slides.\n\n## Bloques completos\n\nCiberseguridad, Networking y Cloud/UC/Automatización añaden sección + taxonomía + todas las fichas de fabricante asociadas.\n
