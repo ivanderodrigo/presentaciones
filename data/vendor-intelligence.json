@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "5.0.0",
   "generatedFrom": "Westcon_Comstor_Espana_FY27_completa.pptx",
   "vendors": {
     "Anomali": {
@@ -306,7 +306,6 @@
       ],
       "competitors": [
         "HPE Aruba Networking",
-        "Juniper Networks",
         "Palo Alto Networks",
         "Fortinet"
       ],
@@ -365,7 +364,6 @@
         ],
         "competitors": [
           "\"Cisco\" \"HPE Aruba Networking\" comparison",
-          "\"Cisco\" \"Juniper Networks\" comparison",
           "\"Cisco\" \"Palo Alto Networks\" comparison",
           "\"Cisco\" \"Fortinet\" comparison"
         ]
@@ -2543,102 +2541,6 @@
         ]
       }
     },
-    "Juniper Networks": {
-      "name": "Juniper Networks",
-      "category": "AI-native Networking / Routing / DC",
-      "sourceSlides": [
-        45
-      ],
-      "headline": "AI-NATIVE NETWORKING (MIST AI)",
-      "tagline": "La primera red verdaderamente autónoma gracias a Mist AI",
-      "valueProposition": "Plataforma de redes integral con switching, routing, seguridad y Wi-Fi impulsado por Mist AI. Infraestructuras de alto rendimiento, seguras y auto-operadas para campus, data centres y entornos cloud con visibilidad total y experiencia de usuario garantizada.",
-      "approvedAdvantages": [
-        "Mist AI reduce los tickets de soporte de red hasta un 90%",
-        "Garantía de SLE (Service Level Experience) basada en datos de usuario real",
-        "AIOps proactivo: detecta anomalías antes de que afecten al negocio",
-        "Seguridad integrada en cada capa de la red sin appliances adicionales"
-      ],
-      "competitors": [
-        "Cisco",
-        "HPE Aruba Networking",
-        "Arista Networks",
-        "Extreme Networks"
-      ],
-      "buyingTriggers": [
-        "Mist AI campus",
-        "Data centre fabric",
-        "Routing modernization",
-        "AIOps"
-      ],
-      "analystQueries": [
-        "\"Juniper Networks\" Gartner",
-        "\"Juniper Networks\" Forrester Wave",
-        "\"Juniper Networks\" IDC MarketScape",
-        "\"Juniper Networks\" Omdia",
-        "\"Juniper Networks\" GigaOm"
-      ],
-      "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal",
-      "decisionCriteria": [
-        "Experiencia y disponibilidad de servicio",
-        "Automatización y simplicidad operativa",
-        "Escalabilidad y arquitectura",
-        "Integración con red existente",
-        "Coste total y lifecycle"
-      ],
-      "proofThemes": [
-        "Piloto con KPI de experiencia, disponibilidad y operación",
-        "Integración con el stack real del partner/cliente",
-        "Referencia pública comparable",
-        "Operación y lifecycle medidos",
-        "Escalabilidad y coste total"
-      ],
-      "positioningFrame": "La primera red verdaderamente autónoma gracias a Mist AI. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
-      "researchPlan": {
-        "analysts": [
-          "\"Juniper Networks\" Gartner",
-          "\"Juniper Networks\" Forrester",
-          "\"Juniper Networks\" IDC MarketScape",
-          "\"Juniper Networks\" Omdia",
-          "\"Juniper Networks\" GigaOm",
-          "\"Juniper Networks\" ISG",
-          "\"Juniper Networks\" Canalys",
-          "\"Juniper Networks\" KuppingerCole"
-        ],
-        "differentiation": [
-          "\"Juniper Networks\" competitive differentiation",
-          "\"Juniper Networks\" architecture benchmark integration"
-        ],
-        "customers": [
-          "\"Juniper Networks\" customer case study",
-          "\"Juniper Networks\" deployment success story"
-        ],
-        "channel": [
-          "\"Juniper Networks\" partner program certification specialization channel incentives"
-        ],
-        "competitors": [
-          "\"Juniper Networks\" \"Cisco\" comparison",
-          "\"Juniper Networks\" \"HPE Aruba Networking\" comparison",
-          "\"Juniper Networks\" \"Arista Networks\" comparison",
-          "\"Juniper Networks\" \"Extreme Networks\" comparison"
-        ]
-      },
-      "verticalAngles": {
-        "Banca y seguros": [
-          "Data centre fabric"
-        ],
-        "Administración pública": [
-          "Mist AI campus"
-        ],
-        "Industria y utilities": [
-          "Mist AI reduce los tickets de soporte de red hasta un 90%"
-        ],
-        "Retail": [
-          "Mist AI campus",
-          "Data centre fabric"
-        ]
-      }
-    },
     "Nokia": {
       "name": "Nokia",
       "category": "IP/MPLS / Optical / Fixed Access",
@@ -2656,7 +2558,6 @@
       ],
       "competitors": [
         "Cisco",
-        "Juniper Networks",
         "Ciena",
         "Huawei"
       ],
@@ -2714,7 +2615,6 @@
         ],
         "competitors": [
           "\"Nokia\" \"Cisco\" comparison",
-          "\"Nokia\" \"Juniper Networks\" comparison",
           "\"Nokia\" \"Ciena\" comparison",
           "\"Nokia\" \"Huawei\" comparison"
         ]
@@ -3520,6 +3420,238 @@
           "Process automation",
           "Integración con cualquier aplicación, incluyendo legado sin API disponible",
           "Agentic automation"
+        ]
+      }
+    },
+    "Cloudflare": {
+      "name": "Cloudflare",
+      "category": "Connectivity Cloud / SASE / Application Security",
+      "sourceSlides": [],
+      "headline": "CONNECTIVITY CLOUD / SASE / APPLICATION SECURITY",
+      "tagline": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
+      "valueProposition": "Cloudflare unifica seguridad de aplicaciones, Zero Trust/SASE, servicios de red, rendimiento y capacidades de desarrollo sobre una red global común. Permite proteger aplicaciones y APIs, usuarios y conectividad sin encadenar múltiples point products y planos de control.",
+      "approvedAdvantages": [
+        "Una plataforma común para seguridad de aplicaciones, Zero Trust/SASE y servicios de red.",
+        "WAF, protección DDoS, API Security y Bot Management integrados en el edge.",
+        "Acceso Zero Trust, Secure Web Gateway, CASB y DLP para usuarios y aplicaciones privadas.",
+        "Arquitectura global anycast que combina seguridad, conectividad y rendimiento."
+      ],
+      "competitors": [
+        "Akamai",
+        "Zscaler",
+        "Netskope",
+        "Palo Alto Networks"
+      ],
+      "buyingTriggers": [
+        "SASE / SSE consolidation",
+        "Application and API security",
+        "DDoS protection",
+        "Network modernization",
+        "Zero Trust access"
+      ],
+      "analystQueries": [
+        "\"Cloudflare\" Gartner",
+        "\"Cloudflare\" Forrester Wave",
+        "\"Cloudflare\" IDC MarketScape",
+        "\"Cloudflare\" Omdia",
+        "\"Cloudflare\" GigaOm"
+      ],
+      "sourceType": "official public sources 2026",
+      "sourceConfidence": "official/public",
+      "sourceLinks": [
+        "https://developers.cloudflare.com/reference-architecture/design-guides/secure-application-delivery/",
+        "https://www.cloudflare.com/products/",
+        "https://developers.cloudflare.com/reference-architecture/architectures/security/"
+      ],
+      "decisionCriteria": [
+        "Consolidación de funciones",
+        "Cobertura de aplicaciones, usuarios y red",
+        "Rendimiento y latencia",
+        "Simplicidad operativa",
+        "Integración y automatización"
+      ],
+      "proofThemes": [
+        "Piloto sobre una aplicación o grupo de usuarios",
+        "Medir latencia, disponibilidad y bloqueo de amenazas",
+        "Integrar identidad y logging existentes",
+        "Comparar complejidad operativa antes/después"
+      ],
+      "positioningFrame": "Una connectivity cloud para reducir complejidad y proteger aplicaciones, usuarios y redes desde un mismo tejido global.",
+      "researchPlan": {
+        "analysts": [
+          "\"Cloudflare\" Gartner",
+          "\"Cloudflare\" Forrester",
+          "\"Cloudflare\" IDC MarketScape",
+          "\"Cloudflare\" Omdia",
+          "\"Cloudflare\" GigaOm",
+          "\"Cloudflare\" ISG",
+          "\"Cloudflare\" Canalys"
+        ],
+        "differentiation": [
+          "\"Cloudflare\" connectivity cloud architecture",
+          "\"Cloudflare\" SASE application security differentiation"
+        ],
+        "customers": [
+          "\"Cloudflare\" customer case study",
+          "\"Cloudflare\" deployment success story"
+        ],
+        "channel": [
+          "\"Cloudflare\" partner program channel certification"
+        ],
+        "competitors": [
+          "\"Cloudflare\" Akamai comparison",
+          "\"Cloudflare\" Zscaler comparison",
+          "\"Cloudflare\" Palo Alto comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Application and API security",
+          "SASE / SSE consolidation"
+        ],
+        "Administración pública": [
+          "Zero Trust access",
+          "DDoS protection"
+        ],
+        "Industria y utilities": [
+          "Network modernization",
+          "Zero Trust access"
+        ],
+        "Retail": [
+          "Application and API security",
+          "DDoS protection"
+        ],
+        "Sanidad": [
+          "Zero Trust access",
+          "Application and API security"
+        ],
+        "Educación": [
+          "DDoS protection",
+          "Zero Trust access"
+        ],
+        "Transporte y logística": [
+          "Application and API security",
+          "Network modernization"
+        ],
+        "Hostelería y turismo": [
+          "Application and API security",
+          "Zero Trust access"
+        ],
+        "Software y servicios digitales": [
+          "Application and API security",
+          "DDoS protection",
+          "SASE / SSE consolidation"
+        ]
+      }
+    },
+    "Sonar (SonarQube)": {
+      "name": "Sonar (SonarQube)",
+      "category": "Code Quality / Application Security / DevSecOps",
+      "sourceSlides": [],
+      "headline": "CODE QUALITY & APPLICATION SECURITY",
+      "tagline": "Confianza en cada cambio de código, humano o generado por IA",
+      "valueProposition": "SonarQube verifica cada cambio de código con reglas consistentes de calidad, seguridad y mantenibilidad. Integra quality gates en IDE, pull requests y CI/CD, y aplica el mismo estándar a código escrito por desarrolladores o por agentes de IA.",
+      "approvedAdvantages": [
+        "Quality gates repetibles para bloquear código que no cumple los estándares definidos.",
+        "SAST, taint analysis, secrets detection, IaC scanning y capacidades de software composition analysis.",
+        "Feedback integrado en IDE, pull requests y CI/CD para corregir antes de producción.",
+        "Verificación independiente del código generado por humanos y por herramientas de IA."
+      ],
+      "competitors": [
+        "Checkmarx",
+        "Veracode",
+        "Snyk Code",
+        "Semgrep"
+      ],
+      "buyingTriggers": [
+        "AI-generated code governance",
+        "DevSecOps standardization",
+        "Application security shift-left",
+        "Technical debt reduction",
+        "Secure SDLC"
+      ],
+      "analystQueries": [
+        "\"SonarQube\" Gartner",
+        "\"SonarQube\" Forrester",
+        "\"Sonar\" application security analyst",
+        "\"SonarQube\" IDC"
+      ],
+      "sourceType": "official public sources 2026",
+      "sourceConfidence": "official/public",
+      "sourceLinks": [
+        "https://www.sonarsource.com/products/sonarqube/",
+        "https://www.sonarsource.com/resources/library/how-to-check-code-quality-using-sonarqube/"
+      ],
+      "decisionCriteria": [
+        "Cobertura de lenguajes y repositorios",
+        "Precisión de findings",
+        "Integración con IDE/CI/CD",
+        "Gobierno mediante quality gates",
+        "Despliegue cloud o server"
+      ],
+      "proofThemes": [
+        "Aplicar un quality gate a repositorios reales",
+        "Comparar findings antes/después en un pull request",
+        "Verificar código generado por IA con el mismo estándar",
+        "Medir deuda técnica y vulnerabilidades evitadas antes de merge"
+      ],
+      "positioningFrame": "Una capa de verificación independiente para asegurar calidad y seguridad en cada cambio de software.",
+      "researchPlan": {
+        "analysts": [
+          "\"SonarQube\" Gartner",
+          "\"SonarQube\" Forrester",
+          "\"SonarQube\" IDC",
+          "\"Sonar\" application security analyst"
+        ],
+        "differentiation": [
+          "\"SonarQube\" code quality security differentiation",
+          "\"SonarQube\" AI generated code verification"
+        ],
+        "customers": [
+          "\"SonarQube\" customer case study",
+          "\"SonarQube\" enterprise customer"
+        ],
+        "channel": [
+          "\"Sonar\" partner program channel"
+        ],
+        "competitors": [
+          "\"SonarQube\" Checkmarx comparison",
+          "\"SonarQube\" Veracode comparison",
+          "\"SonarQube\" Snyk comparison"
+        ]
+      },
+      "verticalAngles": {
+        "Banca y seguros": [
+          "Secure SDLC",
+          "AI-generated code governance"
+        ],
+        "Administración pública": [
+          "Application security shift-left",
+          "Secure SDLC"
+        ],
+        "Industria y utilities": [
+          "Application security shift-left"
+        ],
+        "Retail": [
+          "Secure SDLC"
+        ],
+        "Sanidad": [
+          "Secure SDLC",
+          "Application security shift-left"
+        ],
+        "Educación": [
+          "Technical debt reduction"
+        ],
+        "Transporte y logística": [
+          "Secure SDLC"
+        ],
+        "Hostelería y turismo": [
+          "Application security shift-left"
+        ],
+        "Software y servicios digitales": [
+          "AI-generated code governance",
+          "DevSecOps standardization",
+          "Technical debt reduction"
         ]
       }
     }
