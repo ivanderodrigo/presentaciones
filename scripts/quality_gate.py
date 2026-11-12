@@ -171,8 +171,8 @@ if "vendorName(a).localeCompare" not in builder:
 
 # Vertical playbook clone with controlled title sizing and two large manufacturer logos.
 for token in [
-    "VERTICAL_TITLE","VERTICAL_QUESTION","verticalMeta","verticalQuestionFor",
-    "PLAYBOOK SECTORIAL","ABRE CON","FABRICANTES CLAVE","SEÑALES DE OPORTUNIDAD",
+    "VERTICAL_TITLE","VERTICAL_QUESTION","verticalMeta","verticalQuestionFor","verticalImpact",
+    "PLAYBOOK SECTORIAL","ABRE CON","IMPACTO ESPERADO","SEÑALES DE OPORTUNIDAD",
     "QUICK WINS","POR QUÉ GANAMOS","SIGUIENTE PASO","slice(0,2)"
 ]:
     if token not in builder:
