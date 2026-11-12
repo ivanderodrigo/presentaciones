@@ -1,16 +1,19 @@
-name: Validate Meeting Intelligence
+name: Validate Presentation Studio
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     paths:
       - 'index.html'
-      - 'styles.css'
-      - 'app.js'
+      - 'builder.css'
+      - 'builder.js'
       - 'data/**'
       - 'scripts/**'
       - 'assets/**'
+      - '.github/workflows/quality.yml'
 
 jobs:
   validate:
@@ -20,7 +23,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check builder JavaScript
+        run: node --check builder.js
       - name: Structural quality gate
         run: python scripts/quality_gate.py
-      - name: Compile research engine
+      - name: Compile research engines
         run: python -m py_compile scripts/research_intelligence.py scripts/research_partner.py
