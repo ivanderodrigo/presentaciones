@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "5.2.0",
   "sourceDecks": [
     {
       "name": "Westcon Comstor España FY2027",
@@ -347,7 +347,7 @@
     },
     {
       "name": "Cloudflare",
-      "area": "Ciberseguridad / Networking",
+      "area": "Ciberseguridad",
       "tags": [
         "Connectivity Cloud",
         "SASE",
@@ -360,7 +360,7 @@
     },
     {
       "name": "Sonar (SonarQube)",
-      "area": "Ciberseguridad / Cloud, UC y automatización",
+      "area": "Ciberseguridad",
       "tags": [
         "Code Quality",
         "SAST",
