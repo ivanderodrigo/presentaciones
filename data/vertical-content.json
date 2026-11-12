@@ -156,8 +156,7 @@
             "Sedes y WAN",
             [
               "Cisco",
-              "Ericsson",
-              "Juniper Networks"
+              "Ericsson"
             ]
           ],
           [
@@ -170,7 +169,6 @@
             "Campus seguro",
             [
               "Cisco",
-              "Juniper Networks",
               "Extreme Networks"
             ]
           ],
@@ -435,7 +433,6 @@
             "Campus y Wi-Fi",
             [
               "Cisco",
-              "Juniper Networks",
               "Extreme Networks",
               "Ruckus Networks"
             ]
@@ -735,8 +732,7 @@
             "Transporte",
             [
               "Ciena",
-              "Nokia",
-              "Juniper Networks"
+              "Nokia"
             ]
           ]
         ],
@@ -1115,8 +1111,1390 @@
         "references": "Casos públicos de AWS, UiPath y Avaya.",
         "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
       }
+    },
+    "Sanidad": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Continuidad asistencial, identidad y datos clínicos protegidos",
+        "why": [
+          [
+            "El dato clínico no admite exposición",
+            "Historia clínica, identidad y resultados requieren controles consistentes en todo el ciclo."
+          ],
+          [
+            "Más dispositivos, más superficie",
+            "Equipos biomédicos, IoT, proveedores y accesos remotos amplían el entorno a proteger."
+          ],
+          [
+            "Una caída afecta a la atención",
+            "La indisponibilidad de servicios digitales impacta en profesionales, pacientes y operación."
+          ]
+        ],
+        "challenge": "La seguridad debe proteger identidad, dato y dispositivos conectados sin frenar la atención ni complicar el trabajo clínico.",
+        "cases": [
+          [
+            "IDENTIDAD Y TERCEROS",
+            "MFA, Zero Trust y control de accesos para profesionales, proveedores y aplicaciones clínicas."
+          ],
+          [
+            "DATO CLÍNICO",
+            "Cifrado, gestión de claves y DLP para reducir exposición y mejorar trazabilidad."
+          ],
+          [
+            "IOMT / XIOT",
+            "Descubrir y vigilar dispositivos conectados sin interferir en la operación asistencial."
+          ],
+          [
+            "APPS, APIs Y RESPUESTA",
+            "Proteger portales y APIs, reducir superficie y acelerar detección y respuesta."
+          ]
+        ],
+        "impacts": [
+          [
+            "Continuidad asistencial",
+            97
+          ],
+          [
+            "Protección del dato",
+            95
+          ],
+          [
+            "Control de terceros",
+            91
+          ],
+          [
+            "Visibilidad",
+            92
+          ]
+        ],
+        "solutions": [
+          [
+            "Identidad y acceso",
+            [
+              "Okta",
+              "Zscaler",
+              "Cisco"
+            ]
+          ],
+          [
+            "Dato protegido",
+            [
+              "Fortanix",
+              "Proofpoint"
+            ]
+          ],
+          [
+            "IoMT / XIoT",
+            [
+              "Claroty",
+              "CrowdStrike"
+            ]
+          ],
+          [
+            "Apps y respuesta",
+            [
+              "Cloudflare",
+              "F5",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un servicio clínico crítico",
+          "Mapear identidad, datos y dispositivos",
+          "Piloto acotado con KPI de disponibilidad y riesgo"
+        ],
+        "references": "Westcon portfolio FY27; documentación pública de fabricantes.",
+        "nextStep": "Assessment de 90 minutos sobre un servicio clínico crítico y sus dependencias."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Red clínica disponible para Wi-Fi, IoMT, sedes y movilidad",
+        "why": [
+          [
+            "Wi-Fi ya es parte de la asistencia",
+            "Movilidad clínica, voz, terminales y dispositivos dependen de cobertura y experiencia."
+          ],
+          [
+            "No todo dispositivo debe confiar igual",
+            "Profesionales, invitados, IoMT y terceros necesitan segmentación y políticas distintas."
+          ],
+          [
+            "Hospitales y centros forman una red",
+            "La operación multisede exige resiliencia, visibilidad y cambios repetibles."
+          ]
+        ],
+        "challenge": "La red debe dar experiencia predecible a profesionales y dispositivos, aislar riesgos y mantener conectados centros y servicios críticos.",
+        "cases": [
+          [
+            "WIFI CLÍNICO",
+            "Cobertura y experiencia para movilidad, voz, terminales y aplicaciones asistenciales."
+          ],
+          [
+            "SEGMENTACIÓN Y NAC",
+            "Separar usuarios, invitados, IoMT y servicios críticos con políticas consistentes."
+          ],
+          [
+            "DDI Y DNS",
+            "Automatizar direccionamiento y reducir incidencias invisibles en servicios dependientes de DNS."
+          ],
+          [
+            "SEDES Y RESPALDO",
+            "WAN y 4G/5G para centros, consultas y ubicaciones con necesidad de continuidad."
+          ]
+        ],
+        "impacts": [
+          [
+            "Experiencia clínica",
+            95
+          ],
+          [
+            "Disponibilidad",
+            96
+          ],
+          [
+            "Segmentación",
+            93
+          ],
+          [
+            "Eficiencia operativa",
+            89
+          ]
+        ],
+        "solutions": [
+          [
+            "Campus y Wi-Fi",
+            [
+              "Extreme Networks",
+              "Cisco",
+              "Ruckus Networks"
+            ]
+          ],
+          [
+            "Segmentación",
+            [
+              "Extreme Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "DDI",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "WAN y respaldo",
+            [
+              "Ericsson",
+              "Cisco"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un edificio o servicio con incidencias",
+          "Medir cobertura, DNS y segmentación",
+          "Piloto visible para usuarios y TI"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes de networking.",
+        "nextStep": "Assessment de red en un edificio o servicio asistencial prioritario."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Automatización, cloud y experiencia digital para liberar tiempo asistencial",
+        "why": [
+          [
+            "El back-office consume tiempo clínico",
+            "Citas, autorizaciones, validaciones y documentación generan tareas repetitivas."
+          ],
+          [
+            "El paciente espera continuidad entre canales",
+            "Teléfono, portal, mensajería y presencial necesitan contexto compartido."
+          ],
+          [
+            "Los datos permiten nuevos servicios",
+            "Cloud e IA pueden acelerar analítica y modelos sin depender de grandes migraciones."
+          ]
+        ],
+        "challenge": "La tecnología aporta valor cuando reduce tareas administrativas, mejora la atención y mantiene disponibles las aplicaciones críticas.",
+        "cases": [
+          [
+            "CITAS Y BACK-OFFICE",
+            "Automatizar validaciones, documentos y tareas administrativas repetitivas."
+          ],
+          [
+            "CONTACT CENTER PACIENTE",
+            "Unificar canales, autoservicio y asistencia al agente con contexto."
+          ],
+          [
+            "CLOUD, DATOS E IA",
+            "Modernizar analítica y servicios digitales con gobierno y consumo controlado."
+          ],
+          [
+            "ALTA DISPONIBILIDAD",
+            "Mantener aplicaciones clínicas y servicios locales operativos ante fallos."
+          ]
+        ],
+        "impacts": [
+          [
+            "Tiempo administrativo",
+            94
+          ],
+          [
+            "Experiencia paciente",
+            92
+          ],
+          [
+            "Escalabilidad",
+            88
+          ],
+          [
+            "Disponibilidad",
+            95
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "CX y voz",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Alta disponibilidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un proceso de alto volumen",
+          "Medir tiempo y retrabajo",
+          "Piloto con KPI antes/después"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Seleccionar un proceso administrativo o de atención con impacto medible."
+      }
+    },
+    "Educación": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Identidad, dispositivos y servicios digitales seguros para campus educativos",
+        "why": [
+          [
+            "Muchos usuarios, muchos perfiles",
+            "Alumnos, docentes, personal, invitados y proveedores cambian constantemente."
+          ],
+          [
+            "El campus es abierto por naturaleza",
+            "BYOD, SaaS y acceso remoto amplían la superficie y dificultan políticas rígidas."
+          ],
+          [
+            "El servicio digital es ya académico",
+            "Correo, LMS, matrícula y portales deben estar disponibles y protegidos."
+          ]
+        ],
+        "challenge": "El entorno educativo necesita proteger identidad, dispositivos y servicios públicos sin convertir la seguridad en una barrera para aprender y colaborar.",
+        "cases": [
+          [
+            "IDENTIDAD Y MFA",
+            "SSO, MFA y gobierno de accesos para alumnado, personal y terceros."
+          ],
+          [
+            "EMAIL Y ENDPOINT",
+            "Reducir phishing, credenciales comprometidas y riesgo en equipos distribuidos."
+          ],
+          [
+            "PORTALES Y APIS",
+            "Proteger matrícula, LMS, webs y APIs frente a abuso, bots y DDoS."
+          ],
+          [
+            "VISIBILIDAD Y RESPUESTA",
+            "Priorizar incidentes y validar controles sin aumentar carga del equipo de TI."
+          ]
+        ],
+        "impacts": [
+          [
+            "Protección de identidad",
+            94
+          ],
+          [
+            "Disponibilidad digital",
+            92
+          ],
+          [
+            "Reducción de phishing",
+            90
+          ],
+          [
+            "Eficiencia TI",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Identidad",
+            [
+              "Okta",
+              "1Password",
+              "Ping Identity"
+            ]
+          ],
+          [
+            "Email y endpoint",
+            [
+              "Proofpoint",
+              "CrowdStrike"
+            ]
+          ],
+          [
+            "Apps y portales",
+            [
+              "Cloudflare",
+              "F5"
+            ]
+          ],
+          [
+            "Detección y validación",
+            [
+              "AttackIQ",
+              "Anomali",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un servicio académico crítico",
+          "Mapear identidades y accesos",
+          "Piloto sobre acceso o portal de alta exposición"
+        ],
+        "references": "Westcon portfolio FY27; documentación pública de fabricantes.",
+        "nextStep": "Priorizar identidad o servicio digital con mayor impacto académico."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Campus Wi-Fi de alta densidad para aprender, investigar y operar",
+        "why": [
+          [
+            "La experiencia depende del Wi-Fi",
+            "Aulas, bibliotecas, residencias y eventos concentran miles de dispositivos."
+          ],
+          [
+            "BYOD exige políticas simples",
+            "La red debe separar perfiles sin multiplicar SSID ni tareas manuales."
+          ],
+          [
+            "DNS y direccionamiento escalan rápido",
+            "Altas, bajas y nuevos edificios hacen crítica la automatización DDI."
+          ]
+        ],
+        "challenge": "La red educativa debe absorber alta densidad, invitados y movilidad manteniendo visibilidad, seguridad y una operación sencilla.",
+        "cases": [
+          [
+            "WIFI DE ALTA DENSIDAD",
+            "Aulas, auditorios, bibliotecas y residencias con experiencia consistente."
+          ],
+          [
+            "NAC Y SEGMENTACIÓN",
+            "Políticas distintas para alumno, personal, invitado, IoT y laboratorio."
+          ],
+          [
+            "DDI E IPAM",
+            "Automatizar DNS, DHCP e IP para campus grandes y cambiantes."
+          ],
+          [
+            "GUEST WIFI",
+            "Portal de invitados y analítica para eventos, visitantes y servicios de campus."
+          ]
+        ],
+        "impacts": [
+          [
+            "Experiencia Wi-Fi",
+            97
+          ],
+          [
+            "Escalabilidad",
+            93
+          ],
+          [
+            "Control de acceso",
+            91
+          ],
+          [
+            "Operación",
+            90
+          ]
+        ],
+        "solutions": [
+          [
+            "Campus Wi-Fi",
+            [
+              "Extreme Networks",
+              "Ruckus Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "NAC",
+            [
+              "Extreme Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "DDI",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "Guest Wi-Fi",
+            [
+              "Weblib"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir edificio de alta densidad",
+          "Medir experiencia y autenticación",
+          "Piloto con indicadores de usuario real"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Assessment RF y de acceso en un edificio con alta densidad."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Servicios digitales flexibles para docencia, investigación y administración",
+        "why": [
+          [
+            "La demanda cambia por curso y campaña",
+            "Matrícula, exámenes y proyectos de investigación generan picos muy distintos."
+          ],
+          [
+            "Hay procesos repetitivos en administración",
+            "Admisiones, certificados y gestión documental ofrecen automatización inmediata."
+          ],
+          [
+            "IA y datos crecen en docencia e investigación",
+            "La infraestructura debe permitir experimentar con gobierno y coste controlado."
+          ]
+        ],
+        "challenge": "El reto es ofrecer servicios digitales ágiles sin sobredimensionar infraestructura ni añadir trabajo al equipo de TI.",
+        "cases": [
+          [
+            "MATRÍCULA Y ADMINISTRACIÓN",
+            "Automatizar validaciones, certificados y movimientos entre sistemas."
+          ],
+          [
+            "CLOUD PARA DOCENCIA",
+            "Escalar laboratorios, aplicaciones y datos según demanda académica."
+          ],
+          [
+            "DATOS E IA",
+            "Habilitar analítica, experimentación e IA con gobierno y consumo visible."
+          ],
+          [
+            "COLABORACIÓN Y VOZ",
+            "Conectar servicios, atención y equipos distribuidos con comunicaciones fiables."
+          ]
+        ],
+        "impacts": [
+          [
+            "Agilidad",
+            94
+          ],
+          [
+            "Eficiencia administrativa",
+            92
+          ],
+          [
+            "Escalabilidad",
+            93
+          ],
+          [
+            "Experiencia digital",
+            89
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "IA y analítica",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Voz y colaboración",
+            [
+              "AudioCodes",
+              "Avaya"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un proceso o servicio con picos",
+          "Medir capacidad y tareas manuales",
+          "Piloto de automatización o cloud acotado"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Seleccionar un servicio académico o administrativo de alto volumen."
+      }
+    },
+    "Transporte y logística": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Protege operaciones conectadas, terceros y servicios digitales de transporte",
+        "why": [
+          [
+            "La operación conecta IT, OT e IoT",
+            "Almacenes, flotas, terminales y sistemas de control comparten cada vez más datos."
+          ],
+          [
+            "Terceros son parte del servicio",
+            "Transportistas, operadores, mantenimiento y partners necesitan acceso controlado."
+          ],
+          [
+            "APIs sostienen la cadena",
+            "Reservas, tracking y plataformas logísticas dependen de integraciones expuestas."
+          ]
+        ],
+        "challenge": "La seguridad debe reducir riesgo en operaciones distribuidas sin bloquear la conectividad necesaria para mover mercancías y pasajeros.",
+        "cases": [
+          [
+            "OT / IOT Y VISIBILIDAD",
+            "Descubrir activos conectados y priorizar exposición sin interrumpir la operación."
+          ],
+          [
+            "TERCEROS ZERO TRUST",
+            "Acceso mínimo y trazable para mantenimiento, operadores y partners."
+          ],
+          [
+            "APPS Y APIS",
+            "Proteger tracking, reservas, ecommerce y APIs frente a abuso y DDoS."
+          ],
+          [
+            "ENDPOINT Y RESPUESTA",
+            "Reducir movimiento lateral y acelerar respuesta en sedes y equipos distribuidos."
+          ]
+        ],
+        "impacts": [
+          [
+            "Continuidad operativa",
+            97
+          ],
+          [
+            "Control de terceros",
+            94
+          ],
+          [
+            "Protección digital",
+            91
+          ],
+          [
+            "Visibilidad",
+            92
+          ]
+        ],
+        "solutions": [
+          [
+            "OT / IoT",
+            [
+              "Claroty",
+              "Vectra AI"
+            ]
+          ],
+          [
+            "Acceso seguro",
+            [
+              "Zscaler",
+              "Cloudflare",
+              "Cisco"
+            ]
+          ],
+          [
+            "Apps y APIs",
+            [
+              "Cloudflare",
+              "F5"
+            ]
+          ],
+          [
+            "Endpoint y respuesta",
+            [
+              "CrowdStrike",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un nodo operativo crítico",
+          "Mapear accesos y APIs",
+          "Piloto sin impacto en operación"
+        ],
+        "references": "Westcon portfolio FY27; documentación pública de fabricantes.",
+        "nextStep": "Assessment de un hub, almacén o servicio digital crítico."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Conectividad para almacenes, hubs, flotas y sedes distribuidas",
+        "why": [
+          [
+            "La movilidad es parte del proceso",
+            "Handhelds, vehículos, sensores y terminales necesitan cobertura continua."
+          ],
+          [
+            "Los hubs no pueden depender de un único enlace",
+            "La continuidad exige respaldo y operación remota."
+          ],
+          [
+            "El crecimiento debe ser repetible",
+            "Nuevas sedes y almacenes necesitan plantillas y despliegues rápidos."
+          ]
+        ],
+        "challenge": "La red debe cubrir grandes espacios, movilidad y sedes distribuidas con una arquitectura fácil de repetir y mantener.",
+        "cases": [
+          [
+            "WIFI EN ALMACÉN",
+            "Cobertura para terminales, picking, scanners y movilidad operativa."
+          ],
+          [
+            "PRIVATE 5G",
+            "Conectividad para movilidad, exterior y casos industriales donde Wi-Fi no basta."
+          ],
+          [
+            "WAN Y BACKUP",
+            "SD-WAN y 4G/5G para hubs, oficinas y ubicaciones temporales."
+          ],
+          [
+            "DDI Y TRANSPORTE",
+            "Automatizar direccionamiento y conectar centros con resiliencia y capacidad."
+          ]
+        ],
+        "impacts": [
+          [
+            "Cobertura",
+            96
+          ],
+          [
+            "Continuidad",
+            95
+          ],
+          [
+            "Productividad",
+            92
+          ],
+          [
+            "Velocidad de despliegue",
+            90
+          ]
+        ],
+        "solutions": [
+          [
+            "Wi-Fi",
+            [
+              "Extreme Networks",
+              "Ruckus Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "Private 5G",
+            [
+              "Ericsson"
+            ]
+          ],
+          [
+            "WAN y respaldo",
+            [
+              "Cisco",
+              "Ericsson"
+            ]
+          ],
+          [
+            "DDI y transporte",
+            [
+              "EfficientIP",
+              "Ciena",
+              "Nokia"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un hub representativo",
+          "Medir cobertura y enlaces",
+          "Piloto con KPI operativo"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Diseñar un piloto de conectividad en un hub o almacén prioritario."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Automatización, edge y datos para una operación logística más ágil",
+        "why": [
+          [
+            "Hay documentación repetitiva",
+            "Pedidos, albaranes, incidencias y conciliaciones siguen generando trabajo manual."
+          ],
+          [
+            "La decisión necesita datos casi en tiempo real",
+            "Rutas, inventario y capacidad mejoran con analítica e IA."
+          ],
+          [
+            "El edge sostiene procesos locales",
+            "Almacenes y hubs necesitan seguir operando incluso ante cortes."
+          ]
+        ],
+        "challenge": "La tecnología debe reducir tareas manuales y mejorar visibilidad sin crear dependencia de una única ubicación o sistema.",
+        "cases": [
+          [
+            "DOCUMENTOS Y BACK-OFFICE",
+            "Automatizar albaranes, incidencias, conciliaciones y validaciones."
+          ],
+          [
+            "DATOS E IA",
+            "Analítica de rutas, capacidad, demanda e incidencias sobre cloud."
+          ],
+          [
+            "EDGE DISPONIBLE",
+            "Mantener aplicaciones locales y procesamiento operativo ante fallos."
+          ],
+          [
+            "ATENCIÓN Y VOZ",
+            "Unificar comunicaciones con clientes, transportistas y operaciones."
+          ]
+        ],
+        "impacts": [
+          [
+            "Productividad",
+            95
+          ],
+          [
+            "Visibilidad",
+            92
+          ],
+          [
+            "Disponibilidad",
+            94
+          ],
+          [
+            "Tiempo de resolución",
+            90
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "Cloud e IA",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Edge y HA",
+            [
+              "Penguin Solutions"
+            ]
+          ],
+          [
+            "CX y voz",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un proceso repetitivo",
+          "Medir tiempo y error",
+          "Piloto con KPI operativo"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Seleccionar un proceso logístico de alto volumen para automatizar."
+      }
+    },
+    "Hostelería y turismo": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Protege reserva, pago, huésped y operación sin fricción",
+        "why": [
+          [
+            "La experiencia empieza antes de llegar",
+            "Web, motor de reservas, APIs y pagos forman parte del servicio al huésped."
+          ],
+          [
+            "Muchos terceros acceden al entorno",
+            "Operadores, franquicias, proveedores y personal temporal necesitan control."
+          ],
+          [
+            "La seguridad debe ser invisible",
+            "El huésped espera rapidez en reserva, check-in, Wi-Fi y pago."
+          ]
+        ],
+        "challenge": "Cada caída, fraude o acceso indebido afecta a ingresos, reputación y experiencia en un negocio altamente digital y distribuido.",
+        "cases": [
+          [
+            "RESERVA Y APIS",
+            "WAAP, API Security, bot management y DDoS para canales digitales."
+          ],
+          [
+            "IDENTIDAD Y TERCEROS",
+            "Acceso seguro para personal, proveedores y aplicaciones internas."
+          ],
+          [
+            "PAGO Y DATO",
+            "Reducir exposición de datos sensibles y proteger flujos de pago."
+          ],
+          [
+            "ENDPOINT Y RESPUESTA",
+            "Proteger equipos distribuidos y acelerar respuesta ante incidentes."
+          ]
+        ],
+        "impacts": [
+          [
+            "Protección de ingresos",
+            95
+          ],
+          [
+            "Experiencia huésped",
+            91
+          ],
+          [
+            "Control de terceros",
+            92
+          ],
+          [
+            "Continuidad digital",
+            94
+          ]
+        ],
+        "solutions": [
+          [
+            "Web y APIs",
+            [
+              "Cloudflare",
+              "F5"
+            ]
+          ],
+          [
+            "Identidad y acceso",
+            [
+              "Okta",
+              "Zscaler"
+            ]
+          ],
+          [
+            "Dato y pago",
+            [
+              "Fortanix",
+              "Proofpoint"
+            ]
+          ],
+          [
+            "Endpoint y respuesta",
+            [
+              "CrowdStrike",
+              "LevelBlue"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir reserva o check-in",
+          "Mapear terceros y datos",
+          "Piloto sobre un flujo digital crítico"
+        ],
+        "references": "Westcon portfolio FY27; documentación pública de fabricantes.",
+        "nextStep": "Assessment del journey digital de reserva, acceso o pago."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Wi-Fi y conectividad que forman parte de la experiencia del huésped",
+        "why": [
+          [
+            "El huésped juzga el Wi-Fi como un servicio",
+            "Cobertura y rendimiento influyen directamente en satisfacción y reputación."
+          ],
+          [
+            "Hoteles son entornos muy densos y variables",
+            "Habitaciones, salones, eventos, IoT y personal compiten por conectividad."
+          ],
+          [
+            "La operación multisede necesita repetibilidad",
+            "Cada propiedad debe desplegarse y gestionarse con una plantilla común."
+          ]
+        ],
+        "challenge": "La red debe combinar experiencia de huésped, operación interna, eventos e IoT con políticas simples y gestión centralizada.",
+        "cases": [
+          [
+            "WIFI DE HUÉSPED",
+            "Cobertura y experiencia consistente en habitaciones y zonas comunes."
+          ],
+          [
+            "EVENTOS Y ALTA DENSIDAD",
+            "Capacidad temporal y predecible para congresos y reuniones."
+          ],
+          [
+            "PORTAL Y ENGAGEMENT",
+            "Acceso invitado, consentimiento y analítica integrada con experiencia digital."
+          ],
+          [
+            "WAN Y BACKUP 5G",
+            "Mantener PMS, pago y operación cuando falla el enlace principal."
+          ]
+        ],
+        "impacts": [
+          [
+            "Experiencia huésped",
+            97
+          ],
+          [
+            "Disponibilidad",
+            95
+          ],
+          [
+            "Operación multisede",
+            91
+          ],
+          [
+            "Datos de cliente",
+            88
+          ]
+        ],
+        "solutions": [
+          [
+            "Wi-Fi",
+            [
+              "Ruckus Networks",
+              "Extreme Networks",
+              "Cisco"
+            ]
+          ],
+          [
+            "Guest Wi-Fi",
+            [
+              "Weblib"
+            ]
+          ],
+          [
+            "WAN y respaldo",
+            [
+              "Cisco",
+              "Ericsson"
+            ]
+          ],
+          [
+            "DDI",
+            [
+              "EfficientIP"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir una propiedad representativa",
+          "Medir cobertura y experiencia",
+          "Crear plantilla replicable por hotel"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Assessment Wi-Fi y WAN en una propiedad representativa."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Automatiza la operación y mejora cada interacción con el huésped",
+        "why": [
+          [
+            "La demanda cambia por temporada",
+            "La capacidad de atención y sistemas debe adaptarse a picos sin sobredimensionar."
+          ],
+          [
+            "Hay mucho trabajo repetitivo",
+            "Reservas, facturas, incidencias y conciliaciones consumen tiempo operativo."
+          ],
+          [
+            "El contexto mejora la atención",
+            "Canales unificados y datos compartidos reducen repeticiones y tiempos."
+          ]
+        ],
+        "challenge": "La tecnología debe liberar tiempo del equipo y mantener una experiencia coherente desde la reserva hasta el post-estancia.",
+        "cases": [
+          [
+            "RESERVAS Y BACK-OFFICE",
+            "Automatizar validaciones, facturas, conciliaciones e incidencias."
+          ],
+          [
+            "CONTACT CENTER",
+            "Unificar voz, mensajería y autoservicio con contexto de huésped."
+          ],
+          [
+            "CLOUD Y DATOS",
+            "Escalar aplicaciones, analítica y personalización según demanda."
+          ],
+          [
+            "ALTA DISPONIBILIDAD",
+            "Mantener PMS y servicios locales ante fallos de infraestructura."
+          ]
+        ],
+        "impacts": [
+          [
+            "Eficiencia operativa",
+            94
+          ],
+          [
+            "Experiencia huésped",
+            93
+          ],
+          [
+            "Escalabilidad",
+            91
+          ],
+          [
+            "Disponibilidad",
+            92
+          ]
+        ],
+        "solutions": [
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "CX y voz",
+            [
+              "Avaya",
+              "AudioCodes"
+            ]
+          ],
+          [
+            "Cloud y datos",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Alta disponibilidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir journey de alto volumen",
+          "Medir tiempo y abandono",
+          "Piloto con KPI de servicio"
+        ],
+        "references": "Westcon portfolio FY27; casos públicos de fabricantes.",
+        "nextStep": "Seleccionar un proceso de reserva, atención o back-office."
+      }
+    },
+    "Software y servicios digitales": {
+      "cyber": {
+        "areaLabel": "CIBERSEGURIDAD",
+        "title": "Protege aplicaciones y código sin frenar la velocidad de entrega",
+        "why": [
+          [
+            "Más código se genera más rápido",
+            "Equipos y agentes de IA aumentan el volumen de cambios que llega al pipeline."
+          ],
+          [
+            "Las APIs son parte del producto",
+            "El riesgo está tanto en el código como en la exposición de aplicaciones y servicios."
+          ],
+          [
+            "El control debe vivir en el flujo DevOps",
+            "La seguridad que llega al final genera retrabajo y ralentiza releases."
+          ]
+        ],
+        "challenge": "El objetivo es verificar código y proteger aplicaciones continuamente, con controles integrados en IDE, CI/CD y edge.",
+        "cases": [
+          [
+            "CODE QUALITY & SAST",
+            "Quality gates, SAST y revisión de código humano o generado por IA antes de merge."
+          ],
+          [
+            "APPS Y APIS",
+            "WAF, API Security, bots y DDoS para servicios públicos y productos digitales."
+          ],
+          [
+            "IDENTIDAD Y ACCESO",
+            "Zero Trust para desarrolladores, terceros, consolas y entornos internos."
+          ],
+          [
+            "DETECCIÓN Y VALIDACIÓN",
+            "Validar controles y acelerar respuesta sobre un stack cambiante."
+          ]
+        ],
+        "impacts": [
+          [
+            "Calidad del software",
+            96
+          ],
+          [
+            "Seguridad de aplicación",
+            95
+          ],
+          [
+            "Velocidad de entrega",
+            91
+          ],
+          [
+            "Trazabilidad",
+            93
+          ]
+        ],
+        "solutions": [
+          [
+            "Código seguro",
+            [
+              "Sonar (SonarQube)"
+            ]
+          ],
+          [
+            "Apps y APIs",
+            [
+              "Cloudflare",
+              "F5"
+            ]
+          ],
+          [
+            "Acceso",
+            [
+              "Okta",
+              "Zscaler"
+            ]
+          ],
+          [
+            "Validación y respuesta",
+            [
+              "AttackIQ",
+              "CrowdStrike",
+              "Anomali"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un repositorio y una aplicación",
+          "Definir quality gate y superficie pública",
+          "Piloto dentro del pipeline real"
+        ],
+        "references": "Documentación oficial de SonarQube y Cloudflare; Westcon portfolio FY27.",
+        "nextStep": "PoV sobre un repositorio y una aplicación expuesta con criterios de éxito claros."
+      },
+      "network": {
+        "areaLabel": "NETWORKING",
+        "title": "Conectividad programable para equipos distribuidos, cloud y servicios digitales",
+        "why": [
+          [
+            "El producto vive en múltiples nubes y regiones",
+            "La conectividad debe acompañar a aplicaciones y equipos distribuidos."
+          ],
+          [
+            "El acceso privado no puede depender de VPN clásica",
+            "Desarrolladores y terceros necesitan acceso granular a recursos internos."
+          ],
+          [
+            "DNS y red son parte del rendimiento",
+            "La experiencia de una aplicación depende de resolución, rutas y edge."
+          ]
+        ],
+        "challenge": "La red debe conectar desarrolladores, nubes y servicios con políticas consistentes y la menor fricción operativa posible.",
+        "cases": [
+          [
+            "ZERO TRUST ACCESS",
+            "Acceso privado por identidad a herramientas, repositorios y entornos."
+          ],
+          [
+            "CONNECTIVITY CLOUD",
+            "Conectar y proteger aplicaciones, usuarios y redes desde un tejido global."
+          ],
+          [
+            "DNS Y DDI",
+            "Automatizar nombres, direccionamiento y dependencias de aplicaciones."
+          ],
+          [
+            "CLOUD INTERCONNECT",
+            "Conectar nubes, CPD y edge con capacidad y resiliencia."
+          ]
+        ],
+        "impacts": [
+          [
+            "Experiencia desarrollador",
+            93
+          ],
+          [
+            "Disponibilidad",
+            95
+          ],
+          [
+            "Simplicidad operativa",
+            92
+          ],
+          [
+            "Escalabilidad",
+            94
+          ]
+        ],
+        "solutions": [
+          [
+            "Connectivity cloud",
+            [
+              "Cloudflare"
+            ]
+          ],
+          [
+            "Acceso",
+            [
+              "Zscaler",
+              "Cisco"
+            ]
+          ],
+          [
+            "DNS / DDI",
+            [
+              "EfficientIP"
+            ]
+          ],
+          [
+            "Transporte",
+            [
+              "Ciena",
+              "Nokia"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir una aplicación distribuida",
+          "Mapear accesos y dependencias de red",
+          "Piloto con latencia y operación medibles"
+        ],
+        "references": "Documentación oficial de Cloudflare; Westcon portfolio FY27.",
+        "nextStep": "Assessment de conectividad y acceso sobre una aplicación distribuida."
+      },
+      "cloud": {
+        "areaLabel": "CLOUD, UC Y AUTOMATIZACIÓN",
+        "title": "Plataforma cloud y automatización para acelerar el ciclo de software",
+        "why": [
+          [
+            "Equipos necesitan entornos bajo demanda",
+            "Desarrollo, test e IA requieren elasticidad sin esperar aprovisionamiento manual."
+          ],
+          [
+            "La automatización reduce tareas repetitivas",
+            "Provisioning, testing, reporting y operaciones ofrecen quick wins."
+          ],
+          [
+            "La IA cambia el ciclo de desarrollo",
+            "Más generación de código exige mejor verificación y observabilidad del proceso."
+          ]
+        ],
+        "challenge": "La plataforma debe aumentar velocidad sin perder gobierno, coste visible ni calidad del software.",
+        "cases": [
+          [
+            "CLOUD DE DESARROLLO",
+            "Entornos, datos y servicios bajo demanda para equipos y productos."
+          ],
+          [
+            "AUTOMATIZACIÓN",
+            "Orquestar tareas repetitivas de desarrollo, soporte y operaciones."
+          ],
+          [
+            "IA PARA DESARROLLO",
+            "Aprovechar IA con controles de calidad, seguridad y trazabilidad."
+          ],
+          [
+            "ALTA DISPONIBILIDAD",
+            "Proteger servicios críticos y workloads que no pueden parar."
+          ]
+        ],
+        "impacts": [
+          [
+            "Velocidad de entrega",
+            96
+          ],
+          [
+            "Automatización",
+            93
+          ],
+          [
+            "Gobierno",
+            90
+          ],
+          [
+            "Disponibilidad",
+            94
+          ]
+        ],
+        "solutions": [
+          [
+            "Cloud",
+            [
+              "AWS",
+              "Microsoft"
+            ]
+          ],
+          [
+            "Automatización",
+            [
+              "UiPath"
+            ]
+          ],
+          [
+            "Code confidence",
+            [
+              "Sonar (SonarQube)"
+            ]
+          ],
+          [
+            "Alta disponibilidad",
+            [
+              "Penguin Solutions"
+            ]
+          ]
+        ],
+        "start": [
+          "Elegir un producto digital",
+          "Medir lead time y tareas manuales",
+          "Piloto con KPI de entrega y calidad"
+        ],
+        "references": "Westcon portfolio FY27; documentación oficial de SonarQube.",
+        "nextStep": "Seleccionar un flujo de software con impacto medible en lead time o calidad."
+      }
     }
   },
   "source": "Westcon_Datasheets_Verticales_FY27",
-  "version": "FY2027"
+  "version": "FY2027-v5"
 }
