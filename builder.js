@@ -51,14 +51,14 @@ var TAXONOMY=(window.WESTCON_TAXONOMY&&window.WESTCON_TAXONOMY.areas)||{};
 
 var VERTICAL_TITLE={
   'Banca y seguros':{left:'BANCA Y\nSEGUROS',main:'BANCA Y SEGUROS',lf:28.7,mf:29.8},
-  'Administración pública':{left:'ADMINISTRACIÓN\nPÚBLICA',main:'ADMINISTRACIÓN PÚBLICA',lf:22.0,mf:25.0},
-  'Industria y utilities':{left:'INDUSTRIA Y\nUTILITIES',main:'INDUSTRIA Y UTILITIES',lf:24.0,mf:27.0},
+  'Administración pública':{left:'ADMINISTRACIÓN\nPÚBLICA',main:'ADMINISTRACIÓN PÚBLICA',lf:20.0,mf:24.0},
+  'Industria y utilities':{left:'INDUSTRIA Y\nUTILITIES',main:'INDUSTRIA Y UTILITIES',lf:21.0,mf:25.0},
   'Retail':{left:'RETAIL',main:'RETAIL',lf:29.0,mf:30.0},
   'Sanidad':{left:'SANIDAD',main:'SANIDAD',lf:29.0,mf:30.0},
   'Educación':{left:'EDUCACIÓN',main:'EDUCACIÓN',lf:27.0,mf:29.0},
-  'Transporte y logística':{left:'TRANSPORTE Y\nLOGÍSTICA',main:'TRANSPORTE Y LOGÍSTICA',lf:22.0,mf:25.0},
-  'Hostelería y turismo':{left:'HOSTELERÍA Y\nTURISMO',main:'HOSTELERÍA Y TURISMO',lf:22.0,mf:25.5},
-  'Software y servicios digitales':{left:'SOFTWARE Y\nSERVICIOS DIGITALES',main:'SOFTWARE Y SERVICIOS DIGITALES',lf:18.5,mf:21.5}
+  'Transporte y logística':{left:'TRANSPORTE Y\nLOGÍSTICA',main:'TRANSPORTE Y LOGÍSTICA',lf:19.0,mf:23.0},
+  'Hostelería y turismo':{left:'HOSTELERÍA Y\nTURISMO',main:'HOSTELERÍA Y TURISMO',lf:19.0,mf:23.0},
+  'Software y servicios digitales':{left:'SOFTWARE Y\nSERVICIOS DIGITALES',main:'SOFTWARE Y SERVICIOS DIGITALES',lf:16.5,mf:20.0}
 };
 
 var VERTICAL_QUESTION={
@@ -572,11 +572,7 @@ async function generatePptx(){
 
     s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:sc(4.0),y:sc(2.65),w:sc(5.85),h:sc(.32),fontFace:'Corbel',fontSize:13.6,bold:true,color:C.orange,charSpacing:3.3,margin:0,fit:'shrink'});
     var adv=(p.approvedAdvantages||[]).slice(0,4);
-    var runs=[];
-    adv.forEach(function(t,i){
-      runs.push({text:'•  '+t,options:{breakLine:i<adv.length-1}});
-    });
-    s.addText(runs,{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,breakLine:false,fit:'shrink',paraSpaceAfterPt:4});
+    s.addText(adv.map(function(t){return '•  '+t}).join('\n'),{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,fit:'shrink',breakLine:false,paraSpaceAfterPt:4});
 
     s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(2.275),fill:{color:'1A2E44',transparency:40},line:{color:accent,pt:.8}});
     s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(.38),fill:{color:'F09E0D',transparency:70},line:{color:'F09E0D',pt:1}});
