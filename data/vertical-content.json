@@ -1015,7 +1015,7 @@
           "Medir red, operación y experiencia",
           "Crear una plantilla para despliegue masivo"
         ],
-        "references": "Casos públicos de Cisco, Extreme Networks y Ruckus.",
+        "references": "Casos públicos de Cisco y Extreme Networks.",
         "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
       },
       "cloud": {
