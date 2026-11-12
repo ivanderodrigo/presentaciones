@@ -109,9 +109,9 @@ function matchesFilter(x){
   if(state.filter==='service')return x.kind==='source'&&x.type==='service';
   if(state.filter==='vendor')return x.type==='vendor';
   if(state.filter==='vertical')return x.kind==='vertical';
-  if(state.filter==='cyber')return x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('ciber')>=0 || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cyber';
-  if(state.filter==='network')return x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('network')>=0 || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='network';
-  if(state.filter==='cloud')return x.kind!=='vertical'&&x.type==='vendor'&&(norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0) || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cloud';
+  if(state.filter==='cyber')return (x.kind==='vertical'&&x.area==='cyber') || (x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('ciber')>=0) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cyber');
+  if(state.filter==='network')return (x.kind==='vertical'&&x.area==='network') || (x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('network')>=0) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='network');
+  if(state.filter==='cloud')return (x.kind==='vertical'&&x.area==='cloud') || (x.kind!=='vertical'&&x.type==='vendor'&&(norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0)) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cloud');
   return true;
 }
 function presentationOrder(item){
