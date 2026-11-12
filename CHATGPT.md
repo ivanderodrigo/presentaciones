@@ -1,4 +1,4 @@
-# ChatGPT project context — Westcon Presentation Builder
+# ChatGPT project context — Westcon Presentation Builder v5.1
 
 Repository: ivanderodrigo/presentaciones
 
@@ -31,3 +31,4 @@ Banca y seguros; Administración pública; Industria y utilities; Retail; Sanida
 
 ## GitHub workflow
 For substantial changes: create branch → validate → PR → merge to main. Preserve original assets and scheduled research workflows.
+\n## v5.1 rules\n- Cloudflare and Sonar slides must use their real logos.\n- Solution blocks add section + taxonomy + all active vendor slides in that area.\n- Three-slide vertical model per sector/area: context, use cases + vendors, activation.\n- Keep favicon/app identification enabled.\n
