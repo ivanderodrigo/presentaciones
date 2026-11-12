@@ -1,20 +1,25 @@
-WESTCON PRESENTATION BUILDER v3 — INSTALACIÓN
+WESTCON PRESENTATION BUILDER v3 — DESPLIEGUE
 
-1. Descomprime el ZIP.
-2. En tu carpeta local C:\Users\ivand\Downloads\presentaciones borra todo MENOS .git
-3. Copia dentro todo el contenido de esta carpeta.
-4. En VS Code / PowerShell:
+DESPLIEGUE PRINCIPAL
+La aplicación está conectada a ChatGPT mediante GitHub con permisos de lectura y escritura.
 
-   git add -A
-   git commit -m "Westcon Presentation Builder v3"
+Las actualizaciones pueden realizarse directamente desde ChatGPT:
+1. crear una rama de trabajo;
+2. modificar los archivos;
+3. validar el código y el contenido;
+4. revisar el diff;
+5. fusionar a main;
+6. GitHub Pages publica desde main / (root).
+
+No es necesario copiar manualmente la versión a VS Code para las iteraciones realizadas desde ChatGPT.
+
+FLUJO LOCAL DE RESPALDO
+Si alguna vez quieres trabajar desde C:\Users\ivand\Downloads\presentaciones:
+
    git pull --rebase origin main
+   git add -A
+   git commit -m "Actualización Presentation Builder"
    git push origin main
 
-5. GitHub Pages seguirá publicando desde main / (root).
-6. Después del despliegue ejecuta en GitHub Actions:
-   - Update public market intelligence
-   para volver a poblar/actualizar la caché pública de fabricantes.
-
-NOTA CHATGPT/GITHUB
-ChatGPT puede leer directamente ivanderodrigo/presentaciones mediante la conexión GitHub actual.
-La escritura directa desde ChatGPT está siendo rechazada por la instalación de GitHub (403 en Contents/refs), aunque el permiso de la app en ChatGPT está en "Allow all actions". Esta versión incluye CHATGPT.md para dejar el contexto persistente del proyecto dentro del repo.
+INTELIGENCIA
+Los archivos data/live-intelligence.* se refrescan mediante GitHub Actions. Las actualizaciones de interfaz deben preservarlos salvo que se quiera cambiar expresamente su contenido o estructura.
