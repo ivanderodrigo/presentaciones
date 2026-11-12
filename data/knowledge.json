@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.7.0",
   "sourceDecks": [
     {
       "name": "Westcon Comstor España FY2027",
@@ -272,15 +272,6 @@
         "Optical",
         "Fixed Access",
         "Automation"
-      ]
-    },
-    {
-      "name": "Ruckus Networks",
-      "area": "Networking",
-      "tags": [
-        "Wi-Fi",
-        "Switching",
-        "High Density"
       ]
     },
     {
