@@ -41,20 +41,20 @@ Los workflows de research siguen actualizando `data/live-intelligence.*` y `data
 
 ## ChatGPT + GitHub
 
-El repositorio se puede leer desde ChatGPT mediante la conexión GitHub. `CHATGPT.md` contiene el contexto persistente del proyecto para futuras iteraciones.
+El repositorio `ivanderodrigo/presentaciones` está conectado a ChatGPT con acceso directo de lectura y escritura. `CHATGPT.md` conserva el contexto del proyecto para futuras iteraciones.
 
-Para que ChatGPT pueda **escribir directamente** en el repositorio, la instalación de la GitHub App debe permitir escritura en Contents/refs. El ajuste de permisos de ChatGPT por sí solo no sustituye los permisos de la instalación GitHub.
+Las nuevas versiones pueden prepararse en una rama, validarse y fusionarse a `main` desde ChatGPT, sin necesidad de sustituir archivos manualmente en VS Code.
 
 ## Despliegue
 
-GitHub Pages: `main` → `/(root)`.
+GitHub Pages publica desde `main` → `/(root)`.
 
-Actualización local:
+Si alguna vez se trabaja en local, el flujo de respaldo es:
 
 ```powershell
-git add -A
-git commit -m "Westcon Presentation Builder v3"
 git pull --rebase origin main
+git add -A
+git commit -m "Actualización Presentation Builder"
 git push origin main
 ```
 
@@ -64,8 +64,6 @@ git push origin main
 - **Research partner dossier**: crea/actualiza dossier público de un partner.
 
 ## Calidad
-
-Ejecuta:
 
 ```bash
 python scripts/quality_gate.py
