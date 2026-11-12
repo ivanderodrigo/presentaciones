@@ -33,5 +33,7 @@
   "AWS": "assets/vendors/aws.png",
   "Microsoft": "assets/vendors/microsoft.png",
   "Penguin Solutions": "assets/vendors/penguin-solutions.png",
-  "UiPath": "assets/vendors/uipath.png"
+  "UiPath": "assets/vendors/uipath.png",
+  "Cloudflare": "assets/vendors/cloudflare.svg",
+  "Sonar (SonarQube)": "assets/vendors/sonar.svg"
 }
