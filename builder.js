@@ -126,9 +126,9 @@ function matchesFilter(x){
   if(state.filter==='service')return x.kind==='source'&&x.type==='service';
   if(state.filter==='vendor')return x.type==='vendor';
   if(state.filter==='vertical')return x.kind==='vertical';
-  if(state.filter==='cyber')return areaKey(x.kind==='vertical'?x.area:x.area)==='cyber';
-  if(state.filter==='network')return areaKey(x.kind==='vertical'?x.area:x.area)==='network';
-  if(state.filter==='cloud')return areaKey(x.kind==='vertical'?x.area:x.area)==='cloud';
+  if(state.filter==='cyber')return (x.kind==='vertical'&&x.area==='cyber')||norm(x.area).indexOf('ciber')>=0;
+  if(state.filter==='network')return (x.kind==='vertical'&&x.area==='network')||norm(x.area).indexOf('network')>=0;
+  if(state.filter==='cloud')return (x.kind==='vertical'&&x.area==='cloud')||norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0;
   return true;
 }
 function filteredItems(){
