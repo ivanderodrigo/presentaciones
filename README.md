@@ -1,4 +1,4 @@
-# Westcon Presentation Builder · v5.4
+# Westcon Presentation Builder · v5.7
 
 Constructor visual de presentaciones ad-hoc para Westcon Comstor España FY27.
 
@@ -102,3 +102,11 @@ La aplicación se publica desde main y sigue siendo completamente estática.
 - Las taxonomías no incluyen categorías de servicios Westcon.
 - Los verticales mantienen una única slide rica por sector/área, con el grid del playbook FY27, títulos adaptativos para sectores largos y un máximo de dos logos grandes por caso de uso.
 - La biblioteca conserva la narrativa del deck original y coloca los verticales al cierre de cada bloque tecnológico.
+
+
+## Ajustes v5.7
+
+- Ruckus Networks deja de formar parte del portfolio visible: eliminado de fabricantes activos, índice de slides, intelligence, logos, verticales y taxonomías.
+- Cisco se trata correctamente como fabricante multiárea y puede aparecer en Cybersecurity y Networking.
+- Cloudflare y Sonar replican ahora la geometría exacta del cuadro FY27 de ventajas de Ping/F5: Corbel 11 pt, interlineado 100%, espacio posterior 0, sangría colgante de bullet y anclaje vertical centrado.
+- Las taxonomías sustituyen las listas de nombres por tarjetas blancas con los logos de los fabricantes, manteniendo texto explicativo tecnológico debajo.

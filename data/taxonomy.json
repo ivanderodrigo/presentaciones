@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.7.0",
   "areas": {
     "cyber": {
       "label": "CIBERSEGURIDAD",
@@ -108,8 +108,7 @@
           "title": "Campus switching y fabric",
           "vendors": [
             "Extreme Networks",
-            "Cisco",
-            "Ruckus Networks"
+            "Cisco"
           ],
           "detail": "Switching · fabric · policy · operación centralizada"
         },
@@ -118,7 +117,6 @@
           "vendors": [
             "Extreme Networks",
             "Cisco",
-            "Ruckus Networks",
             "Weblib"
           ],
           "detail": "WLAN · NAC · assurance · guest access · experiencia digital"
@@ -143,7 +141,6 @@
           "title": "Guest Wi‑Fi y engagement",
           "vendors": [
             "Weblib",
-            "Ruckus Networks",
             "Cisco"
           ],
           "detail": "Captive portal · analytics · marketing · servicios para invitados"

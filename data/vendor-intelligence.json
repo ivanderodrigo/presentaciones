@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.7.0",
   "generatedFrom": "Westcon_Comstor_Espana_FY27_completa.pptx",
   "vendors": {
     "Anomali": {
@@ -2461,8 +2461,7 @@
       "competitors": [
         "Cisco",
         "HPE Aruba Networking",
-        "Juniper Mist",
-        "Ruckus Networks"
+        "Juniper Mist"
       ],
       "buyingTriggers": [
         "Campus modernization",
@@ -2519,8 +2518,7 @@
         "competitors": [
           "\"Extreme Networks\" \"Cisco\" comparison",
           "\"Extreme Networks\" \"HPE Aruba Networking\" comparison",
-          "\"Extreme Networks\" \"Juniper Mist\" comparison",
-          "\"Extreme Networks\" \"Ruckus Networks\" comparison"
+          "\"Extreme Networks\" \"Juniper Mist\" comparison"
         ]
       },
       "verticalAngles": {
@@ -2631,104 +2629,6 @@
         ],
         "Retail": [
           "Network automation"
-        ]
-      }
-    },
-    "Ruckus Networks": {
-      "name": "Ruckus Networks",
-      "category": "High-density Wi-Fi / Switching",
-      "sourceSlides": [
-        47
-      ],
-      "headline": "HIGH-PERFORMANCE WI-FI & SWITCHING",
-      "tagline": "Wi-Fi que funciona donde otros fallan: entornos densos y críticos",
-      "valueProposition": "Plataforma de redes robusta con Wi-Fi de alta densidad, switches e inteligencia de gestión cloud. Tecnologías propias BeamFlex y ChannelFly para máximo rendimiento RF en estadios, hospitales, hoteles, campus y espacios industriales.",
-      "approvedAdvantages": [
-        "BeamFlex: antenas adaptativas que mejoran la señal >40% vs Wi-Fi estándar",
-        "ChannelFly: selección dinámica de canal para máximo throughput sin interferencias",
-        "Gestión cloud con Ruckus One: operación simplificada de toda la red",
-        "Casos de uso críticos: hospitales, aeropuertos, eventos masivos, manufacturing"
-      ],
-      "competitors": [
-        "Cisco / Meraki",
-        "HPE Aruba Networking",
-        "Extreme Networks",
-        "Juniper Mist"
-      ],
-      "buyingTriggers": [
-        "High-density Wi-Fi",
-        "Hospitality",
-        "Education",
-        "Venue / campus"
-      ],
-      "analystQueries": [
-        "\"Ruckus Networks\" Gartner",
-        "\"Ruckus Networks\" Forrester Wave",
-        "\"Ruckus Networks\" IDC MarketScape",
-        "\"Ruckus Networks\" Omdia",
-        "\"Ruckus Networks\" GigaOm"
-      ],
-      "sourceType": "corporate FY2027",
-      "sourceConfidence": "approved/internal",
-      "decisionCriteria": [
-        "Cobertura del riesgo prioritario",
-        "Precisión y reducción de ruido operativo",
-        "Integración con el stack de seguridad",
-        "Tiempo de despliegue y operación",
-        "Evidencia y trazabilidad"
-      ],
-      "proofThemes": [
-        "Piloto con KPI de experiencia, disponibilidad y operación",
-        "Integración con el stack real del partner/cliente",
-        "Referencia pública comparable",
-        "Operación y lifecycle medidos",
-        "Escalabilidad y coste total"
-      ],
-      "positioningFrame": "Wi-Fi que funciona donde otros fallan: entornos densos y críticos. La conversación debe centrarse en el caso de uso y en demostrar sus capacidades con criterios medibles.",
-      "researchPlan": {
-        "analysts": [
-          "\"Ruckus Networks\" Gartner",
-          "\"Ruckus Networks\" Forrester",
-          "\"Ruckus Networks\" IDC MarketScape",
-          "\"Ruckus Networks\" Omdia",
-          "\"Ruckus Networks\" GigaOm",
-          "\"Ruckus Networks\" ISG",
-          "\"Ruckus Networks\" Canalys",
-          "\"Ruckus Networks\" KuppingerCole"
-        ],
-        "differentiation": [
-          "\"Ruckus Networks\" competitive differentiation",
-          "\"Ruckus Networks\" architecture benchmark integration"
-        ],
-        "customers": [
-          "\"Ruckus Networks\" customer case study",
-          "\"Ruckus Networks\" deployment success story"
-        ],
-        "channel": [
-          "\"Ruckus Networks\" partner program certification specialization channel incentives"
-        ],
-        "competitors": [
-          "\"Ruckus Networks\" \"Cisco / Meraki\" comparison",
-          "\"Ruckus Networks\" \"HPE Aruba Networking\" comparison",
-          "\"Ruckus Networks\" \"Extreme Networks\" comparison",
-          "\"Ruckus Networks\" \"Juniper Mist\" comparison"
-        ]
-      },
-      "verticalAngles": {
-        "Banca y seguros": [
-          "High-density Wi-Fi",
-          "Hospitality"
-        ],
-        "Administración pública": [
-          "Venue / campus",
-          "High-density Wi-Fi"
-        ],
-        "Industria y utilities": [
-          "ChannelFly: selección dinámica de canal para máximo throughput sin interferencias"
-        ],
-        "Retail": [
-          "High-density Wi-Fi",
-          "BeamFlex: antenas adaptativas que mejoran la señal >40% vs Wi-Fi estándar"
         ]
       }
     },

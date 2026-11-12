@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural, portfolio and rendering quality gate for Westcon Presentation Builder v5.6."""
+"""Structural, portfolio and rendering quality gate for Westcon Presentation Builder v5.7."""
 from pathlib import Path
 import json, sys
 
@@ -16,8 +16,8 @@ def load(path):
 knowledge=load("data/knowledge.json")
 vendors=knowledge.get("vendors",[])
 vendor_by={v.get("name"):v for v in vendors}
-if len(vendors)!=37:
-    errors.append(f"knowledge: expected 37 active vendors, found {len(vendors)}")
+if len(vendors)!=36:
+    errors.append(f"knowledge: expected 36 active vendors, found {len(vendors)}")
 for name in ["Cloudflare","Sonar (SonarQube)"]:
     if name not in vendor_by:
         errors.append(f"knowledge: missing {name}")
@@ -25,8 +25,12 @@ for name in ["Cloudflare","Sonar (SonarQube)"]:
         errors.append(f"knowledge: {name} must belong to Ciberseguridad")
 if "Juniper Networks" in vendor_by:
     errors.append("knowledge: Juniper Networks must not be active")
+if "Ruckus Networks" in vendor_by:
+    errors.append("knowledge: Ruckus Networks must not be active")
 
 vi=load("data/vendor-intelligence.json").get("vendors",{})
+if "Ruckus Networks" in vi:
+    errors.append("vendor intelligence: Ruckus must not remain as an active research vendor")
 for name in ["Cloudflare","Sonar (SonarQube)"]:
     x=vi.get(name,{})
     if len(x.get("approvedAdvantages",[]))!=4:
@@ -42,6 +46,8 @@ for name in ["Cloudflare","Sonar (SonarQube)"]:
             errors.append(f"{name}: advantage too long: {adv[:40]}...")
 
 logos=load("data/vendor-logo-map.json")
+if "Ruckus Networks" in logos:
+    errors.append("logo map: Ruckus must not remain in the active portfolio map")
 for name,path in {"Cloudflare":"assets/vendors/cloudflare.svg","Sonar (SonarQube)":"assets/vendors/sonar.svg"}.items():
     if logos.get(name)!=path:
         errors.append(f"{name}: logo mapping missing")
@@ -55,12 +61,16 @@ for sid in ["curated-cloudflare","curated-sonar"]:
         errors.append(f"slide index: {sid} missing or not Cybersecurity")
 if any("Juniper Networks" in (s.get("vendors") or []) for s in slides):
     errors.append("slide index: Juniper must not be visible")
+if any("Ruckus Networks" in (s.get("vendors") or []) for s in slides):
+    errors.append("slide index: Ruckus must not be visible")
 
 corp=list((ROOT/"assets/source-slides/corporate").glob("slide-*.png"))
 if len(corp)!=84:
     errors.append(f"corporate assets: expected 84, found {len(corp)}")
 
 taxonomy=load("data/taxonomy.json")
+if "Ruckus" in json.dumps(taxonomy,ensure_ascii=False):
+    errors.append("taxonomy: Ruckus reference remains")
 areas=taxonomy.get("areas",{})
 if set(areas)!={"cyber","network","cloud"}:
     errors.append("taxonomy: cyber/network/cloud required")
@@ -95,6 +105,8 @@ if len(vc)!=9 or models!=27:
     errors.append(f"verticals: expected 9 sectors/27 models, found {len(vc)}/{models}")
 if "Juniper Networks" in json.dumps(vc,ensure_ascii=False):
     errors.append("verticals: Juniper reference remains")
+if "Ruckus" in json.dumps(vc,ensure_ascii=False):
+    errors.append("verticals: Ruckus reference remains")
 for vertical,am in vc.items():
     for area,m in am.items():
         if len(m.get("why",[]))<3 or len(m.get("cases",[]))<4 or len(m.get("solutions",[]))<4:
@@ -106,10 +118,10 @@ index=(ROOT/"index.html").read_text(encoding="utf-8")
 builder=(ROOT/"builder.js").read_text(encoding="utf-8")
 css=(ROOT/"builder.css").read_text(encoding="utf-8")
 
-if "FY27 · v5.6" not in index:
-    errors.append("interface: v5.6 label missing")
-if "favicon.ico?v=56" not in index or "favicon.svg?v=56" not in index:
-    errors.append("interface: v5.6 favicon cache-bust missing")
+if "FY27 · v5.7" not in index:
+    errors.append("interface: v5.7 label missing")
+if "favicon.ico?v=57" not in index or "favicon.svg?v=57" not in index:
+    errors.append("interface: v5.7 favicon cache-bust missing")
 if "\\n" in index:
     errors.append("interface: literal \\n markup remains")
 if "data/taxonomy.js" not in index:
@@ -159,25 +171,36 @@ if "for(var j=0;j<4;j++)" in builder:
 if "r.text(name,bx+.03,cc.y+.842" not in builder or "var name=names[j]" not in builder:
     errors.append("builder: missing vendor-name fallback when a vertical logo cannot load")
 
-# Curated vendor advantages must match FY27 compact spacing.
-for token in ["var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.18","lh:1.0","yy+=Math.max(.34"]:
-    if token not in builder:
-        errors.append(f"builder: FY27 compact advantage spacing missing: {token}")
-if "yy=3.00" in builder:
-    errors.append("builder: curated advantages start too close to the heading")
-
 for obsolete in ["sourceOverlayHtml","patchSourceSlide","portfolio-hide-juniper","taxonomy-patch","vendorStoryModel","ROLE_META"]:
     if obsolete in builder:
         errors.append(f"builder: obsolete fragile logic remains: {obsolete}")
 if "Juniper Networks" in builder:
     errors.append("builder: Juniper reference remains")
+if "Ruckus" in builder:
+    errors.append("builder: Ruckus reference remains")
+
+# Taxonomies must render manufacturer logos, not vendor-name text lists.
+for token in ["async function drawTaxonomyLogos","await drawTaxonomyLogos(card,s)","r.rect(bx,by,bw,bh,'#FFFFFF'"]:
+    if token not in builder:
+        errors.append(f"builder: taxonomy logo-tile renderer missing: {token}")
+if "card.vendors.join(' · ')" in builder:
+    errors.append("builder: taxonomy must not render manufacturer names as a text list")
+
+# Curated advantages must exactly emulate the FY27 Ping/F5 paragraph geometry.
+for token in ["0.375", "vertical middle anchor", "advTotal", "r.P(4.4028)", "r.PT(11)"]:
+    if token not in builder:
+        errors.append(f"builder: exact FY27 advantage geometry missing: {token}")
+
+# Multi-area manufacturers must be allowed in every area they belong to.
+if "function vendorInArea" not in builder:
+    errors.append("builder: multi-area manufacturer membership helper missing")
 
 for token in [".visual-placeholder",".preview-loading",".thumb>img",".deck-thumb img"]:
     if token not in css:
         errors.append(f"css: stable rendering style missing: {token}")
 
-print("WESTCON PRESENTATION BUILDER v5.6 · QUALITY GATE")
-print(f"Active vendors: {len(vendors)}/37 · Corporate assets: {len(corp)}/84")
+print("WESTCON PRESENTATION BUILDER v5.7 · QUALITY GATE")
+print(f"Active vendors: {len(vendors)}/36 · Corporate assets: {len(corp)}/84")
 print(f"Taxonomy coverage: Cyber {len(area_members('cyber'))} · Networking {len(area_members('network'))} · Cloud {len(area_members('cloud'))}")
 print(f"Vertical sectors/models: {len(vc)}/9 · {models}/27")
 print("Cloudflare/Sonar: exact FY27 F5/Ping source templates; standard opportunity block untouched")
@@ -187,4 +210,4 @@ for e in errors:
     print("ERROR ·",e)
 if errors:
     sys.exit(1)
-print("OK · v5.6 stable visual/library quality gate passed")
+print("OK · v5.7 stable visual/library quality gate passed")

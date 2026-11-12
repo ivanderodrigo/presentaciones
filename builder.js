@@ -216,13 +216,29 @@ async function renderVendor(item,mode){
   r.rect(4.14,.20,5.58,.40,rightBox);r.text('¿Qué aporta '+item.vendor.replace(' (SonarQube)','')+'?',4.15,.22,5.55,.38,{pt:12,min:10.5,bold:true,family:'Corbel',color:accent,lh:1});
   r.rect(4.14,.60,5.58,1.87,rightBox);r.text(p.valueProposition||'',4.15,.65,5.55,1.82,{pt:11,min:9.7,family:'Corbel',color:'#E7E6E6',lh:1.15});
   r.rect(3.96,3.00,5.90,2.31,'#1A2E44');
-  // Match the FY27 manufacturer cards: clear gap after the orange heading,
-  // then compact single-spaced bullets (no double vertical spacing).
-  var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.18;
+  // Exact clone of the FY27 advantage text box (Ping/F5):
+  // shape 4.00/3.00/5.80/2.35, Corbel 11 pt, 100% line spacing,
+  // 0 pt paragraph spacing, 0.375" hanging bullet indent and vertical middle anchor.
+  var adv=(p.approvedAdvantages||[]).slice(0,4);
+  r.font(11,false,false,'Corbel');
+  var advMax=r.P(5.369),advLine=r.PT(11),advBlocks=[];
   adv.forEach(function(a){
-    r.text('•',4.00,yy,.22,.22,{pt:11,family:'Corbel',color:'#E7E6E6',lh:1.0});
-    var tx=r.text(a,4.28,yy,5.42,.38,{pt:11,min:9.8,family:'Corbel',color:'#E7E6E6',lh:1.0});
-    yy+=Math.max(.34,tx.height/r.P(1)+.018);
+    var words=String(a||'').split(/\s+/),line='',ls=[];
+    words.forEach(function(word){
+      var test=line?line+' '+word:word;
+      if(ctx.measureText(test).width<=advMax||!line)line=test;
+      else{ls.push(line);line=word}
+    });
+    if(line)ls.push(line);
+    advBlocks.push(ls.length?ls:['']);
+  });
+  var advTotal=advBlocks.reduce(function(sum,ls){return sum+ls.length*advLine},0);
+  var advY=r.P(3.0139)+(r.P(2.3222)-advTotal)/2;
+  ctx.fillStyle='#E7E6E6';ctx.textAlign='left';
+  advBlocks.forEach(function(ls){
+    ctx.fillText('•',r.P(4.0278),advY);
+    ls.forEach(function(line,li){ctx.fillText(line,r.P(4.4028),advY+li*advLine,advMax)});
+    advY+=ls.length*advLine;
   });
   return canvas.toDataURL('image/png');
 }
@@ -232,8 +248,15 @@ async function drawLogoCard(r,name,x,y,w,h){
   if(u){try{await r.contain(u,x+.05,y+.04,w-.10,h-.08,.015);return}catch(e){}}
   r.text(name,x+.05,y+.08,w-.10,h-.12,{pt:6.8,min:5.4,bold:true,family:'Arial',color:'#173744',align:'center',lh:1.0});
 }
+function vendorInArea(v,area){
+  var a=norm(v&&v.area||'');
+  if(area==='cyber')return a.indexOf('ciber')>=0;
+  if(area==='network')return a.indexOf('network')>=0;
+  if(area==='cloud')return a.indexOf('cloud')>=0||a.indexOf('automat')>=0||a.indexOf('uc')>=0;
+  return false;
+}
 function vendorNamesForArea(area){
-  return (K.vendors||[]).filter(function(v){return areaKey(v.area)===area}).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
+  return (K.vendors||[]).filter(function(v){return vendorInArea(v,area)}).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
 }
 async function renderPortfolio(mode){
   var canvas=makeCanvas(mode),r=renderer(canvas),ctx=r.ctx;ctx.fillStyle='#1A2E44';ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -256,7 +279,29 @@ async function renderTaxonomy(area,mode){
   var cards=t.cards||[],specs=[];
   if(cards.length===7){for(var i=0;i<4;i++)specs.push({x:.45+i*2.38,y:1.28,w:2.14,h:1.63});for(var j=0;j<3;j++)specs.push({x:1.02+j*3.00,y:3.28,w:2.65,h:1.63})}
   else{for(var rr=0;rr<2;rr++)for(var cc=0;cc<3;cc++)specs.push({x:.55+cc*3.10,y:1.28+rr*2.00,w:2.78,h:1.63})}
-  cards.forEach(function(card,i){var s=specs[i];r.rect(s.x,s.y,s.w,s.h,'#113A50',accent,.006,.055);r.text(card.title,s.x+.12,s.y+.12,s.w-.24,.26,{pt:10,min:8.3,bold:true,family:'Corbel',color:accent});r.text(card.vendors.join(' · '),s.x+.12,s.y+.52,s.w-.24,.48,{pt:7.7,min:6.3,bold:true,family:'Corbel',color:'#fff',lh:1.10});r.text(card.detail,s.x+.12,s.y+1.12,s.w-.24,.35,{pt:6.6,min:5.7,family:'Corbel',color:'#D8E5E9',lh:1.08})});
+  async function drawTaxonomyLogos(card,s){
+    var names=(card.vendors||[]).filter(Boolean),cols=names.length<=4?2:3,rows=Math.ceil(names.length/cols),gap=.055;
+    var regionX=s.x+.12,regionY=s.y+.48,regionW=s.w-.24,regionH=.72;
+    var bw=(regionW-gap*(cols-1))/cols,bh=Math.min(.30,(regionH-gap*(rows-1))/Math.max(rows,1));
+    var usedH=rows*bh+Math.max(0,rows-1)*gap,top=regionY+(regionH-usedH)/2;
+    for(var n=0;n<names.length;n++){
+      var col=n%cols,row=Math.floor(n/cols),bx=regionX+col*(bw+gap),by=top+row*(bh+gap),name=names[n],u=logoUrl(name);
+      r.rect(bx,by,bw,bh,'#FFFFFF',accent,.004,.025);
+      if(u){
+        try{await r.contain(u,bx+.035,by+.025,bw-.07,bh-.05,.006)}
+        catch(e){r.text(name,bx+.03,by+.07,bw-.06,bh-.10,{pt:5.2,min:4.2,bold:true,family:'Arial',color:'#173744',align:'center',lh:1.0})}
+      }else{
+        r.text(name,bx+.03,by+.07,bw-.06,bh-.10,{pt:5.2,min:4.2,bold:true,family:'Arial',color:'#173744',align:'center',lh:1.0});
+      }
+    }
+  }
+  for(var k=0;k<cards.length;k++){
+    var card=cards[k],s=specs[k];
+    r.rect(s.x,s.y,s.w,s.h,'#113A50',accent,.006,.055);
+    r.text(card.title,s.x+.12,s.y+.12,s.w-.24,.26,{pt:10,min:8.3,bold:true,family:'Corbel',color:accent});
+    await drawTaxonomyLogos(card,s);
+    r.text(card.detail,s.x+.12,s.y+1.28,s.w-.24,.25,{pt:6.3,min:5.3,family:'Corbel',color:'#D8E5E9',lh:1.05});
+  }
   r.text('FY2027 — Westcon Comstor España',.35,5.35,3,.14,{pt:6.8,family:'Corbel',color:'#D8E5E9'});
   return canvas.toDataURL('image/png');
 }

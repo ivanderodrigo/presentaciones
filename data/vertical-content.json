@@ -433,8 +433,7 @@
             "Campus y Wi-Fi",
             [
               "Cisco",
-              "Extreme Networks",
-              "Ruckus Networks"
+              "Extreme Networks"
             ]
           ],
           [
@@ -717,7 +716,6 @@
           [
             "Wi-Fi industrial",
             [
-              "Ruckus Networks",
               "Extreme Networks",
               "Cisco"
             ]
@@ -995,7 +993,6 @@
           [
             "Wi-Fi y switching",
             [
-              "Ruckus Networks",
               "Extreme Networks",
               "Cisco"
             ]
@@ -1018,7 +1015,7 @@
           "Medir red, operación y experiencia",
           "Crear una plantilla para despliegue masivo"
         ],
-        "references": "Casos públicos de Cisco, Extreme Networks y Ruckus.",
+        "references": "Casos públicos de Cisco y Extreme Networks.",
         "nextStep": "Assessment de 90 minutos para priorizar un caso de uso y definir un piloto medible."
       },
       "cloud": {
@@ -1266,8 +1263,7 @@
             "Campus y Wi-Fi",
             [
               "Extreme Networks",
-              "Cisco",
-              "Ruckus Networks"
+              "Cisco"
             ]
           ],
           [
@@ -1544,7 +1540,6 @@
             "Campus Wi-Fi",
             [
               "Extreme Networks",
-              "Ruckus Networks",
               "Cisco"
             ]
           ],
@@ -1821,7 +1816,6 @@
             "Wi-Fi",
             [
               "Extreme Networks",
-              "Ruckus Networks",
               "Cisco"
             ]
           ],
@@ -2097,7 +2091,6 @@
           [
             "Wi-Fi",
             [
-              "Ruckus Networks",
               "Extreme Networks",
               "Cisco"
             ]
@@ -2496,5 +2489,5 @@
     }
   },
   "source": "Westcon_Datasheets_Verticales_FY27",
-  "version": "FY2027-v5"
+  "version": "5.7.0"
 }

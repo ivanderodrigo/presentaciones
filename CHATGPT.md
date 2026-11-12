@@ -53,3 +53,9 @@ For substantial changes: create branch → validate → PR → merge to main. Pr
 - Taxonomy card titles must be technology/architecture categories, never Westcon service categories.
 - Cloudflare/Sonar text must respect FY27 manufacturer-card text budgets.
 - Sector playbooks use adaptive titles and no more than two large vendor logos per use case.
+
+## v5.7 invariants
+- Ruckus Networks is no longer an active/visible portfolio manufacturer and must not appear in indexed slides, taxonomy, vertical mappings or generated portfolio views.
+- Multi-area manufacturers such as Cisco must appear in every technology area they belong to.
+- Cloudflare/Sonar advantages use the exact FY27 Ping/F5 paragraph geometry.
+- Taxonomy cards show manufacturer logos in white tiles instead of text-only vendor lists.

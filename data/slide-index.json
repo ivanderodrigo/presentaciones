@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.7.0",
   "generatedAt": "2026-08-27",
   "slides": [
     {
@@ -1036,30 +1036,6 @@
       ],
       "level": "technical",
       "asset": "assets/source-slides/corporate/slide-46.png",
-      "freshness": "FY2027"
-    },
-    {
-      "id": "corp-47",
-      "source": "corporate",
-      "page": 47,
-      "title": "HIGH-PERFORMANCE WI-FI & SWITCHING",
-      "subtitle": "Wi-Fi que funciona donde otros fallan: entornos densos y críticos",
-      "type": "vendor",
-      "area": "Networking",
-      "vendors": [
-        "Ruckus Networks"
-      ],
-      "vertical": null,
-      "tags": [
-        "Ruckus Networks"
-      ],
-      "roles": [
-        "psm",
-        "vsm",
-        "sa"
-      ],
-      "level": "technical",
-      "asset": "assets/source-slides/corporate/slide-47.png",
       "freshness": "FY2027"
     },
     {
