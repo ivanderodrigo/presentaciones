@@ -1,194 +1,72 @@
-# Westcon Meeting Intelligence · v2.1
+# Westcon Presentation Builder · v3
 
-Aplicación estática para **GitHub Pages** que prepara reuniones con partners/integradores y genera un PowerPoint FY27 final, pensado para enseñarlo directamente al partner.
+Aplicación estática para GitHub Pages orientada a **crear presentaciones ad-hoc para partners e integradores**, no a gestionar reuniones.
 
-## Idea central
+## Principio
 
-**Máxima sencillez por fuera; máxima inteligencia por dentro.**
+**La presentación original FY27 es la biblioteca. La inteligencia añade contexto; el usuario mantiene el control final del deck.**
 
-La entrada mínima es:
+La experiencia se reduce a:
 
-1. **partner / integrador**;
-2. **rol**: PSM, VSM o Solution Architect;
-3. **objetivo de la reunión**;
-4. VSM/SA: **fabricante foco**. En PSM puede quedar vacío y el motor propone el foco a partir del contexto.
+1. partner (opcional);
+2. perfil PSM / VSM / Solution Architect (opcional, solo para orientar la propuesta);
+3. objetivo;
+4. fabricantes y vertical, cuando apliquen;
+5. botón **Proponer deck**.
 
-El tipo de reunión se adapta automáticamente al rol mientras el usuario no lo cambie. Fabricantes adicionales, vertical, tecnologías, servicios, profundidad, research y datos privados son opcionales.
+Después el usuario puede **añadir, quitar, duplicar y reordenar** cualquier slide antes de generar el PowerPoint.
 
-## Qué cambia en v2
+## Biblioteca incluida
 
-### Partner Intelligence
+- 84 slides corporativas de Westcon Comstor España FY2027;
+- 12 verticales estructuradas (4 sectores × 3 áreas) adaptadas a 16:9;
+- 36 fabricantes con Vendor Intelligence;
+- evidencia pública actualizable mediante GitHub Actions;
+- servicios Westcon FY27.
 
-La aplicación construye una ficha viva del partner a partir de señales públicas y memoria local de reuniones:
+## Nuevas slides que puede generar
 
-- portfolio y fabricantes visibles;
-- especialización tecnológica;
-- verticales y referencias;
-- certificaciones y alianzas;
-- estrategia, adquisiciones, expansión y noticias;
-- talento/ofertas como señal de inversión;
-- proyectos, contratos y casos públicos;
-- continuidad de reuniones anteriores.
+- portada personalizada;
+- objetivo / agenda;
+- contexto público del partner;
+- caso de uso verticalizado;
+- diferenciación de fabricante;
+- analistas y señales de mercado;
+- siguientes pasos;
+- slide libre.
 
-Los resultados de cada reunión pueden registrarse en segundos. La siguiente reunión recupera acuerdos, objeciones y próximos pasos.
+## Inteligencia invisible
 
-Existe además un workflow manual **Research partner dossier** que permite enriquecer y versionar en GitHub la inteligencia pública de un partner concreto.
+Los workflows de research siguen actualizando `data/live-intelligence.*` y `data/partner-intelligence.*`. El constructor utiliza esas evidencias para generar contenido, pero no muestra scoring, whitespace, colas de investigación ni lenguaje interno en el deck final.
 
-### Vendor Intelligence · 36/36 fabricantes
+## ChatGPT + GitHub
 
-Cada fabricante dispone de una ficha estructurada con:
+El repositorio `ivanderodrigo/presentaciones` está conectado a ChatGPT con acceso directo de lectura y escritura. `CHATGPT.md` conserva el contexto del proyecto para futuras iteraciones.
 
-- propuesta de valor y categoría;
-- ventajas comerciales/técnicas aprobadas a partir del corpus FY27;
-- criterios de decisión;
-- señales de compra;
-- contexto competitivo interno;
-- temas de prueba / PoC;
-- encaje por vertical;
-- plan de investigación específico;
-- mapeo a las slides corporativas FY27 que se pueden reutilizar.
+Las nuevas versiones pueden prepararse en una rama, validarse y fusionarse a `main` desde ChatGPT, sin necesidad de sustituir archivos manualmente en VS Code.
 
-El research público diario profundiza en:
+## Despliegue
 
-- Gartner, Forrester, IDC/MarketScape, Omdia, GigaOm, ISG, Canalys y KuppingerCole;
-- casos públicos y referencias;
-- lanzamientos, adquisiciones, estrategia y momentum;
-- market share/adopción cuando hay evidencia pública;
-- programa de canal, certificaciones, especializaciones e incentivos públicos;
-- arquitectura, integración, interoperabilidad, benchmarks y reference designs;
-- competencia, alternativas, migraciones y diferenciación;
-- resiliencia, seguridad, vulnerabilidades, incidentes y confianza.
+GitHub Pages publica desde `main` → `/(root)`.
 
-La evidencia conserva **fuente, fecha, URL, clase, autoridad y confianza**. Una posición de analista solo se presenta cuando la fuente pública la declara explícitamente.
-
-### Presentation Director
-
-El usuario no elige una plantilla. El director decide automáticamente:
-
-- profundidad y número objetivo de slides según duración;
-- cuánto contexto Westcon necesita ese partner;
-- qué fabricantes merecen prioridad;
-- qué slides del corpus FY27 reutilizar;
-- qué contenido nuevo generar;
-- qué vertical/casos de uso encajan;
-- qué evidencia de mercado merece aparecer;
-- qué servicios Westcon refuerzan el siguiente paso;
-- qué dejar fuera para no convertir la reunión en un catálogo.
-
-La biblioteca de **96 slides fuente** está indexada semánticamente: 84 corporativas + 12 datasheets verticales. Los playbooks internos y las slides con instrucciones para comerciales pueden alimentar el razonamiento, pero **no se insertan en la presentación partner-facing**.
-
-## Salida partner-facing
-
-El PowerPoint final no muestra “cómo vender”, scoring, whitespace, hipótesis, cola de búsquedas ni instrucciones internas. Puede mostrar, según la reunión:
-
-- objetivo y agenda;
-- contexto relevante del partner;
-- evolución conjunta y pipeline cuando el PSM aporta datos;
-- próximos hitos de desarrollo con el fabricante;
-- necesidad, arquitectura y criterios de diseño;
-- casos de uso verticales;
-- diferenciación y criterios de decisión;
-- posicionamiento/evidencia pública de analistas;
-- noticias y señales recientes relevantes;
-- contenido corporativo FY27 original;
-- servicios Westcon;
-- próximos pasos.
-
-El **briefing interno** sí conserva razones de priorización, fuentes, scoring y preguntas de discovery.
-
-## PSM
-
-Funciona con partner + objetivo. Opcionalmente permite introducir:
-
-- contexto de relación;
-- facturación FY25/FY26/FY27 YTD;
-- objetivos y pipeline;
-- oportunidades;
-- compromisos previos.
-
-Para reducir trabajo se puede **importar un CSV de negocio** exportado desde Excel. La propia aplicación descarga una plantilla con los encabezados esperados.
-
-## VSM
-
-Solo necesita partner + fabricante + objetivo. Los datos de tier, certificaciones, objetivos, incentivos, pipeline y plan de canal son opcionales y enriquecen la narrativa.
-
-## Solution Architect
-
-Solo necesita partner + fabricante + objetivo/caso de uso. El resto del contexto técnico es opcional. La aplicación prepara diferenciación, criterios, evidencia externa, diseño narrativo y PoC/PoV.
-
-## Base FY27 incluida
-
-- 84 slides de **Westcon Comstor España FY2027**;
-- 12 **Datasheets Verticales FY27**;
-- 36 fabricantes estructurados;
-- Ciberseguridad, Networking, Cloud/UC/Automatización;
-- servicios Westcon y BLUEPRINT;
-- verticales Banca y Seguros, Administración Pública, Industria/Utilities y Retail.
-
-## Privacidad
-
-Facturación, pipeline, notas internas, arquitectura y resultados de reunión se guardan en `localStorage` del navegador, salvo exportación manual del usuario.
-
-Los workflows de GitHub solo escriben **evidencia pública** de fabricantes y partners.
-
-## Actualizaciones automáticas
-
-### Inteligencia de fabricantes
-
-**Actions → Update public market intelligence → Run workflow**
-
-Después se ejecuta diariamente. Genera/refresca:
-
-- `data/live-intelligence.json`
-- `data/live-intelligence.js`
-
-### Dossier de un partner
-
-**Actions → Research partner dossier → Run workflow**
-
-Introduce partner, país y horizonte. Genera/refresca:
-
-- `data/partner-intelligence.json`
-- `data/partner-intelligence.js`
-
-## Mejora v2.1 · experiencia vertical
-
-La presentación `Westcon_Datasheets_Verticales_FY27` es ahora la **fuente maestra de contenido y diseño para verticales**. Sus 12 combinaciones (4 sectores × 3 áreas) se han estructurado en `data/vertical-content.*`.
-
-La aplicación ya **no estira un datasheet vertical dentro de una slide 16:9** ni genera la antigua slide genérica de tarjetas por fabricante. En su lugar recompone el contenido en formato panorámico conservando la gramática del datasheet: cabecera sectorial, “Por qué actuar ahora”, reto, cuatro casos de uso, impacto esperado, “Cómo lo resolvemos”, “Cómo empezar” y siguiente paso.
-
-Los fabricantes elegidos por el usuario se resaltan visualmente dentro del ecosistema del caso vertical. Los originales verticales siguen formando parte de la base de conocimiento, pero no se deforman en la presentación partner-facing.
-
-## Instalación / actualización en GitHub Pages
-
-Si ya tienes el repositorio, conserva únicamente `.git`, sustituye el resto por el contenido de esta versión y ejecuta:
+Si alguna vez se trabaja en local, el flujo de respaldo es:
 
 ```powershell
+git pull --rebase origin main
 git add -A
-git commit -m "Westcon Meeting Intelligence v2.1"
+git commit -m "Actualización Presentation Builder"
 git push origin main
 ```
 
-GitHub Pages:
+## Research
 
-**Settings → Pages → Deploy from a branch → main → /(root)**
-
-## Ejecución local
-
-```powershell
-python -m http.server 8000
-```
-
-Abrir `http://localhost:8000`.
+- **Update public market intelligence**: refresca evidencia de fabricantes.
+- **Research partner dossier**: crea/actualiza dossier público de un partner.
 
 ## Calidad
 
-`python scripts/quality_gate.py` valida, entre otras cosas:
+```bash
+python scripts/quality_gate.py
+```
 
-- 36/36 fabricantes;
-- 96/96 slides indexadas;
-- 84 slides corporativas y 12 verticales presentes;
-- motores Partner/Vendor/Presentation Director;
-- workflows de research;
-- ausencia de lenguaje interno prohibido en el generador partner-facing;
-- exclusión de playbooks/mensajes internos del PowerPoint externo.
+La validación comprueba 36 fabricantes, 96 slides indexadas, 84 assets corporativos, 12 verticales y los componentes básicos del Presentation Builder.

@@ -1,0 +1,25 @@
+WESTCON PRESENTATION BUILDER v3 — DESPLIEGUE
+
+DESPLIEGUE PRINCIPAL
+La aplicación está conectada a ChatGPT mediante GitHub con permisos de lectura y escritura.
+
+Las actualizaciones pueden realizarse directamente desde ChatGPT:
+1. crear una rama de trabajo;
+2. modificar los archivos;
+3. validar el código y el contenido;
+4. revisar el diff;
+5. fusionar a main;
+6. GitHub Pages publica desde main / (root).
+
+No es necesario copiar manualmente la versión a VS Code para las iteraciones realizadas desde ChatGPT.
+
+FLUJO LOCAL DE RESPALDO
+Si alguna vez quieres trabajar desde C:\Users\ivand\Downloads\presentaciones:
+
+   git pull --rebase origin main
+   git add -A
+   git commit -m "Actualización Presentation Builder"
+   git push origin main
+
+INTELIGENCIA
+Los archivos data/live-intelligence.* se refrescan mediante GitHub Actions. Las actualizaciones de interfaz deben preservarlos salvo que se quiera cambiar expresamente su contenido o estructura.

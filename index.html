@@ -3,267 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Westcon Meeting Intelligence — preparación inteligente de reuniones con partners e integradores." />
-  <title>Westcon Meeting Intelligence · v2.1</title>
+  <meta name="description" content="Westcon Presentation Builder — crea presentaciones ad-hoc a partir del corpus FY27 de Westcon Comstor." />
+  <title>Westcon Presentation Builder · v3</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <img src="assets/westcon-comstor.png" alt="Westcon Comstor" />
-        <div>
-          <strong>Meeting Intelligence</strong>
-          <span>FY27 · v2.1</span>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"><div><strong>Presentation Builder</strong><span>FY27 · v3</span></div></div>
+      <div class="top-actions"><button class="ghost" id="resetBtn">Nuevo deck</button><button class="primary" id="generateBtn">Generar PowerPoint</button></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div><span class="eyebrow">CONSTRUCTOR AD-HOC</span><h1>Empieza por la presentación original. Añade solo lo que aporta valor.</h1><p>Selecciona contexto mínimo y deja que el motor proponga un deck. Después puedes añadir, quitar y reordenar cualquier slide antes de generar el PowerPoint.</p></div>
+        <div class="hero-stat"><strong id="deckCount">0</strong><span>slides en el deck</span></div>
+      </section>
+
+      <section class="context-card">
+        <div class="context-grid">
+          <label>Partner / integrador <input id="partner" placeholder="Ej. SATEC"></label>
+          <label>Perfil <select id="role"><option value="">Sin perfil</option><option value="psm">PSM</option><option value="vsm">VSM</option><option value="sa">Solution Architect</option></select></label>
+          <label>Objetivo <input id="objective" placeholder="Ej. presentar Extreme y detectar oportunidades"></label>
+          <label>Vertical <select id="vertical"><option value="">Sin vertical</option></select></label>
         </div>
-      </div>
+        <div class="vendor-row"><span>Fabricantes</span><div id="vendorChips" class="chips"></div></div>
+        <div class="context-actions"><button class="secondary" id="suggestBtn">✨ Proponer deck</button><button class="ghost" id="baseBtn">Añadir base Westcon</button><span id="suggestionNote">Puedes empezar vacío o dejar que el motor te proponga una narrativa.</span></div>
+      </section>
 
-      <button class="primary wide" id="newMeetingBtn">＋ Nueva reunión</button>
-
-      <nav class="nav" aria-label="Navegación principal">
-        <button class="nav-item active" data-panel="builder">Preparar reunión</button>
-        <button class="nav-item" data-panel="saved">Reuniones guardadas <span id="savedCount" class="pill">0</span></button>
-        <button class="nav-item" data-panel="knowledge">Base de conocimiento</button>
-        <button class="nav-item" data-panel="about">Qué hace esta versión</button>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="status-dot"><i></i><span>Inteligencia automática activa</span></div>
-        <small>Sin backend · compatible con hosting estático</small>
-      </div>
-    </aside>
-
-    <main class="main">
-      <section id="builder" class="panel active">
-        <header class="hero">
-          <div class="hero-copy">
-            <span class="eyebrow">PREPARAR REUNIÓN CON PARTNER</span>
-            <h1>Dime a quién visitas, tu rol y qué quieres conseguir.</h1>
-            <p>Partner Intelligence, Vendor Intelligence y Presentation Director trabajan debajo: investigan, recuerdan, priorizan y componen una presentación final para enseñar al partner.</p>
+      <section class="workspace">
+        <aside class="library-panel">
+          <div class="panel-head"><div><span class="eyebrow">BIBLIOTECA</span><h2>Slides disponibles</h2></div><span id="libraryCount" class="pill">0</span></div>
+          <input id="searchSlides" class="search" placeholder="Buscar por fabricante, tecnología, servicio...">
+          <div class="tabs" id="libraryTabs">
+            <button class="active" data-filter="all">Todo</button>
+            <button data-filter="corporate">Corporativo</button>
+            <button data-filter="vendor">Fabricantes</button>
+            <button data-filter="service">Servicios</button>
+            <button data-filter="vertical">Verticales</button>
+            <button data-filter="generated">Inteligencia</button>
           </div>
-          <div class="hero-badge">
-            <span>Perfil activo</span>
-            <strong id="activeRoleBadge">Sin seleccionar</strong>
-          </div>
-        </header>
+          <div id="slideLibrary" class="library-list"></div>
+        </aside>
 
-        <div class="progress-wrap" aria-label="Progreso del formulario">
-          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
-          <div class="progress-meta"><span id="progressText">0% completado</span><span id="gapText">Faltan los datos básicos</span></div>
-        </div>
-
-        <form id="meetingForm" novalidate>
-          <section class="card section-card" data-section="basics">
-            <div class="section-title">
-              <div><span class="step">01</span><h2>La reunión</h2></div>
-              <span class="section-hint">Tres datos bastan para empezar</span>
-            </div>
-            <div class="grid two">
-              <label>Partner / integrador <input id="partnerName" name="partnerName" required placeholder="Ej. integrador, MSP, consultora..." /></label>
-              <label>País / mercado
-                <select id="country" name="country"><option>España</option><option>Portugal</option><option>Iberia</option><option>Otro</option></select>
-              </label>
-              <label>Tipo de reunión
-                <select id="meetingType" name="meetingType">
-                  <option value="business-review">Business review / seguimiento</option>
-                  <option value="development">Desarrollo de partner</option>
-                  <option value="vendor-focus">Reunión centrada en fabricante</option>
-                  <option value="technical">Sesión técnica / arquitectura</option>
-                  <option value="qbr">QBR</option>
-                  <option value="first">Primera reunión / discovery</option>
-                  <option value="other">Otra</option>
-                </select>
-              </label>
-              <label>Duración prevista
-                <select id="duration" name="duration"><option>30 min</option><option selected>60 min</option><option>90 min</option><option>120 min</option></select>
-              </label>
-            </div>
-            <label>¿Qué quieres conseguir en esta reunión?
-              <textarea id="objective" name="objective" rows="3" placeholder="Ej. revisar negocio FY27, identificar oportunidades, presentar Extreme y acordar próximos pasos..."></textarea>
-            </label>
-            <details class="details-block compact-details"><summary>Resultado deseado (opcional)</summary>
-              <label>Resultado que te gustaría llevarte
-                <input id="desiredOutcome" name="desiredOutcome" placeholder="Ej. workshop acordado, plan de canal, PoC, pipeline validado..." />
-              </label>
-            </details>
-          </section>
-
-          <section class="card section-card" data-section="role">
-            <div class="section-title">
-              <div><span class="step">02</span><h2>¿Desde qué rol vas?</h2></div>
-              <span class="section-hint">Cambia la lógica de la reunión</span>
-            </div>
-            <div id="roleCards" class="role-grid"></div>
-            <div class="subrole-row">
-              <span>Apoyo secundario (opcional)</span>
-              <div id="supportRoles" class="chip-row"></div>
-            </div>
-          </section>
-
-          <section class="card section-card smart-scope" data-section="scope">
-            <div class="section-title">
-              <div><span class="step">03</span><h2>Foco automático</h2></div>
-              <span class="section-hint">Puedes dejarlo completamente en manos del motor</span>
-            </div>
-            <div class="auto-focus-strip">
-              <div><i>AI</i><strong>Presentation Director</strong><span>deduce fabricantes, vertical, servicios y profundidad a partir del partner, tu rol, el objetivo y la evidencia disponible.</span></div>
-              <span class="auto-pill">AUTOMÁTICO</span>
-            </div>
-            <details class="details-block smart-details"><summary>Afinar fabricantes, vertical o tecnologías (opcional)</summary>
-              <div class="grid two align-start smart-details-body">
-                <div>
-                  <div class="field-head"><strong>Fabricantes implicados</strong><input id="vendorSearch" class="mini-search" placeholder="Buscar fabricante" /></div>
-                  <div id="vendorGrid" class="vendor-grid"></div>
-                </div>
-                <div>
-                  <label>Vertical / foco de mercado
-                    <select id="vertical" name="vertical"></select>
-                  </label>
-                  <label>Tecnologías / temas prioritarios
-                    <textarea id="technologies" name="technologies" rows="4" placeholder="Ej. SASE, OT Security, AI networking, DDI, contact center, automatización..."></textarea>
-                  </label>
-                  <details class="details-block compact-details"><summary>Opciones de contenido</summary>
-                    <div class="toggle-stack">
-                      <label class="toggle"><input type="checkbox" id="includeGeneral" checked><span></span> Introducción Westcon</label>
-                      <label class="toggle"><input type="checkbox" id="reserveVendorSlides"><span></span> Hueco para slides oficiales del vendor</label>
-                      <label class="toggle"><input type="checkbox" id="includeServices" checked><span></span> Servicios Westcon relevantes</label>
-                    </div>
-                  </details>
-                  <details class="details-block compact-details"><summary>Seleccionar servicios Westcon concretos</summary><div id="serviceChips" class="chip-grid"></div></details>
-                </div>
-              </div>
-            </details>
-          </section>
-
-          <section class="card section-card role-section" data-section="roledata">
-            <div class="section-title">
-              <div><span class="step">04</span><h2 id="roleSectionTitle">Solo lo que tú sabes</h2></div>
-              <span class="section-hint">Todo es opcional salvo lo imprescindible para el rol</span>
-            </div>
-            <div id="roleFields" class="role-fields empty-state">
-              <p>Selecciona PSM, VSM o Solution Architect para adaptar esta sección.</p>
-            </div>
-          </section>
-
-          <section class="card section-card intelligence-auto compact-engine" data-section="intelligence">
-            <div class="section-title">
-              <div><span class="step">05</span><h2>Inteligencia automática</h2></div>
-              <span class="section-hint">Activa por defecto · no tienes que configurar nada</span>
-            </div>
-            <div class="engine-live"><span class="engine-pulse"></span><div><strong>Research intensivo + evidence-first</strong><small>Partner · fabricantes · competencia · analistas · noticias · casos · canal · arquitectura · mercado</small></div><span class="auto-pill">ACTIVO</span></div>
-            <details class="details-block smart-details"><summary>Ver qué investiga y ajustar fuentes (opcional)</summary>
-              <div id="researchGrid" class="research-grid auto-research-grid"></div>
-              <div class="callout intelligence-promise"><strong>La aplicación investiga por defecto:</strong> partner, portfolio y alianzas, certificaciones, noticias, estrategia, contrataciones, casos públicos, programa de canal, competidores, documentación técnica y posicionamiento público en Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys, KuppingerCole y otras fuentes relevantes.</div>
-              <div class="grid two">
-                <label>Horizonte temporal de noticias
-                  <select id="researchHorizon"><option value="30">Últimos 30 días</option><option value="90" selected>Últimos 90 días</option><option value="180">Últimos 6 meses</option><option value="365">Último año</option></select>
-                </label>
-                <label>URLs / fuentes conocidas
-                  <input id="knownSources" placeholder="Web del partner, locator, certificaciones, noticia concreta..." />
-                </label>
-              </div>
-              <div class="source-rule"><strong>Rigor:</strong> los hechos externos conservan fuente, fecha y URL. El motor no presenta como hecho una inferencia ni atribuye posiciones de analista si la evidencia pública no las declara.</div>
-            </details>
-          </section>
-
-          <section class="card section-card" data-section="output">
-            <div class="section-title">
-              <div><span class="step">06</span><h2>Presentación final</h2></div>
-              <span class="section-hint">El resultado está pensado para mostrarlo al partner</span>
-            </div>
-            <div class="grid two">
-              <label>Profundidad
-                <select id="deckDepth"><option value="auto" selected>Automática según reunión y duración</option><option value="short">Ejecutiva · 8–10 slides</option><option value="standard">Estándar · 12–16 slides</option><option value="deep">Profunda · 18–24 slides</option></select>
-              </label>
-              <label>Idioma
-                <select id="language"><option>Español</option><option>Inglés</option><option>Portugués</option></select>
-              </label>
-              <select id="tone" hidden><option selected>Automático por perfil</option></select>
-            </div>
-            <div class="output-options">
-              <label class="toggle"><input type="checkbox" id="outPptx" checked><span></span> PowerPoint editable</label>
-              <label class="toggle"><input type="checkbox" id="outBrief" checked><span></span> Briefing ejecutivo</label>
-              <label class="toggle"><input type="checkbox" id="outNotes" checked><span></span> Notas del presentador</label>
-              <label class="toggle"><input type="checkbox" id="outQuestions" checked><span></span> Preguntas recomendadas</label>
-              <label class="toggle"><input type="checkbox" id="outPdf"><span></span> PDF</label>
-              <label class="toggle"><input type="checkbox" id="outSources" checked><span></span> Fuentes y fechas</label>
-            </div>
-          </section>
-
-          <section class="action-zone">
-            <div>
-              <strong id="readyTitle">Completa partner, objetivo y perfil</strong>
-              <span id="readySubtitle">La investigación y la composición se hacen automáticamente.</span>
-            </div>
-            <div class="action-buttons">
-              <button type="button" class="secondary" id="saveBtn">Guardar borrador</button>
-              <button type="button" class="secondary" id="exportBtn">Exportar JSON</button>
-              <button type="button" class="primary" id="buildBlueprintBtn">Investigar y preparar presentación</button>
-            </div>
-          </section>
-        </form>
-
-        <section id="blueprint" class="blueprint hidden" aria-live="polite"></section>
-      </section>
-
-      <section id="saved" class="panel">
-        <header class="page-head"><div><span class="eyebrow">HISTÓRICO LOCAL</span><h1>Reuniones guardadas</h1></div></header>
-        <div id="savedMeetings" class="saved-list"></div>
-      </section>
-
-      <section id="knowledge" class="panel">
-        <header class="page-head"><div><span class="eyebrow">BASE DE CONOCIMIENTO VIVA</span><h1>Contenido corporativo e inteligencia de mercado</h1><p>La aplicación combina el corpus FY27 con inteligencia pública actualizada y research en tiempo de preparación.</p></div></header>
-        <div id="sourceCards" class="source-cards"></div>
-        <div id="intelligenceStatus" class="card"></div>
-        <div class="card"><div class="section-title"><div><h2>Fabricantes por área</h2></div><span class="section-hint" id="vendorCount"></span></div><div id="knowledgeVendors" class="knowledge-vendors"></div></div>
-      </section>
-
-      <section id="about" class="panel">
-        <header class="page-head"><div><span class="eyebrow">VERSIÓN 2.0</span><h1>Inteligencia persistente + director automático de presentación</h1></div></header>
-        <div class="about-grid">
-          <div class="card"><h3>Máxima sencillez por fuera</h3><ul><li>Partner, rol y objetivo son suficientes para un PSM; VSM y SA añaden el fabricante foco.</li><li>El Presentation Director decide automáticamente profundidad, número de slides, nivel de introducción y contenido según rol, duración, tipo de reunión y conocimiento previo del partner.</li><li>Los datos internos de facturación, pipeline, certificaciones o arquitectura son opcionales y se mantienen en el navegador.</li><li>El PowerPoint resultante está redactado y diseñado para enseñarlo al partner: no expone scoring, hipótesis, competidores internos ni instrucciones de venta.</li></ul></div>
-          <div class="card"><h3>Máxima inteligencia por dentro</h3><ul><li>84 slides corporativas FY27 y 12 datasheets verticales como corpus semilla.</li><li>36 fichas de fabricante con propuesta de valor, ventajas, casos de uso, señales de oportunidad y contexto competitivo.</li><li>Partner Intelligence persistente: perfil público, fabricantes detectados, capacidades, verticales, movimientos y memoria de reuniones.</li><li>Research en tiempo de preparación sobre el partner y fabricantes seleccionados.</li><li>Actualización diaria y tolerante a fallos con GDELT, Google News, páginas oficiales y caché previa.</li><li>Radar de Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y KuppingerCole, conservando fuente, fecha y URL.</li><li>Noticias, casos públicos, canal, documentación técnica y señales de mercado para reforzar la conversación.</li><li>Regla evidence-first: una posición de analista solo se presenta cuando una fuente pública la sustenta explícitamente.</li></ul></div>
-        </div>
+        <section class="deck-panel">
+          <div class="panel-head"><div><span class="eyebrow">TU PRESENTACIÓN</span><h2>Orden final</h2></div><div class="panel-actions"><button class="ghost small" id="addCustomBtn">＋ Slide libre</button><button class="ghost small" id="clearDeckBtn">Vaciar</button></div></div>
+          <div id="deckEmpty" class="empty"><strong>Tu deck está vacío.</strong><span>Añade slides desde la biblioteca o pulsa “Proponer deck”.</span></div>
+          <div id="deckList" class="deck-list"></div>
+          <div class="deck-footer"><span>Arrastra para reordenar o usa ↑ ↓.</span><strong id="deckSummary">0 slides</strong></div>
+        </section>
       </section>
     </main>
   </div>
 
-  <template id="businessRowTemplate">
-    <tr>
-      <td><select class="row-vendor"></select></td>
-      <td><input type="number" class="fy25" placeholder="0"></td>
-      <td><input type="number" class="fy26" placeholder="0"></td>
-      <td><input type="number" class="fy27" placeholder="0"></td>
-      <td><input type="number" class="target" placeholder="0"></td>
-      <td><input type="number" class="pipeline" placeholder="0"></td>
-      <td><button type="button" class="icon-btn remove-row" title="Eliminar">×</button></td>
-    </tr>
-  </template>
-
-  <template id="opportunityRowTemplate">
-    <tr>
-      <td><input class="opp-name" placeholder="Cuenta / oportunidad"></td>
-      <td><select class="opp-vendor"></select></td>
-      <td><input class="opp-solution" placeholder="Solución"></td>
-      <td><input type="number" class="opp-amount" placeholder="0"></td>
-      <td><select class="opp-stage"><option>Discovery</option><option>Qualified</option><option>Design</option><option>PoC</option><option>Proposal</option><option>Commit</option></select></td>
-      <td><input type="number" min="0" max="100" class="opp-prob" value="50"></td>
-      <td><button type="button" class="icon-btn remove-row" title="Eliminar">×</button></td>
-    </tr>
-  </template>
-
-  <dialog id="outcomeDialog" class="outcome-dialog">
-    <form method="dialog" id="outcomeForm">
-      <div class="dialog-head"><div><span class="eyebrow">MEMORIA DE LA RELACIÓN</span><h2>Registrar resultado de la reunión</h2></div><button value="cancel" class="icon-btn" aria-label="Cerrar">×</button></div>
-      <p class="dialog-sub">Tarda menos de un minuto. La siguiente presentación utilizará esta memoria para continuar la conversación.</p>
-      <input type="hidden" id="outcomePartner">
-      <div class="grid two">
-        <label>Qué interesó / qué acordamos<textarea id="outcomeSummary" rows="4" placeholder="Ej. interés en campus fabric, workshop técnico y revisión de dos cuentas..."></textarea></label>
-        <label>Objeciones o temas pendientes<textarea id="outcomeObjections" rows="4" placeholder="Ej. necesita validar integración, presupuesto, certificación..."></textarea></label>
-        <label>Próximo paso<input id="outcomeNextStep" placeholder="Ej. workshop de arquitectura con preventa"></label>
-        <label>Fecha objetivo<input type="date" id="outcomeNextDate"></label>
-      </div>
-      <div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" id="saveOutcomeBtn" class="primary">Guardar memoria</button></div>
+  <dialog id="customDialog">
+    <form method="dialog" id="customForm">
+      <div class="dialog-head"><div><span class="eyebrow">SLIDE LIBRE</span><h2>Añadir contenido propio</h2></div><button value="cancel" class="icon-btn">×</button></div>
+      <label>Título <input id="customTitle" required placeholder="Título de la slide"></label>
+      <label>Contenido <textarea id="customBody" rows="8" placeholder="Texto, bullets o mensaje principal"></textarea></label>
+      <div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" id="saveCustomBtn" class="primary">Añadir slide</button></div>
     </form>
   </dialog>
 
