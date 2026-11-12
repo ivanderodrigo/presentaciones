@@ -32,3 +32,10 @@ Banca y seguros; Administración pública; Industria y utilities; Retail; Sanida
 ## GitHub workflow
 For substantial changes: create branch → validate → PR → merge to main. Preserve original assets and scheduled research workflows.
 \n## v5.1 rules\n- Cloudflare and Sonar slides must use their real logos.\n- Solution blocks add section + taxonomy + all active vendor slides in that area.\n- Three-slide vertical model per sector/area: context, use cases + vendors, activation.\n- Keep favicon/app identification enabled.\n
+## v5.2 invariants
+- Cloudflare and Sonar are Cybersecurity-only in the visible builder.
+- Curated vendor cards must match the FY27 vendor-card structure and content density.
+- Vendor miniatures inside solution filters are alphabetically ordered after section/taxonomy slides.
+- Each vertical/area is one dense, partner-facing FY27-style sector slide, not a multi-slide mini-deck.
+- Vertical slides must show how Westcon portfolio vendors address each use case, using vendor logos where available.
+- Root favicon.ico + versioned favicon.svg must remain enabled.
