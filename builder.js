@@ -64,8 +64,8 @@ function areaKey(area){
   return'corporate';
 }
 function areaName(area){return area==='cyber'?'CIBERSEGURIDAD':area==='network'?'NETWORKING':'CLOUD, UC Y AUTOMATIZACIÓN'}
-function areaAccent(area){return area==='cyber'?'#EC008C':area==='network'?'#00C7CD':'#F5A800'}
-function pptAccent(area){return area==='cyber'?C.magenta:area==='network'?C.cyan:C.orange}
+function areaAccent(area){return area==='cyber'?'#D40A82':area==='network'?'#12C7C0':'#F5AE2D'}
+function pptAccent(area){return area==='cyber'?'D40A82':area==='network'?'12C7C0':'F5AE2D'}
 
 function internalSlide(s){
   return s.type==='sector'||s.type==='vertical-datasheet'||/playbook|mensajes clave|abre con|preguntas que abren|uso del slide/i.test((s.title||'')+' '+(s.subtitle||''));
@@ -266,20 +266,37 @@ function curatedThumb(item,full){
   '</div>';
 }
 
+function verticalQuestion(area){
+  if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
+  if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
+  return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
+}
+function verticalVendors(v){
+  var out=[];
+  (v.solutions||[]).forEach(function(s){(s[1]||[]).forEach(function(n){if(out.indexOf(n)<0)out.push(n)})});
+  return out.slice(0,6);
+}
+function verticalWhyWin(){
+  return ['Portfolio multi-fabricante alineado al caso de uso','PoC, preventa y 3D Labs para demostrar valor','Servicios, FLEX y lifecycle para ampliar la oportunidad'];
+}
+
 function verticalThumb(item,full){
-  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#EC008C';
-  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal"><b>'+esc(w[0])+'</b><span>'+esc(w[1])+'</span></div>'}).join('');
+  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82';
+  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal">'+esc(w[0])+'</div>'}).join('');
   var cases=(v.cases||[]).slice(0,4).map(function(c,i){
     var sol=(v.solutions||[])[i]||['',[]];
     var logos=(sol[1]||[]).slice(0,4).map(function(name){var u=logoUrl(name);return u?'<img src="'+esc(u)+'" alt="'+esc(name)+'" title="'+esc(name)+'">':'<em>'+esc(name)+'</em>'}).join('');
-    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><small>'+esc(sol[0]||'Cómo lo resolvemos')+'</small><div class="vs-logo-row">'+logos+'</div></div>';
+    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><div class="vs-logo-row">'+logos+'</div></div>';
   }).join('');
-  var impact=(v.impacts||[]).slice(0,4).map(function(x){return '<span>'+esc(x[0])+' '+esc(x[1])+'</span>'}).join('');
+  var quick=(v.start||[]).slice(0,3).map(function(x){return '• '+esc(x)}).join('<br>');
+  var why=verticalWhyWin().map(function(x){return '• '+esc(x)}).join('<br>');
+  var vendors=verticalVendors(v).join(' · ');
   return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+'">'+
-    '<div class="vs-left"><em>SOLUCIÓN SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>EL RETO</b><span>'+esc(v.challenge)+'</span></div></div>'+
-    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>CÓMO EMPEZAR</b><span>'+esc((v.start||[]).join(' · '))+'</span></div><div><b>IMPACTO ESPERADO</b><span>'+impact+'</span></div></div><div class="vs-next">SIGUIENTE PASO · '+esc(v.nextStep)+'</div></div>'+
+    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestion(item.area))+'</span></div><div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(vendors)+'</span></div></div>'+
+    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div><h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div><div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
   '</div>';
 }
+
 function generatedMini(item){
   var accent=item.kind==='vertical'?item.accent:(CURATED[item.vendor]||{}).accent||'#EC008C';
   return '<div class="deck-mini-generated" style="--accent:'+accent+'">'+esc(item.kind==='vertical'?item.vertical:item.vendor||'PERSONALIZADA')+'</div>';
