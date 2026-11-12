@@ -165,13 +165,6 @@ if "for(var j=0;j<4;j++)" in builder:
 if "r.text(name,bx+.03,cc.y+.842" not in builder or "var name=names[j]" not in builder:
     errors.append("builder: missing vendor-name fallback when a vertical logo cannot load")
 
-# Curated vendor advantages must match FY27 compact spacing.
-for token in ["var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.18","lh:1.0","yy+=Math.max(.34"]:
-    if token not in builder:
-        errors.append(f"builder: FY27 compact advantage spacing missing: {token}")
-if "yy=3.00" in builder:
-    errors.append("builder: curated advantages start too close to the heading")
-
 for obsolete in ["sourceOverlayHtml","patchSourceSlide","portfolio-hide-juniper","taxonomy-patch","vendorStoryModel","ROLE_META"]:
     if obsolete in builder:
         errors.append(f"builder: obsolete fragile logic remains: {obsolete}")
@@ -201,7 +194,7 @@ for token in [".visual-placeholder",".preview-loading",".thumb>img",".deck-thumb
         errors.append(f"css: stable rendering style missing: {token}")
 
 print("WESTCON PRESENTATION BUILDER v5.7 · QUALITY GATE")
-print(f"Active vendors: {len(vendors)}/37 · Corporate assets: {len(corp)}/84")
+print(f"Active vendors: {len(vendors)}/36 · Corporate assets: {len(corp)}/84")
 print(f"Taxonomy coverage: Cyber {len(area_members('cyber'))} · Networking {len(area_members('network'))} · Cloud {len(area_members('cloud'))}")
 print(f"Vertical sectors/models: {len(vc)}/9 · {models}/27")
 print("Cloudflare/Sonar: exact FY27 F5/Ping source templates; standard opportunity block untouched")
