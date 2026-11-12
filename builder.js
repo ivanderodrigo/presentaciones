@@ -248,8 +248,15 @@ async function drawLogoCard(r,name,x,y,w,h){
   if(u){try{await r.contain(u,x+.05,y+.04,w-.10,h-.08,.015);return}catch(e){}}
   r.text(name,x+.05,y+.08,w-.10,h-.12,{pt:6.8,min:5.4,bold:true,family:'Arial',color:'#173744',align:'center',lh:1.0});
 }
+function vendorInArea(v,area){
+  var a=norm(v&&v.area||'');
+  if(area==='cyber')return a.indexOf('ciber')>=0;
+  if(area==='network')return a.indexOf('network')>=0;
+  if(area==='cloud')return a.indexOf('cloud')>=0||a.indexOf('automat')>=0||a.indexOf('uc')>=0;
+  return false;
+}
 function vendorNamesForArea(area){
-  return (K.vendors||[]).filter(function(v){return areaKey(v.area)===area}).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
+  return (K.vendors||[]).filter(function(v){return vendorInArea(v,area)}).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
 }
 async function renderPortfolio(mode){
   var canvas=makeCanvas(mode),r=renderer(canvas),ctx=r.ctx;ctx.fillStyle='#1A2E44';ctx.fillRect(0,0,canvas.width,canvas.height);
