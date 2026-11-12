@@ -46,6 +46,69 @@ var OPPORTUNITY_LINES=[
   ['Ampliar la oportunidad','servicios profesionales y soporte, FLEX, marketplaces, SaaS y renovaciones/lifecycle.']
 ];
 
+
+var TAXONOMY=(window.WESTCON_TAXONOMY&&window.WESTCON_TAXONOMY.areas)||{};
+
+var VERTICAL_TITLE={
+  'Banca y seguros':{left:'BANCA Y\nSEGUROS',main:'BANCA Y SEGUROS',lf:28.7,mf:29.8},
+  'Administración pública':{left:'ADMINISTRACIÓN\nPÚBLICA',main:'ADMINISTRACIÓN PÚBLICA',lf:20.0,mf:24.0},
+  'Industria y utilities':{left:'INDUSTRIA Y\nUTILITIES',main:'INDUSTRIA Y UTILITIES',lf:21.0,mf:25.0},
+  'Retail':{left:'RETAIL',main:'RETAIL',lf:29.0,mf:30.0},
+  'Sanidad':{left:'SANIDAD',main:'SANIDAD',lf:29.0,mf:30.0},
+  'Educación':{left:'EDUCACIÓN',main:'EDUCACIÓN',lf:27.0,mf:29.0},
+  'Transporte y logística':{left:'TRANSPORTE Y\nLOGÍSTICA',main:'TRANSPORTE Y LOGÍSTICA',lf:19.0,mf:23.0},
+  'Hostelería y turismo':{left:'HOSTELERÍA Y\nTURISMO',main:'HOSTELERÍA Y TURISMO',lf:19.0,mf:23.0},
+  'Software y servicios digitales':{left:'SOFTWARE Y\nSERVICIOS DIGITALES',main:'SOFTWARE Y SERVICIOS DIGITALES',lf:16.5,mf:20.0}
+};
+
+var VERTICAL_QUESTION={
+  'Banca y seguros':{
+    cyber:'¿Qué servicio financiero no puede caer ni exponer datos sensibles?',
+    network:'¿Qué sucursal o servicio crítico depende de una red sin margen de fallo?',
+    cloud:'¿Qué proceso legacy limita hoy la experiencia o la eficiencia?'
+  },
+  'Administración pública':{
+    cyber:'¿Qué trámite digital no puede caer ni perder trazabilidad?',
+    network:'¿Qué servicio público se resiente si falla la conectividad?',
+    cloud:'¿Qué trámite sigue consumiendo tiempo por tareas manuales?'
+  },
+  'Industria y utilities':{
+    cyber:'¿Qué activo OT no puede parar ni quedar expuesto?',
+    network:'¿Qué proceso industrial necesita conectividad continua y predecible?',
+    cloud:'¿Qué proceso de planta ganaría valor con edge, datos o automatización?'
+  },
+  'Retail':{
+    cyber:'¿Qué caída o fraude impactaría hoy directamente en ventas?',
+    network:'¿Qué tienda pierde experiencia cuando falla la conectividad?',
+    cloud:'¿Qué fricción de cliente o back‑office podemos automatizar?'
+  },
+  'Sanidad':{
+    cyber:'¿Qué servicio clínico no puede caer ni exponer datos del paciente?',
+    network:'¿Qué área asistencial depende de Wi‑Fi y segmentación fiables?',
+    cloud:'¿Qué tarea administrativa resta hoy tiempo a la atención?'
+  },
+  'Educación':{
+    cyber:'¿Qué identidad o servicio académico sería más costoso comprometer?',
+    network:'¿Dónde sufre más la experiencia Wi‑Fi en el campus?',
+    cloud:'¿Qué servicio académico necesita escalar sin más operación manual?'
+  },
+  'Transporte y logística':{
+    cyber:'¿Qué hub, API o tercero puede detener la operación si se compromete?',
+    network:'¿Qué nodo logístico necesita movilidad y enlaces siempre disponibles?',
+    cloud:'¿Qué proceso documental o de datos sigue siendo demasiado manual?'
+  },
+  'Hostelería y turismo':{
+    cyber:'¿Qué fallo en reserva, pago o acceso dañaría antes la experiencia?',
+    network:'¿Dónde nota más el huésped una conectividad deficiente?',
+    cloud:'¿Qué interacción con el huésped podemos automatizar sin perder contexto?'
+  },
+  'Software y servicios digitales':{
+    cyber:'¿Cómo verificamos más código sin frenar el ritmo de entrega?',
+    network:'¿Qué dependencia de red limita una aplicación distribuida?',
+    cloud:'¿Qué parte del ciclo de software necesita más elasticidad o automatización?'
+  }
+};
+
 var state={deck:[],filter:'all',query:'',drag:null,preview:null};
 
 function uid(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random()}
@@ -223,26 +286,50 @@ function themeBlocks(){
   ];
 }
 
-function sourceOverlayHtml(page){
-  if(Number(page)===5){
-    return '<div class="portfolio-hide-juniper"></div>'+
-      '<div class="portfolio-new-card cloudflare"><img src="'+esc(logoUrl('Cloudflare')||'')+'" alt="Cloudflare"></div>'+
-      '<div class="portfolio-new-card sonar"><img src="'+esc(logoUrl('Sonar (SonarQube)')||'')+'" alt="Sonar"></div>';
-  }
-  if(Number(page)===7){
-    return '<div class="taxonomy-patch cyber-sase">• Palo Alto, Cisco, Zscaler, F5 y Cloudflare<br>• NGFW, SSE/SASE, ZTNA, DDoS<br>• Certes: cifrado persistente</div>'+
-      '<div class="taxonomy-patch cyber-apps">• F5/Cloudflare/Noname: WAAP, WAF y API Security<br>• Sonar: SAST, quality gates y DevSecOps<br>• Menlo: Secure Browser / RBI</div>';
-  }
-  if(Number(page)===39){
-    return '<div class="taxonomy-patch network-routing">• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G</div>'+
-      '<div class="taxonomy-patch network-campus">• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN<br>• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt<br>• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One</div>'+
-      '<div class="taxonomy-patch network-dc">• Cisco: Nexus, ACI, NDFC y switching DC<br>• Extreme: SLX, VSP/Universal Switching y Fabric Connect</div>'+
-      '<div class="taxonomy-patch network-branch">• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing<br>• Extreme: ExtremeCloud SD‑WAN<br>• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular</div>';
-  }
+
+function specialPage(page){return [5,7,39,58].indexOf(Number(page))>=0}
+function vendorNamesForArea(area){
+  return (K.vendors||[]).filter(function(v){
+    var a=norm(v.area||'');
+    if(area==='cyber')return a.indexOf('ciber')>=0;
+    if(area==='network')return a.indexOf('network')>=0;
+    return a.indexOf('cloud')>=0||a.indexOf('automat')>=0||a.indexOf('uc')>=0;
+  }).map(function(v){return v.name}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})});
+}
+function logoCardHtml(name){
+  var u=logoUrl(name);
+  return '<div class="sp-logo-card">'+(u?'<img src="'+esc(u)+'" alt="'+esc(name)+'">':'<span>'+esc(name)+'</span>')+'</div>';
+}
+function portfolioHtml(full){
+  var cyber=vendorNamesForArea('cyber').map(logoCardHtml).join('');
+  var network=vendorNamesForArea('network').map(logoCardHtml).join('');
+  var cloud=vendorNamesForArea('cloud').map(logoCardHtml).join('');
+  return '<div class="'+(full?'preview-generated ':'')+'special-portfolio">'+
+    '<h3>PORTFOLIO DE FABRICANTES</h3><p>Visión rápida del portfolio Westcon Comstor España por áreas de especialización</p>'+
+    '<section class="sp-cyber"><h4>CIBERSEGURIDAD</h4><div class="sp-logo-grid cyber">'+cyber+'</div></section>'+
+    '<section class="sp-network"><h4>NETWORKING</h4><div class="sp-logo-grid network">'+network+'</div></section>'+
+    '<section class="sp-cloud"><h4>CLOUD Y OTRAS SOLUCIONES</h4><div class="sp-logo-grid cloud">'+cloud+'</div></section>'+
+    '<footer>FY2027 — Westcon Comstor España</footer></div>';
+}
+function taxonomyHtml(area,full){
+  var t=TAXONOMY[area],cards=t.cards.map(function(card){
+    return '<article><h4>'+esc(card.title)+'</h4><p>'+esc(card.vendors.join(' · '))+'</p><small>'+esc(card.detail)+'</small></article>';
+  }).join('');
+  return '<div class="'+(full?'preview-generated ':'')+'special-taxonomy '+area+'">'+
+    '<h3>'+esc(t.title)+'</h3><p class="subtitle">'+esc(t.subtitle)+'</p><div class="tax-grid count-'+t.cards.length+'">'+cards+'</div>'+
+    '<footer>FY2027 — Westcon Comstor España</footer></div>';
+}
+function specialSourceHtml(item,full){
+  var p=Number(item.page);
+  if(p===5)return portfolioHtml(full);
+  if(p===7)return taxonomyHtml('cyber',full);
+  if(p===39)return taxonomyHtml('network',full);
+  if(p===58)return taxonomyHtml('cloud',full);
   return '';
 }
 function sourceVisualHtml(item,showPage){
-  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+sourceOverlayHtml(item.page)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+  if(specialPage(item.page))return '<div class="source-special">'+specialSourceHtml(item,false)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
 }
 
 function opportunityHtml(){
@@ -266,34 +353,36 @@ function curatedThumb(item,full){
   '</div>';
 }
 
-function verticalQuestion(area){
-  if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
-  if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
-  return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
+
+function verticalMeta(name){return VERTICAL_TITLE[name]||{left:String(name||'').toUpperCase(),main:String(name||'').toUpperCase(),lf:24,mf:26}}
+function verticalQuestionFor(item){
+  var x=VERTICAL_QUESTION[item.vertical]||{};
+  return x[item.area]||'¿Qué iniciativa prioritaria podemos convertir en un piloto medible?';
 }
-function verticalVendors(v){
-  var out=[];
-  (v.solutions||[]).forEach(function(s){(s[1]||[]).forEach(function(n){if(out.indexOf(n)<0)out.push(n)})});
-  return out.slice(0,6);
-}
+function verticalImpact(v){return (v.impacts||[]).slice(0,4).map(function(x){return x[0]+' '+x[1]}).join(' · ')}
 function verticalWhyWin(){
   return ['Portfolio multi-fabricante alineado al caso de uso','PoC, preventa y 3D Labs para demostrar valor','Servicios, FLEX y lifecycle para ampliar la oportunidad'];
 }
-
 function verticalThumb(item,full){
-  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82';
+  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82',meta=verticalMeta(item.vertical),lc=(meta.lf/10.7).toFixed(2),mc=(meta.mf/10.7).toFixed(2);
   var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal">'+esc(w[0])+'</div>'}).join('');
   var cases=(v.cases||[]).slice(0,4).map(function(c,i){
     var sol=(v.solutions||[])[i]||['',[]];
-    var logos=(sol[1]||[]).slice(0,4).map(function(name){var u=logoUrl(name);return u?'<img src="'+esc(u)+'" alt="'+esc(name)+'" title="'+esc(name)+'">':'<em>'+esc(name)+'</em>'}).join('');
-    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><div class="vs-logo-row">'+logos+'</div></div>';
+    var logos=(sol[1]||[]).slice(0,2).map(function(name){var u=logoUrl(name);return u?'<span><img src="'+esc(u)+'" alt="'+esc(name)+'"></span>':'<span class="name">'+esc(name)+'</span>'}).join('');
+    return '<div class="vs-case"><b>'+esc(c[0])+'</b><p>'+esc(c[1])+'</p><div class="vs-logo-row">'+logos+'</div></div>';
   }).join('');
   var quick=(v.start||[]).slice(0,3).map(function(x){return '• '+esc(x)}).join('<br>');
   var why=verticalWhyWin().map(function(x){return '• '+esc(x)}).join('<br>');
-  var vendors=verticalVendors(v).join(' · ');
-  return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+'">'+
-    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestion(item.area))+'</span></div><div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(vendors)+'</span></div></div>'+
-    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div><h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div><div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
+  return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+';--left-size:'+lc+'cqw;--main-size:'+mc+'cqw">'+
+    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3>'+esc(meta.left).replace(/\n/g,'<br>')+'</h3><strong>'+esc(areaName(item.area))+'</strong>'+
+      '<div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestionFor(item))+'</span></div>'+
+      '<div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(verticalVendors(v).join(' · '))+'</span></div></div>'+
+    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(meta.main)+'</h3>'+
+      '<div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div>'+
+      '<h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div>'+
+      '<div class="vs-cases">'+cases+'</div>'+
+      '<div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div>'+
+      '<div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
   '</div>';
 }
 
@@ -385,43 +474,58 @@ async function generatePptx(){
   pptx.theme={headFontFace:'Arial',bodyFontFace:'Arial',lang:'es-ES'};
   var westconLogo=null,hero=null;try{westconLogo=await assetData('assets/westcon-comstor.png')}catch(e){}try{hero=await assetData('assets/hero.jpeg')}catch(e){}
 
-  async function patchSourceSlide(s,page){
-    var S=4/3,sc=function(v){return v*S};
-    if(Number(page)===5){
-      s.addShape(pptx.ShapeType.rect,{x:sc(8.51),y:sc(1.68),w:sc(1.05),h:sc(.40),fill:{color:'1A2E44'},line:{color:'1A2E44'}});
-      for(const spec of [
-        {name:'Cloudflare',x:3.17},
-        {name:'Sonar (SonarQube)',x:4.59}
-      ]){
-        s.addShape(pptx.ShapeType.roundRect,{x:sc(spec.x),y:sc(3.41),w:sc(1.34),h:sc(.37),rectRadius:.03,fill:{color:C.white},line:{color:'3CAABE',pt:.5}});
-        await addLogo(s,spec.name,sc(spec.x+.10),sc(3.45),sc(1.14),sc(.29));
+
+  async function addPortfolioSlide(){
+    var s=pptx.addSlide();s.background={color:'1A2E44'};
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:'12C7C0'},line:{color:'12C7C0'}});
+    s.addText('PORTFOLIO DE FABRICANTES',{x:.44,y:.22,w:11.9,h:.42,fontFace:'Corbel',fontSize:22,bold:true,color:C.white,margin:0});
+    s.addText('Visión rápida del portfolio Westcon Comstor España por áreas de especialización',{x:.44,y:.72,w:11.9,h:.25,fontFace:'Corbel',fontSize:12,color:'D8E5E9',margin:0});
+
+    async function group(title,names,x,y,w,h,cols){
+      s.addText(title,{x:x,y:y,w:w,h:.23,fontFace:'Corbel',fontSize:12,bold:true,color:C.white,margin:0});
+      s.addShape(pptx.ShapeType.line,{x:x,y:y+.32,w:w,h:0,line:{color:'3CAABE',pt:1.2}});
+      var gap=.12, cardW=(w-gap*(cols-1))/cols, rows=Math.ceil(names.length/cols), cardH=Math.min(.55,(h-.52-gap*(rows-1))/rows);
+      for(var i=0;i<names.length;i++){
+        var col=i%cols,row=Math.floor(i/cols),cx=x+col*(cardW+gap),cy=y+.48+row*(cardH+gap);
+        s.addShape(pptx.ShapeType.roundRect,{x:cx,y:cy,w:cardW,h:cardH,rectRadius:.035,fill:{color:C.white},line:{color:'3CAABE',pt:.45}});
+        await addLogo(s,names[i],cx+.07,cy+.07,cardW-.14,cardH-.14);
       }
     }
-    if(Number(page)===7){
-      var patches=[
-        {x:5.325,y:1.71,w:1.823,h:.585,text:'• Palo Alto, Cisco, Zscaler, F5 y Cloudflare\n• NGFW, SSE/SASE, ZTNA, DDoS\n• Certes: cifrado persistente'},
-        {x:7.62,y:1.71,w:1.823,h:.585,text:'• F5/Cloudflare/Noname: WAAP, WAF y API Security\n• Sonar: SAST, quality gates y DevSecOps\n• Menlo: Secure Browser / RBI'}
-      ];
-      patches.forEach(function(p){
-        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'113A50'},line:{color:'113A50'}});
-        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:9.4,color:C.white,margin:0,fit:'shrink',breakLine:false});
-      });
+    await group('CIBERSEGURIDAD',vendorNamesForArea('cyber'),.44,1.18,7.15,5.68,4);
+    await group('NETWORKING',vendorNamesForArea('network'),8.02,1.18,4.85,2.28,4);
+    await group('CLOUD Y OTRAS SOLUCIONES',vendorNamesForArea('cloud'),8.02,3.82,4.85,2.32,3);
+    s.addText('FY2027 — Westcon Comstor España',{x:.44,y:7.19,w:3.2,h:.10,fontFace:'Corbel',fontSize:7.5,color:'D8E5E9',margin:0});
+    return s;
+  }
+  async function addTaxonomySlide(area){
+    var t=TAXONOMY[area],accent=pptAccent(area),s=pptx.addSlide();s.background={color:'163A50'};
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.08,fill:{color:accent},line:{color:accent}});
+    s.addText(t.title,{x:.72,y:.34,w:11.8,h:.48,fontFace:'Corbel',fontSize:22,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(t.subtitle,{x:.72,y:1.04,w:11.8,h:.24,fontFace:'Corbel',fontSize:11.5,color:'D8E5E9',margin:0,fit:'shrink'});
+    var cards=t.cards,n=cards.length;
+    var specs=[];
+    if(n===7){
+      for(var i=0;i<4;i++)specs.push({x:.72+i*3.08,y:1.63,w:2.72,h:2.05});
+      for(var j=0;j<3;j++)specs.push({x:1.15+j*4.05,y:4.02,w:3.55,h:2.05});
+    }else{
+      for(var r=0;r<2;r++)for(var q=0;q<3;q++)specs.push({x:.72+q*4.18,y:1.63+r*2.39,w:3.78,h:2.05});
     }
-    if(Number(page)===39){
-      var patches=[
-        {x:2.985,y:1.932,w:1.855,h:.326,text:'• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G'},
-        {x:5.24,y:1.819,w:1.855,h:.552,text:'• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN\n• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt\n• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One'},
-        {x:7.495,y:1.875,w:1.855,h:.439,text:'• Cisco: Nexus, ACI, NDFC y switching DC\n• Extreme: SLX, VSP/Universal Switching y Fabric Connect'},
-        {x:.73,y:3.727,w:2.553,h:.337,text:'• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing\n• Extreme: ExtremeCloud SD‑WAN\n• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular'}
-      ];
-      patches.forEach(function(p){
-        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'173E5C'},line:{color:'173E5C'}});
-        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:8.9,color:C.white,margin:0,fit:'shrink'});
-      });
+    for(var k=0;k<cards.length;k++){
+      var card=cards[k],sp=specs[k];
+      s.addShape(pptx.ShapeType.roundRect,{x:sp.x,y:sp.y,w:sp.w,h:sp.h,rectRadius:.055,fill:{color:'113A50'},line:{color:accent,pt:.75}});
+      s.addText(card.title,{x:sp.x+.16,y:sp.y+.16,w:sp.w-.32,h:.30,fontFace:'Corbel',fontSize:12.4,bold:true,color:accent,margin:0,fit:'shrink'});
+      s.addText(card.vendors.join(' · '),{x:sp.x+.16,y:sp.y+.63,w:sp.w-.32,h:.60,fontFace:'Corbel',fontSize:9.7,bold:true,color:C.white,margin:0,fit:'shrink'});
+      s.addText(card.detail,{x:sp.x+.16,y:sp.y+1.34,w:sp.w-.32,h:.46,fontFace:'Corbel',fontSize:8.3,color:'D8E5E9',margin:0,fit:'shrink'});
     }
+    s.addText('FY2027 — Westcon Comstor España',{x:.40,y:7.18,w:3.2,h:.10,fontFace:'Corbel',fontSize:7.5,color:'D8E5E9',margin:0});
+    return s;
   }
   async function addOriginal(page){
-    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});await patchSourceSlide(s,page);return s;
+    if(Number(page)===5)return addPortfolioSlide();
+    if(Number(page)===7)return addTaxonomySlide('cyber');
+    if(Number(page)===39)return addTaxonomySlide('network');
+    if(Number(page)===58)return addTaxonomySlide('cloud');
+    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});return s;
   }
   function addNotes(s,lines){try{s.addNotes(lines.filter(Boolean).join('\n'))}catch(e){}}
   var logoDimCache={};
@@ -450,8 +554,9 @@ async function generatePptx(){
     var name=item.vendor,p=VI.vendors[name]||{},m=CURATED[name]||{},accent=m.pptAccent||C.purple,s=pptx.addSlide();
     var S=4/3, sc=function(v){return v*S};
     s.background={color:'1A2E44'};
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent,transparency:88},line:{color:accent,pt:1}});
     s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(.12),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.30),y:sc(.18),w:sc(3.30),h:sc(.32),fill:{color:accent,transparency:60},line:{color:accent,pt:1}});
 
     s.addText(p.headline||item.title,{x:sc(.35),y:sc(.20),w:sc(3.20),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,charSpacing:2.5,margin:0,fit:'shrink'});
     s.addShape(pptx.ShapeType.rect,{x:sc(.25),y:sc(.62),w:sc(3.45),h:sc(1.45),fill:{color:C.white},line:{color:accent,pt:1}});
@@ -464,11 +569,7 @@ async function generatePptx(){
 
     s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:sc(4.0),y:sc(2.65),w:sc(5.85),h:sc(.32),fontFace:'Corbel',fontSize:13.6,bold:true,color:C.orange,charSpacing:3.3,margin:0,fit:'shrink'});
     var adv=(p.approvedAdvantages||[]).slice(0,4);
-    var runs=[];
-    adv.forEach(function(t,i){
-      runs.push({text:'•  '+t,options:{breakLine:i<adv.length-1}});
-    });
-    s.addText(runs,{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,breakLine:false,fit:'shrink',paraSpaceAfterPt:4});
+    s.addText(adv.map(function(t){return '•  '+t}).join('\n'),{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,fit:'shrink',breakLine:false,paraSpaceAfterPt:4});
 
     s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(2.275),fill:{color:'1A2E44',transparency:40},line:{color:accent,pt:.8}});
     s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(.38),fill:{color:'F09E0D',transparency:70},line:{color:'F09E0D',pt:1}});
@@ -487,16 +588,12 @@ async function generatePptx(){
     return s;
   }
 
-  function playbookQuestion(area){
-    if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
-    if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
-    return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
-  }
+  function playbookQuestion(item){return verticalQuestionFor(item);}
   function playbookWhyWin(){
     return ['• Portfolio multi-fabricante alineado al caso de uso','• PoC, preventa y 3D Labs para demostrar valor','• Servicios, FLEX y lifecycle para ampliar la oportunidad'].join('\n');
   }
   async function addVerticalSlide(item){
-    var v=verticalModel(item.vertical,item.area),accent=pptAccent(item.area),s=pptx.addSlide();
+    var v=verticalModel(item.vertical,item.area),accent=pptAccent(item.area),meta=verticalMeta(item.vertical),s=pptx.addSlide();
     var S=4/3,sc=function(v){return v*S};
     s.background={color:'082335'};
 
@@ -509,17 +606,17 @@ async function generatePptx(){
     s.addShape(pptx.ShapeType.rect,{x:sc(2.542),y:0,w:sc(.045),h:7.5,fill:{color:accent},line:{color:accent}});
 
     s.addText('PLAYBOOK SECTORIAL',{x:sc(.225),y:sc(.255),w:sc(2.025),h:sc(.165),fontFace:'Arial',fontSize:10.9,bold:true,color:accent,margin:0});
-    s.addText(item.vertical.toUpperCase(),{x:sc(.225),y:sc(.540),w:sc(2.115),h:sc(.615),fontFace:'Arial',fontSize:28.7,bold:true,color:C.white,margin:0,fit:'shrink'});
-    s.addText(areaName(item.area),{x:sc(.225),y:sc(1.170),w:sc(2.115),h:sc(.210),fontFace:'Arial',fontSize:13.5,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(meta.left,{x:sc(.225),y:sc(.540),w:sc(2.115),h:sc(.760),fontFace:'Arial',fontSize:meta.lf,bold:true,color:C.white,margin:0,fit:'shrink',breakLine:false});
+    s.addText(areaName(item.area),{x:sc(.225),y:sc(1.400),w:sc(2.115),h:sc(.210),fontFace:'Arial',fontSize:12.8,bold:true,color:C.white,margin:0,fit:'shrink'});
 
     s.addShape(pptx.ShapeType.roundRect,{x:sc(.180),y:sc(3.615),w:sc(2.212),h:sc(1.005),rectRadius:.05,fill:{color:'082335',transparency:5},line:{color:accent,pt:1}});
     s.addText('ABRE CON',{x:sc(.330),y:sc(3.765),w:sc(.750),h:sc(.135),fontFace:'Arial',fontSize:10.55,bold:true,color:accent,margin:0});
-    s.addText(playbookQuestion(item.area),{x:sc(.330),y:sc(3.975),w:sc(1.845),h:sc(.465),fontFace:'Arial',fontSize:15.8,bold:true,color:C.white,margin:0,fit:'shrink'});
-    s.addText('FABRICANTES CLAVE',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
-    s.addText(verticalVendors(v).join(' · '),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.8,color:C.white,margin:0,fit:'shrink'});
+    s.addText(playbookQuestion(item),{x:sc(.330),y:sc(3.975),w:sc(1.845),h:sc(.465),fontFace:'Arial',fontSize:15.8,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText('IMPACTO ESPERADO',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
+    s.addText(verticalImpact(v),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.3,color:C.white,margin:0,fit:'shrink'});
 
     s.addText(areaName(item.area),{x:sc(2.835),y:sc(.210),w:sc(3.375),h:sc(.165),fontFace:'Arial',fontSize:11.47,bold:true,color:accent,margin:0,fit:'shrink'});
-    s.addText(item.vertical.toUpperCase(),{x:sc(2.835),y:sc(.412),w:sc(5.025),h:sc(.360),fontFace:'Arial',fontSize:29.8,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(meta.main,{x:sc(2.835),y:sc(.412),w:sc(5.025),h:sc(.360),fontFace:'Arial',fontSize:meta.mf,bold:true,color:C.white,margin:0,fit:'shrink'});
     if(westconLogo){
       s.addShape(pptx.ShapeType.roundRect,{x:sc(8.287),y:sc(.165),w:sc(1.462),h:sc(.540),fill:{color:C.white},line:{color:accent,pt:.7},rectRadius:.05});
       s.addImage({data:westconLogo,x:sc(8.363),y:sc(.225),w:sc(1.312),h:sc(.420)});
@@ -540,8 +637,8 @@ async function generatePptx(){
       s.addShape(pptx.ShapeType.roundRect,{x:sc(cc.x),y:sc(cc.y),w:sc(3.315),h:sc(1.147),rectRadius:.06,fill:{color:'113A50'},line:{color:accent,pt:.8}});
       s.addText(ca[0],{x:sc(cc.x+.120),y:sc(cc.y+.090),w:sc(3.075),h:sc(.180),fontFace:'Arial',fontSize:14.33,bold:true,color:accent,margin:0,fit:'shrink'});
       s.addText(ca[1],{x:sc(cc.x+.120),y:sc(cc.y+.315),w:sc(3.075),h:sc(.315),fontFace:'Arial',fontSize:12.15,color:C.white,margin:0,fit:'shrink'});
-      var names=(sol[1]||[]).slice(0,4),n=names.length;
-      var x0=cc.x+.120,slotW=n>=4?.724:n===3?.985:n===2?1.508:2.2,gap=n>=4?.060:n===3?.060:.060;
+      var names=(sol[1]||[]).slice(0,2),n=names.length;
+      var slotW=1.508,gap=.060,x0=n===1?cc.x+.904:cc.x+.120;
       for(var j=0;j<n;j++){
         var bx=x0+j*(slotW+gap);
         s.addShape(pptx.ShapeType.roundRect,{x:sc(bx),y:sc(cc.y+.795),w:sc(slotW),h:sc(.240),rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.45}});

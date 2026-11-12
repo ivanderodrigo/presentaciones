@@ -1,5 +1,5 @@
 {
-  "version": "5.3.0",
+  "version": "5.4.0",
   "generatedFrom": "Westcon_Comstor_Espana_FY27_completa.pptx",
   "vendors": {
     "Anomali": {
@@ -3427,14 +3427,14 @@
       "name": "Cloudflare",
       "category": "Connectivity Cloud / SASE / Application Security",
       "sourceSlides": [],
-      "headline": "APPLICATION SECURITY / SASE / CONNECTIVITY CLOUD",
-      "tagline": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
-      "valueProposition": "Plataforma de Connectivity Cloud que unifica seguridad de aplicaciones y APIs, Zero Trust/SASE y servicios de red sobre una red global común, reduciendo la proliferación de point products y simplificando el control operativo.",
+      "headline": "APPLICATION SECURITY & SASE",
+      "tagline": "Protege aplicaciones, usuarios y redes desde una plataforma global",
+      "valueProposition": "Connectivity Cloud que integra WAAP, Zero Trust/SASE y servicios de red en una plataforma global. Protege aplicaciones y APIs, acceso privado y conectividad entre sedes, cloud y data center.",
       "approvedAdvantages": [
-        "Protege aplicaciones y APIs con WAF, API Security, Bot Management y mitigación DDoS.",
-        "Unifica ZTNA, Secure Web Gateway, CASB y DLP para usuarios y aplicaciones privadas.",
-        "Conecta oficinas, nubes y data centers con servicios de red cloud-native y un plano de control común.",
-        "Consolida seguridad, conectividad y rendimiento sobre una red global para reducir complejidad operativa."
+        "WAAP integrado: WAF, API Security, Bot Management y mitigación DDoS",
+        "Zero Trust/SSE: ZTNA, SWG, CASB y DLP con políticas unificadas",
+        "Conectividad cloud-native para sedes, nubes y data centers",
+        "Una red global común para simplificar operación y reducir point products"
       ],
       "competitors": [
         "Akamai",
@@ -3548,14 +3548,14 @@
       "name": "Sonar (SonarQube)",
       "category": "Code Quality / Application Security / DevSecOps",
       "sourceSlides": [],
-      "headline": "APPLICATION SECURITY / DEVSECOPS",
-      "tagline": "Verifica cada cambio de código, humano o generado por IA",
-      "valueProposition": "Plataforma de code quality y application security que integra análisis estático, quality gates y verificación continua en IDE, pull requests y CI/CD para evitar que bugs, vulnerabilidades y deuda técnica lleguen a producción.",
+      "headline": "APPLICATION SECURITY & DEVSECOPS",
+      "tagline": "Código seguro y mantenible desde el IDE hasta producción",
+      "valueProposition": "Plataforma de code quality y AppSec que analiza cada cambio en IDE, pull requests y CI/CD. Aplica quality gates para evitar que bugs, vulnerabilidades y deuda técnica lleguen a producción.",
       "approvedAdvantages": [
-        "Quality gates automatizados para bloquear cambios que no cumplen los estándares definidos.",
-        "SAST, taint analysis, secrets detection, SCA e IaC scanning para reducir riesgo antes de producción.",
-        "Feedback integrado en IDE, pull requests y CI/CD para corregir problemas en el flujo del desarrollador.",
-        "Aplica el mismo estándar de calidad y seguridad al código humano y al generado por IA."
+        "Quality gates automáticos para bloquear código que no cumple el estándar",
+        "SAST, taint analysis, secrets, SCA e IaC scanning integrados",
+        "Feedback en IDE y pull requests para corregir antes del merge",
+        "Verifica con el mismo criterio código humano y generado por IA"
       ],
       "competitors": [
         "Checkmarx",

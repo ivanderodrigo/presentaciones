@@ -46,3 +46,10 @@ For substantial changes: create branch → validate → PR → merge to main. Pr
 - Page 5 portfolio and taxonomy pages are patched on top of the original source visuals; do not redesign them.
 - Library order mirrors the original corporate deck and inserts area-specific verticals immediately before the next solution section.
 - Vertical slides clone the FY27 sector-playbook grid and remain one dense slide per sector/area.
+
+## v5.4 invariants
+- No screenshot overlays for portfolio or taxonomy slides; they are native generated layouts.
+- data/taxonomy.* is the source of truth for technology classification and must cover every active vendor in every area it belongs to.
+- Taxonomy card titles must be technology/architecture categories, never Westcon service categories.
+- Cloudflare/Sonar text must respect FY27 manufacturer-card text budgets.
+- Sector playbooks use adaptive titles and no more than two large vendor logos per use case.
