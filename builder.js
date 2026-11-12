@@ -47,46 +47,7 @@ var OPPORTUNITY_LINES=[
 ];
 
 
-var TAXONOMY={
-  cyber:{
-    title:'TAXONOMÍA DE CIBERSEGURIDAD',
-    subtitle:'Identidad · endpoint · Zero Trust/SASE · AppSec · dato/cloud/OT · SecOps · exposición',
-    cards:[
-      {title:'Identidad, acceso y secrets',vendors:['Okta','Ping Identity','1Password','Cisco'],detail:'IAM · CIAM · SSO/MFA · Duo · passwords y secrets'},
-      {title:'Endpoint, puesto y usuario',vendors:['CrowdStrike','Ivanti','Proofpoint','Menlo Security'],detail:'EDR/XDR · UEM/patch · email/human risk · secure browser'},
-      {title:'Zero Trust, SASE y red',vendors:['Zscaler','Palo Alto Networks','Cisco','Cloudflare','Certes Networks'],detail:'SSE/ZTNA · NGFW · DLP · DDoS · cifrado/segmentación'},
-      {title:'Aplicaciones, APIs y código',vendors:['F5','Cloudflare','Noname / Akamai API Security','Sonar (SonarQube)'],detail:'WAAP/WAF · API Security · bots/DDoS · SAST · quality gates'},
-      {title:'Dato, cloud y OT/XIoT',vendors:['Fortanix','CrowdStrike','Palo Alto Networks','Claroty','Certes Networks'],detail:'KMS/HSM · CNAPP · CSPM · OT/XIoT · protección de dato'},
-      {title:'Detección, respuesta y threat intel',vendors:['Anomali','CrowdStrike','Vectra AI','NETSCOUT','LevelBlue','Cisco','Palo Alto Networks'],detail:'Threat Intel · NDR/XDR · MDR/SOC · visibilidad y respuesta'},
-      {title:'Exposure, validación y policy',vendors:['AttackIQ','XM Cyber','FireMon','Vectra AI'],detail:'BAS/CTEM · attack paths · security policy · priorización de exposición'}
-    ]
-  },
-  network:{
-    title:'TAXONOMÍA DE NETWORKING',
-    subtitle:'Transporte · routing · campus · Wi‑Fi · WAN/5G · DDI · guest experience',
-    cards:[
-      {title:'Transporte óptico y DCI',vendors:['Ciena','Nokia'],detail:'WDM/OTN · coherent optics · DCI · automatización de transporte'},
-      {title:'Routing, IP/MPLS y acceso operador',vendors:['Nokia','Cisco'],detail:'Edge/core routing · IP/MPLS/SR · fixed access · carrier networking'},
-      {title:'Campus switching y fabric',vendors:['Extreme Networks','Cisco','Ruckus Networks'],detail:'Switching · fabric · policy · operación centralizada'},
-      {title:'Wi‑Fi, NAC y experiencia',vendors:['Extreme Networks','Cisco','Ruckus Networks','Weblib'],detail:'WLAN · NAC · assurance · guest access · experiencia digital'},
-      {title:'Branch, SD‑WAN y Wireless WAN',vendors:['Cisco','Extreme Networks','Ericsson'],detail:'SD‑WAN · branch routing · 4G/5G · failover · private cellular'},
-      {title:'DDI, DNS Security e IPAM',vendors:['EfficientIP'],detail:'DNS · DHCP · IPAM · security · automatización y APIs'},
-      {title:'Guest Wi‑Fi y engagement',vendors:['Weblib','Ruckus Networks','Cisco'],detail:'Captive portal · analytics · marketing · servicios para invitados'}
-    ]
-  },
-  cloud:{
-    title:'TAXONOMÍA DE CLOUD, UC Y AUTOMATIZACIÓN',
-    subtitle:'Voz y CX · cloud · datos/IA · automatización · edge y alta disponibilidad',
-    cards:[
-      {title:'Voz empresarial y Teams Phone',vendors:['AudioCodes','Microsoft'],detail:'SBC · gateways · Direct Routing · Operator Connect · survivability'},
-      {title:'Contact center, CX y colaboración',vendors:['Avaya','AudioCodes','Microsoft'],detail:'UC/CCaaS · omnicanalidad · IA conversacional · colaboración'},
-      {title:'Cloud infrastructure y gobierno',vendors:['AWS','Microsoft'],detail:'Compute · storage · networking · identity · governance · marketplace'},
-      {title:'Datos, IA y modernización',vendors:['AWS','Microsoft'],detail:'Containers · serverless · data platforms · GenAI · AI services'},
-      {title:'Automatización y agentic AI',vendors:['UiPath','AWS','Microsoft'],detail:'RPA · process/task mining · agents · workflows · document automation'},
-      {title:'Edge, HA e infraestructura crítica',vendors:['Penguin Solutions'],detail:'High availability · edge · fault tolerance · AI/HPC infrastructure'}
-    ]
-  }
-};
+var TAXONOMY=(window.WESTCON_TAXONOMY&&window.WESTCON_TAXONOMY.areas)||{};
 
 var VERTICAL_TITLE={
   'Banca y seguros':{left:'BANCA Y\nSEGUROS',main:'BANCA Y SEGUROS',lf:28.7,mf:29.8},
