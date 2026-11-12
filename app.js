@@ -1,956 +1,241 @@
-/* Westcon Meeting Intelligence v2.1 — Vertical Experience + Partner Intelligence + Vendor Intelligence + Presentation Director */
-(() => {
-  const K = window.WESTCON_KNOWLEDGE || {};
-  const VI = window.WESTCON_VENDOR_INTELLIGENCE || {vendors:{},verticalSignals:{}};
-  const LIVE = window.WESTCON_LIVE_INTELLIGENCE || {vendors:{},generatedAt:null};
-  const PARTNERS = window.WESTCON_PARTNER_INTELLIGENCE || {partners:{},generatedAt:null};
-  const SLIDES = window.WESTCON_SLIDE_INDEX || {slides:[]};
-  const VERTICAL_CONTENT = window.WESTCON_VERTICAL_CONTENT || {verticals:{}};
-  const state = { primaryRole: null, supportRoles: new Set(), currentId: null, currentMeeting: null, meetingTypeTouched:false };
-  const $ = (s, r=document) => r.querySelector(s);
-  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
-  const fmtMoney = n => new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(n||0));
-  const slug = s => (s||'reunion').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60) || 'reunion';
-  const nowIso = () => new Date().toISOString();
-  const esc = s => String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const vendorLogo = name => {
-    const map = window.WESTCON_VENDOR_LOGOS || {};
-    if (map[name]) return map[name];
-    const norm = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-    return `assets/vendors/${norm}.png`;
-  };
-  const roleById = id => (K.roles||[]).find(r=>r.id===id);
-  const getVal = id => $(id.startsWith('#')?id:'#'+id)?.value?.trim?.() ?? '';
-  const setVal = (id,v) => { const e=$(id.startsWith('#')?id:'#'+id); if(e) e.value=v??''; };
-  const checked = id => !!$(id.startsWith('#')?id:'#'+id)?.checked;
-  const storageKey='westconMeetingIntelligence.v2.meetings';
-  const legacyStorageKey='westconMeetingIntelligence.v1.meetings';
-  const prefsKey='westconMeetingIntelligence.v2.prefs';
-  const partnerMemoryKey='westconMeetingIntelligence.v2.partnerMemory';
-  const runtimeIntel={partner:{evidence:[],updatedAt:null},vendors:{},lastRun:null,errors:[]};
-  const runtimeCacheKey='westconMeetingIntelligence.v2.runtimeResearch';
-  const ANALYST_DOMAINS=['gartner.com','forrester.com','idc.com','omdia.tech.informa.com','gigaom.com','isg-one.com','canalys.com','kuppingercole.com'];
-  const TRUSTED_MEDIA=['crn.com','theregister.com','techtarget.com','computerweekly.com','sdxcentral.com','siliconangle.com','venturebeat.com','darkreading.com','securityweek.com','helpnetsecurity.com','networkworld.com','cio.com','techradar.com','infosecurity-magazine.com'];
+/* Westcon Presentation Builder v3 */
+(function(){
+  "use strict";
+  var K=window.WESTCON_KNOWLEDGE||{vendors:[],verticals:[]};
+  var VI=window.WESTCON_VENDOR_INTELLIGENCE||{vendors:{}};
+  var LIVE=window.WESTCON_LIVE_INTELLIGENCE||{vendors:{}};
+  var PARTNERS=window.WESTCON_PARTNER_INTELLIGENCE||{partners:{}};
+  var SLIDES=window.WESTCON_SLIDE_INDEX||{slides:[]};
+  var VERTICAL=window.WESTCON_VERTICAL_CONTENT||{verticals:{}};
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var $$=function(s,r){return Array.from((r||document).querySelectorAll(s));};
+  var STORE="westcon.presentationBuilder.v3.draft";
+  var state={deck:[],vendors:new Set(),filter:"all",drag:null};
 
-  // ---------- Rendering ----------
-  function renderRoles(){
-    const host=$('#roleCards'); host.innerHTML='';
-    (K.roles||[]).forEach(r=>{
-      const b=document.createElement('button'); b.type='button'; b.className='role-card'; b.dataset.role=r.id; b.style.setProperty('--role-accent',r.accent);
-      b.innerHTML=`<i></i><strong>${esc(r.name)}</strong><span>${esc(r.mission)}</span>`;
-      b.addEventListener('click',()=>selectPrimaryRole(r.id)); host.appendChild(b);
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function uid(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random();}
+  function slug(s){return String(s||"presentacion").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"presentacion";}
+  function ctx(){return {partner:$("#partner").value.trim(),role:$("#role").value,objective:$("#objective").value.trim(),vertical:$("#vertical").value,vendors:Array.from(state.vendors)};}
+  function save(){localStorage.setItem(STORE,JSON.stringify({context:ctx(),deck:state.deck}));}
+  function load(){try{return JSON.parse(localStorage.getItem(STORE)||"null");}catch(e){return null;}}
+  function vendorByName(name){return (K.vendors||[]).find(function(v){return v.name===name;})||{};}
+  function vendorIntel(name){return (VI.vendors||{})[name]||{};}
+  function liveEvidence(name){return (((LIVE||{}).vendors||{})[name]||{}).evidence||[];}
+  function partnerKey(s){return String(s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
+  function partnerIntel(name){var p=(PARTNERS||{}).partners||{};return p[partnerKey(name)]||p[name]||null;}
+  function internalSlide(x){var b=[x.title,x.subtitle].concat(x.tags||[]).join(" ").toLowerCase();return /playbook|mensajes clave|abre con|preguntas que abren|uso del slide|para comerciales/.test(b);}
+  function sourceSlides(){return (SLIDES.slides||[]).filter(function(x){return x.source==="corporate"&&!internalSlide(x);});}
+  function sourceItem(x){return {kind:"source",sourceId:x.id,page:x.page,title:x.title||("Slide "+x.page),subtitle:x.subtitle||x.area||"",asset:x.asset||("assets/source-slides/corporate/slide-"+String(x.page).padStart(2,"0")+".png"),category:x.type==="vendor"?"vendor":x.type==="service"?"service":"corporate",vendors:x.vendors||[],area:x.area||"",tags:x.tags||[]};}
+  function areaKeys(names){
+    var out=[];
+    names.forEach(function(n){
+      var a=String(vendorByName(n).area||vendorIntel(n).category||"").toLowerCase();
+      if(a.indexOf("ciber")>=0||a.indexOf("security")>=0)out.push("cyber");
+      if(a.indexOf("network")>=0)out.push("network");
+      if(a.indexOf("cloud")>=0||a.indexOf("automat")>=0||a.indexOf("uc")>=0)out.push("cloud");
     });
-    const support=$('#supportRoles'); support.innerHTML='';
-    (K.roles||[]).forEach(r=>{
-      const lab=document.createElement('label'); lab.className='chip'; lab.dataset.role=r.id;
-      lab.innerHTML=`<input type="checkbox" value="${r.id}"><span>${esc(r.name)}</span>`;
-      $('input',lab).addEventListener('change',e=>{
-        if(e.target.checked) state.supportRoles.add(r.id); else state.supportRoles.delete(r.id);
-        lab.classList.toggle('active',e.target.checked); updateProgress();
-      }); support.appendChild(lab);
-    });
+    return Array.from(new Set(out));
   }
-
-  function selectPrimaryRole(id){
-    state.primaryRole=id;
-    $$('.role-card').forEach(b=>b.classList.toggle('selected',b.dataset.role===id));
-    const r=roleById(id); $('#activeRoleBadge').textContent=r?.name||'Sin seleccionar';
-    // primary role cannot also be support
-    const chip=$(`#supportRoles .chip[data-role="${id}"]`); if(chip){ const inp=$('input',chip); inp.checked=false; inp.disabled=true; chip.classList.remove('active'); state.supportRoles.delete(id); }
-    $$('#supportRoles .chip').filter(c=>c.dataset.role!==id).forEach(c=>$('input',c).disabled=false);
-    renderRoleFields(id);
-    if(!state.meetingTypeTouched){
-      const autoType=id==='sa'?'technical':id==='vsm'?'vendor-focus':'business-review';
-      setVal('meetingType',autoType);
-    }
-    const chosen=$$('#vendorGrid input:checked').map(x=>x.value);
-    const focus=id==='vsm'?$('#vsmVendor'):id==='sa'?$('#saVendor'):null; if(focus&&chosen.length===1&&!focus.value)focus.value=chosen[0];
-    renderResearch(); updateProgress();
-  }
-
-  function renderVendors(){
-    const grid=$('#vendorGrid'); grid.innerHTML='';
-    (K.vendors||[]).forEach((v,i)=>{
-      const lab=document.createElement('label'); lab.className='vendor-option'; lab.dataset.search=(v.name+' '+v.area+' '+(v.tags||[]).join(' ')).toLowerCase();
-      lab.innerHTML=`<input type="checkbox" value="${esc(v.name)}"><img src="${vendorLogo(v.name)}" alt=""><div><strong>${esc(v.name)}</strong><small>${esc(v.area)}</small></div>`;
-      $('input',lab).addEventListener('change',e=>{lab.classList.toggle('selected',e.target.checked); if(e.target.checked){const focusId=state.primaryRole==='vsm'?'#vsmVendor':state.primaryRole==='sa'?'#saVendor':null;const focus=focusId?$(focusId):null;if(focus&&!focus.value)focus.value=e.target.value;} updateProgress();}); grid.appendChild(lab);
-    });
-    $('#vendorSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase(); $$('.vendor-option',grid).forEach(x=>x.style.display=!q||x.dataset.search.includes(q)?'flex':'none');});
-  }
-
-  function renderServices(){
-    const host=$('#serviceChips'); host.innerHTML='';
-    (K.westconServices||[]).forEach(s=>{const l=document.createElement('label');l.className='chip';l.innerHTML=`<input type="checkbox" value="${esc(s)}"><span>${esc(s)}</span>`;$('input',l).addEventListener('change',e=>l.classList.toggle('active',e.target.checked));host.appendChild(l);});
-  }
-  function renderVerticals(){
-    const sel=$('#vertical'); sel.innerHTML='<option value="">Sin vertical concreta</option>'+(K.verticals||[]).map(v=>`<option>${esc(v)}</option>`).join('');
-  }
-
-  const researchItems={
-    partner:{title:'Perfil del partner',desc:'Portfolio, especialización, tamaño, sedes y estrategia.'},
-    alliances:{title:'Fabricantes y alianzas',desc:'Vendors actuales, partner tiers y tecnologías promovidas.'},
-    certifications:{title:'Certificaciones',desc:'Certificaciones, badges, especializaciones y skills visibles.'},
-    news:{title:'Noticias y movimientos',desc:'Noticias, adquisiciones, contratos, eventos y cambios relevantes.'},
-    verticals:{title:'Verticales y referencias',desc:'Sectores, clientes públicos y casos de éxito del partner.'},
-    careers:{title:'Talento y ofertas',desc:'Vacantes como señal de inversión, capacidades y estrategia.'},
-    channel:{title:'Programa de canal',desc:'Tier, requisitos, certificaciones, rebates, MDF e incentivos públicos.'},
-    analyst:{title:'Analistas',desc:'Gartner, IDC, Forrester, Omdia, Canalys, GigaOm e ISG.'},
-    competition:{title:'Competencia',desc:'Alternativas tecnológicas y vendors que compiten en el caso.'},
-    technical:{title:'Arquitectura y documentación',desc:'Guías oficiales, integraciones, referencias y diseño recomendado.'},
-    market:{title:'Tendencias de mercado',desc:'Cambios regulatorios, demanda, crecimiento y prioridades del sector.'},
-    cases:{title:'Casos públicos',desc:'Casos de éxito verificables del fabricante y del ecosistema.'}
-  };
-  const defaultsByRole={
-    psm:['partner','alliances','certifications','news','verticals','careers','market','analyst','competition','cases'],
-    vsm:['partner','alliances','certifications','news','channel','verticals','market','analyst','competition','cases'],
-    sa:['partner','alliances','certifications','analyst','competition','technical','market','cases']
-  };
-  function renderResearch(){
-    const host=$('#researchGrid'); if(!host)return;
-    const cards=[
-      ['PARTNER','Portfolio, fabricantes, certificaciones, especialización, estrategia, noticias, proyectos y señales de inversión.'],
-      ['FABRICANTES','Ventajas competitivas, casos públicos, documentación, programas de canal, novedades y evidencia oficial.'],
-      ['MERCADO','Competidores, tendencias, verticales, regulación, movimientos de canal y medios especializados.'],
-      ['ANALISTAS','Gartner, Forrester, IDC, Omdia, GigaOm, ISG, Canalys y otras fuentes públicas verificables.']
+  function generatedItems(){
+    var c=ctx(),out=[
+      {kind:"cover",title:"Portada personalizada",subtitle:"Partner, objetivo, fabricantes y vertical",category:"generated"},
+      {kind:"agenda",title:"Objetivo y agenda",subtitle:"Enmarca la conversación",category:"generated"},
+      {kind:"next",title:"Siguientes pasos",subtitle:"Plan de acción final",category:"generated"}
     ];
-    host.innerHTML=cards.map(([t,d],i)=>`<div class="research-summary-card"><i>${i+1}</i><div><strong>${t}</strong><span>${d}</span></div></div>`).join('');
-  }
-
-  function vendorOptions(selected=''){return '<option value="">Seleccionar</option>'+(K.vendors||[]).map(v=>`<option ${v.name===selected?'selected':''}>${esc(v.name)}</option>`).join('');}
-  function renderRoleFields(role){
-    const h=$('#roleFields'); h.classList.remove('empty-state');
-    const title=$('#roleSectionTitle');
-    if(role==='psm'){
-      title.textContent='PSM · lo que solo tú conoces';
-      h.innerHTML=`
-        <div class="role-intro"><strong>PSM:</strong> basta con el contexto que no puede encontrar Internet. La facturación, pipeline y compromisos son opcionales y enriquecen la business review.</div>
-        <label>Contexto de la relación (opcional)<textarea id="psmContext" rows="3" placeholder="Personas clave, fricciones, prioridades, compromisos anteriores o algo que deba saber antes de preparar la reunión..."></textarea></label>
-        <details class="details-block compact-details"><summary>Añadir datos de negocio y pipeline</summary>
-          <div class="grid three"><label>Estado de la relación<select id="psmRelationship"><option>Estratégica</option><option selected>En desarrollo</option><option>Transaccional</option><option>A recuperar</option><option>Nueva</option></select></label><label>Objetivo FY / cuenta (€)<input type="number" id="psmTarget" placeholder="0"></label><label>Potencial estimado<select id="psmPotential"><option>Muy alto</option><option selected>Alto</option><option>Medio</option><option>Bajo</option></select></label></div>
-          <h3>Facturación y evolución por fabricante</h3><div class="mini-import"><span>Si ya lo tienes en Excel, exporta a CSV y evita teclearlo.</span><label class="secondary file-button">Importar CSV<input type="file" id="psmBusinessCsv" accept=".csv,text/csv" hidden></label><button type="button" class="ghost-button" id="businessCsvTemplate">Plantilla CSV</button></div><div class="table-wrap"><table><thead><tr><th>Fabricante</th><th>FY25</th><th>FY26</th><th>FY27 YTD</th><th>Objetivo FY27</th><th>Pipeline</th><th></th></tr></thead><tbody id="businessRows"></tbody></table></div><div class="table-actions"><button type="button" class="secondary" id="addBusinessRow">＋ Añadir fabricante</button></div><div id="businessMetrics" class="metric-row"></div>
-          <h3>Oportunidades conocidas</h3>${opportunityTable()}
-          <label>Áreas de crecimiento que ya sospechas<textarea id="psmWhitespace" rows="3" placeholder="Fabricantes, servicios o capacidades que crees que deberíamos explorar..."></textarea></label>
-          <label>Acciones / compromisos previos<textarea id="psmActions" rows="3" placeholder="Acciones abiertas, responsables y temas pendientes..."></textarea></label>
-        </details>`;
-      bindBusinessTable(); bindOpportunityTable(); bindBusinessCsv();
-    } else if(role==='vsm'){
-      title.textContent='VSM · fabricante y relación';
-      h.innerHTML=`
-        <div class="role-intro"><strong>VSM:</strong> selecciona el fabricante foco. Lo demás es opcional: la aplicación investiga posicionamiento, noticias, canal y evidencias públicas automáticamente.</div>
-        <label>Fabricante foco<select id="vsmVendor">${vendorOptions()}</select></label>
-        <details class="details-block compact-details"><summary>Añadir estado comercial, certificaciones e incentivos</summary>
-          <div class="grid three"><label>Tier / nivel actual<input id="vsmTier" placeholder="Ej. Platinum / Gold / Registered..."></label><label>Tier objetivo<input id="vsmTargetTier" placeholder="Nivel al que queremos llegar"></label><label>Estado relación<select id="vsmRelationship"><option>Estratégica</option><option selected>En desarrollo</option><option>Inicial</option><option>Bloqueada</option><option>A recuperar</option></select></label><label>Facturación FY27 YTD (€)<input type="number" id="vsmRevenue" placeholder="0"></label><label>Objetivo FY27 (€)<input type="number" id="vsmTarget" placeholder="0"></label></div>
-          <div class="grid two"><label>Certificaciones actuales<textarea id="vsmCerts" rows="3" placeholder="Solo si las conoces"></textarea></label><label>Certificaciones en proceso / necesarias<textarea id="vsmCertsNext" rows="3" placeholder="Solo si las conoces"></textarea></label><label>Plan de canal / objetivos acordados<textarea id="vsmChannelPlan" rows="3" placeholder="Prioridades ya acordadas con el vendor o el partner"></textarea></label><label>Incentivos, rebates, MDF y campañas<textarea id="vsmIncentives" rows="3" placeholder="Información interna que quieras incorporar"></textarea></label></div>
-          <h3>Pipeline del fabricante</h3>${opportunityTable()}<label>Bloqueos y ayuda necesaria<textarea id="vsmBlockers" rows="3" placeholder="Qué está frenando certificación, venta, pipeline o relación"></textarea></label>
-        </details>`;
-      bindOpportunityTable();
-    } else if(role==='sa'){
-      title.textContent='Solution Architect · caso de uso';
-      h.innerHTML=`
-        <div class="role-intro"><strong>Solution Architect:</strong> selecciona el fabricante y, si puedes, describe el caso de uso. La aplicación prepara el resto: arquitectura narrativa, diferenciación, evidencia de mercado y criterios de PoC/PoV.</div>
-        <div class="grid two"><label>Fabricante foco<select id="saVendor">${vendorOptions()}</select></label><label>Caso de uso / problema técnico<input id="saUseCase" placeholder="Ej. Zero Trust, modernización campus, OT visibility, API Security..."></label></div>
-        <details class="details-block compact-details"><summary>Añadir contexto técnico conocido</summary><div class="grid two"><label>Arquitectura / stack actual<textarea id="saCurrent" rows="3" placeholder="Tecnologías actuales, dependencias, restricciones..."></textarea></label><label>Requisitos y criterios de diseño<textarea id="saRequirements" rows="3" placeholder="Escala, rendimiento, integración, seguridad, cloud, operación..."></textarea></label><label>Alternativas que sabes que se están valorando<textarea id="saCompetitors" rows="3" placeholder="Opcional; no se mostrará necesariamente al partner"></textarea></label><label>Diferenciadores que quieres enfatizar<textarea id="saDifferentiators" rows="3" placeholder="Opcional; el motor también los investiga"></textarea></label><label>Evidencia concreta que ya tengas<textarea id="saAnalysts" rows="3" placeholder="Informe, benchmark, caso público o dato que quieras forzar"></textarea></label><label>Criterios de éxito de PoC / PoV<textarea id="saPoc" rows="3" placeholder="Qué debe medirse para demostrar valor"></textarea></label></div><label>Riesgos, objeciones o limitaciones conocidas<textarea id="saRisks" rows="3" placeholder="Compatibilidad, costes, madurez, migración..."></textarea></label></details>`;
-    } else { h.className='role-fields empty-state'; h.innerHTML='<p>Selecciona PSM, VSM o Solution Architect.</p>'; }
-    $$('#roleFields input, #roleFields select, #roleFields textarea').forEach(e=>e.addEventListener('input',updateProgress)); setTimeout(updateProgress,0);
-  }
-
-  function opportunityTable(){return `<div class="table-wrap"><table><thead><tr><th>Cuenta / oportunidad</th><th>Fabricante</th><th>Solución</th><th>Importe</th><th>Fase</th><th>%</th><th></th></tr></thead><tbody id="opportunityRows"></tbody></table></div><div class="table-actions"><button type="button" class="secondary" id="addOpportunityRow">＋ Añadir oportunidad</button></div><div id="oppMetrics" class="metric-row"></div>`;}
-
-  function addBusinessRow(data={}){
-    const t=$('#businessRowTemplate'); if(!t||!$('#businessRows')) return; const row=t.content.firstElementChild.cloneNode(true); $('.row-vendor',row).innerHTML=vendorOptions(data.vendor||'');
-    [['.fy25','fy25'],['.fy26','fy26'],['.fy27','fy27'],['.target','target'],['.pipeline','pipeline']].forEach(([s,k])=>$('.'+s.replace('.',''),row).value=data[k]??'');
-    $('.remove-row',row).addEventListener('click',()=>{row.remove();updateBusinessMetrics();}); $$('input,select',row).forEach(e=>e.addEventListener('input',updateBusinessMetrics)); $('#businessRows').appendChild(row); updateBusinessMetrics();
-  }
-  function parseCsvRows(text){
-    const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());if(lines.length<2)return [];
-    const delim=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':',';
-    const split=line=>{const out=[];let cur='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}else if(c===delim&&!q){out.push(cur.trim());cur='';}else cur+=c;}out.push(cur.trim());return out;};
-    const headers=split(lines[0]).map(x=>x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,''));
-    const idx=(...names)=>headers.findIndex(h=>names.some(n=>h.includes(n)));
-    const iv=idx('fabricante','vendor'),i25=idx('fy25'),i26=idx('fy26'),i27=idx('fy27','ytd'),it=idx('objetivo','target'),ip=idx('pipeline');
-    const num=v=>Number(String(v||'').replace(/\./g,'').replace(',','.').replace(/[^0-9.-]/g,''))||0;
-    return lines.slice(1).map(split).map(c=>({vendor:c[iv]||'',fy25:num(c[i25]),fy26:num(c[i26]),fy27:num(c[i27]),target:num(c[it]),pipeline:num(c[ip])})).filter(r=>r.vendor||r.fy25||r.fy26||r.fy27||r.target||r.pipeline);
-  }
-  function bindBusinessCsv(){
-    const input=$('#psmBusinessCsv');if(input)input.addEventListener('change',async()=>{const f=input.files?.[0];if(!f)return;try{const rows=parseCsvRows(await f.text());if(!rows.length){alert('No he encontrado filas reconocibles. Usa la plantilla CSV para conservar los encabezados.');return;}$('#businessRows').innerHTML='';rows.forEach(addBusinessRow);updateBusinessMetrics();updateProgress();}catch(e){alert('No se pudo leer el CSV.');console.error(e);}finally{input.value='';}});
-    $('#businessCsvTemplate')?.addEventListener('click',()=>{const csv='Fabricante;FY25;FY26;FY27 YTD;Objetivo FY27;Pipeline\nCisco;0;0;0;0;0\n';downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'westcon-psm-negocio.csv');});
-  }
-  function bindBusinessTable(){ $('#addBusinessRow')?.addEventListener('click',()=>addBusinessRow()); addBusinessRow(); }
-  function updateBusinessMetrics(){
-    const rows=getBusinessRows(); const fy26=rows.reduce((a,r)=>a+r.fy26,0), fy27=rows.reduce((a,r)=>a+r.fy27,0), target=rows.reduce((a,r)=>a+r.target,0), pipeline=rows.reduce((a,r)=>a+r.pipeline,0); const growth=fy26?((fy27-fy26)/fy26*100):0; const h=$('#businessMetrics'); if(!h)return; h.innerHTML=`<div class="metric-box"><span>FY26 total</span><strong>${fmtMoney(fy26)}</strong></div><div class="metric-box"><span>FY27 YTD</span><strong>${fmtMoney(fy27)}</strong></div><div class="metric-box"><span>Evolución*</span><strong>${growth>=0?'+':''}${growth.toFixed(1)}%</strong></div><div class="metric-box"><span>Pipeline</span><strong>${fmtMoney(pipeline)}</strong></div>`; }
-  function getBusinessRows(){ return $$('#businessRows tr').map(r=>({vendor:$('.row-vendor',r).value,fy25:Number($('.fy25',r).value||0),fy26:Number($('.fy26',r).value||0),fy27:Number($('.fy27',r).value||0),target:Number($('.target',r).value||0),pipeline:Number($('.pipeline',r).value||0)})).filter(r=>r.vendor||r.fy25||r.fy26||r.fy27||r.target||r.pipeline); }
-
-  function addOpportunityRow(data={}){
-    const t=$('#opportunityRowTemplate'); if(!t||!$('#opportunityRows')) return; const row=t.content.firstElementChild.cloneNode(true); $('.opp-vendor',row).innerHTML=vendorOptions(data.vendor||'');
-    $('.opp-name',row).value=data.name||''; $('.opp-solution',row).value=data.solution||''; $('.opp-amount',row).value=data.amount??''; $('.opp-stage',row).value=data.stage||'Discovery'; $('.opp-prob',row).value=data.prob??50;
-    $('.remove-row',row).addEventListener('click',()=>{row.remove();updateOppMetrics();}); $$('input,select',row).forEach(e=>e.addEventListener('input',updateOppMetrics)); $('#opportunityRows').appendChild(row); updateOppMetrics();
-  }
-  function bindOpportunityTable(){ $('#addOpportunityRow')?.addEventListener('click',()=>addOpportunityRow()); addOpportunityRow(); }
-  function getOpportunityRows(){return $$('#opportunityRows tr').map(r=>({name:$('.opp-name',r).value.trim(),vendor:$('.opp-vendor',r).value,solution:$('.opp-solution',r).value.trim(),amount:Number($('.opp-amount',r).value||0),stage:$('.opp-stage',r).value,prob:Number($('.opp-prob',r).value||0)})).filter(r=>r.name||r.vendor||r.solution||r.amount);}
-  function updateOppMetrics(){const rows=getOpportunityRows(),total=rows.reduce((a,r)=>a+r.amount,0),weighted=rows.reduce((a,r)=>a+r.amount*(r.prob/100),0),commit=rows.filter(r=>r.stage==='Commit').reduce((a,r)=>a+r.amount,0);const h=$('#oppMetrics'); if(!h)return; h.innerHTML=`<div class="metric-box"><span>Oportunidades</span><strong>${rows.length}</strong></div><div class="metric-box"><span>Pipeline</span><strong>${fmtMoney(total)}</strong></div><div class="metric-box"><span>Ponderado</span><strong>${fmtMoney(weighted)}</strong></div><div class="metric-box"><span>Commit</span><strong>${fmtMoney(commit)}</strong></div>`;}
-
-  function roleData(){
-    if(state.primaryRole==='psm') return {relationship:getVal('psmRelationship'),target:Number(getVal('psmTarget')||0),potential:getVal('psmPotential'),context:getVal('psmContext'),business:getBusinessRows(),opportunities:getOpportunityRows(),whitespace:getVal('psmWhitespace'),actions:getVal('psmActions')};
-    if(state.primaryRole==='vsm') return {vendor:getVal('vsmVendor'),tier:getVal('vsmTier'),targetTier:getVal('vsmTargetTier'),revenue:Number(getVal('vsmRevenue')||0),target:Number(getVal('vsmTarget')||0),relationship:getVal('vsmRelationship'),certs:getVal('vsmCerts'),certsNext:getVal('vsmCertsNext'),channelPlan:getVal('vsmChannelPlan'),incentives:getVal('vsmIncentives'),opportunities:getOpportunityRows(),blockers:getVal('vsmBlockers')};
-    if(state.primaryRole==='sa') return {vendor:getVal('saVendor'),useCase:getVal('saUseCase'),current:getVal('saCurrent'),requirements:getVal('saRequirements'),competitors:getVal('saCompetitors'),differentiators:getVal('saDifferentiators'),analysts:getVal('saAnalysts'),poc:getVal('saPoc'),risks:getVal('saRisks')};
-    return {};
-  }
-
-  function gatherMeeting(){
-    return {
-      schemaVersion:'2.0.0', id:state.currentId||crypto.randomUUID?.()||String(Date.now()), updatedAt:nowIso(), partner:getVal('partnerName'), country:getVal('country'), meetingType:getVal('meetingType'), duration:getVal('duration'), objective:getVal('objective'), desiredOutcome:getVal('desiredOutcome'), primaryRole:state.primaryRole, supportRoles:[...state.supportRoles],
-      vendors:$$('#vendorGrid input:checked').map(x=>x.value), vertical:getVal('vertical'), technologies:getVal('technologies'), includeGeneral:checked('includeGeneral'), reserveVendorSlides:checked('reserveVendorSlides'), includeServices:checked('includeServices'), services:$$('#serviceChips input:checked').map(x=>x.value),
-      roleData:roleData(), research:(defaultsByRole[state.primaryRole]||Object.keys(researchItems)), researchHorizon:Number(getVal('researchHorizon')||90), knownSources:getVal('knownSources'),
-      outputs:{depth:getVal('deckDepth'),language:getVal('language'),tone:getVal('tone'),pptx:checked('outPptx'),brief:checked('outBrief'),notes:checked('outNotes'),questions:checked('outQuestions'),pdf:checked('outPdf'),sources:checked('outSources')}
-    };
-  }
-
-  function computeCompleteness(m=gatherMeeting()){
-    let score=0,total=0; const req=(ok,w=1)=>{total+=w;if(ok)score+=w;};
-    req(!!m.partner,4);req(!!m.primaryRole,4);req(!!m.objective,3);
-    if(m.primaryRole==='psm')req(true,3);
-    if(m.primaryRole==='vsm')req(!!m.roleData.vendor||m.vendors.length>0,3);
-    if(m.primaryRole==='sa'){req(!!m.roleData.vendor||m.vendors.length>0,3);req(!!m.roleData.useCase||!!m.objective||!!m.technologies,2);}
-    return Math.round(score/Math.max(total,1)*100);
-  }
-  function missingData(m=gatherMeeting()){
-    const x=[];if(!m.partner)x.push('partner');if(!m.primaryRole)x.push('perfil');if(!m.objective)x.push('objetivo');if((m.primaryRole==='vsm'||m.primaryRole==='sa')&&!m.vendors.length&&!m.roleData?.vendor)x.push('fabricante');return x;
-  }
-  function updateProgress(){const m=gatherMeeting(),s=computeCompleteness(m),miss=missingData(m);$('#progressBar').style.width=s+'%';$('#progressText').textContent=s+'% completado';$('#gapText').textContent=miss.length?'Falta: '+miss.slice(0,3).join(', '):'Listo para investigar';$('#readyTitle').textContent=s>=70?'Listo para investigar y preparar':'Completa los datos esenciales';$('#readySubtitle').textContent=miss.length?'Falta: '+miss.join(', '):'El resto lo hará automáticamente la aplicación.';}
-
-  // ---------- Blueprint intelligence ----------
-  function derivedBusinessInsights(m){
-    const out=[]; const b=m.roleData.business||[];
-    if(b.length){
-      const valid=b.filter(r=>r.fy26||r.fy27); const growths=valid.map(r=>({vendor:r.vendor,g:r.fy26?((r.fy27-r.fy26)/r.fy26*100):null,fy27:r.fy27,pipeline:r.pipeline}));
-      const positives=growths.filter(x=>x.g!==null).sort((a,b)=>b.g-a.g); const negatives=[...positives].sort((a,b)=>a.g-b.g);
-      if(positives[0]?.g>0) out.push({type:'good',text:`${positives[0].vendor} es el mayor crecimiento registrado (${positives[0].g.toFixed(1)}% frente al dato FY26 introducido).`});
-      if(negatives[0]?.g<0) out.push({type:'warn',text:`${negatives[0].vendor} presenta la mayor caída (${negatives[0].g.toFixed(1)}%); conviene validar causa y plan de recuperación.`});
-      const total=b.reduce((a,r)=>a+r.fy27,0); if(total>0){const top=[...b].sort((a,b)=>b.fy27-a.fy27)[0];const share=top.fy27/total*100;if(share>60)out.push({type:'warn',text:`Concentración elevada: ${top.vendor} representa aproximadamente ${share.toFixed(0)}% del FY27 YTD cargado.`});}
-      const pipe=b.reduce((a,r)=>a+r.pipeline,0); if(pipe>0)out.push({type:'good',text:`Pipeline agregado declarado: ${fmtMoney(pipe)}. La reunión debería cerrar responsables y próximos hitos por oportunidad.`});
+    if(c.partner)out.push({kind:"partner",title:c.partner+" · contexto",subtitle:"Síntesis del dossier público disponible",category:"generated"});
+    if(c.vertical&&VERTICAL.verticals&&VERTICAL.verticals[c.vertical]){
+      ["cyber","network","cloud"].forEach(function(a){
+        var d=VERTICAL.verticals[c.vertical][a];
+        if(d)out.push({kind:"vertical",vertical:c.vertical,area:a,title:c.vertical+" · "+d.areaLabel,subtitle:d.title,category:"vertical"});
+      });
     }
-    return out;
-  }
-  function researchQueries(m){
-    const partner=m.partner||'[partner]',vendors=prioritizedVendorNames(m).slice(0,4),qs=[];
-    qs.push(`"${partner}" portfolio technology strategy partnerships certifications`);
-    qs.push(`"${partner}" customer projects contracts awards expansion hiring`);
-    for(const v of vendors){
-      const p=vendorIntel(v),comps=(p?.competitors||[]).slice(0,3);
-      ['Gartner','Forrester','IDC MarketScape','Omdia','GigaOm','ISG','Canalys','KuppingerCole'].forEach(a=>qs.push(`"${v}" "${a}"`));
-      qs.push(`"${v}" customer case study ${inferredVerticalFor(m)||''}`);
-      qs.push(`site:${domainHint(v)} "${v}" architecture integration reference design`);
-      if(comps.length)qs.push(`"${v}" (${comps.map(x=>'"'+x+'"').join(' OR ')}) comparison differentiation`);
-      if(m.primaryRole==='vsm'||(m.supportRoles||[]).includes('vsm'))qs.push(`"${v}" partner program certification specialization incentives channel`);
-      qs.push(`"${partner}" "${v}"`);
-    }
-    return [...new Set(qs)].slice(0,28);
-  }
-  const OFFICIAL_DOMAINS={'Anomali':'anomali.com','AttackIQ':'attackiq.com','Certes Networks':'certesnetworks.com','Cisco':'cisco.com','Claroty':'claroty.com','CrowdStrike':'crowdstrike.com','F5':'f5.com','FireMon':'firemon.com','Fortanix':'fortanix.com','Ivanti':'ivanti.com','LevelBlue':'levelblue.com','Menlo Security':'menlosecurity.com','NETSCOUT':'netscout.com','Noname / Akamai API Security':'akamai.com','Okta':'okta.com','Palo Alto Networks':'paloaltonetworks.com','Ping Identity':'pingidentity.com','Proofpoint':'proofpoint.com','Vectra AI':'vectra.ai','XM Cyber':'xmcyber.com','Zscaler':'zscaler.com','1Password':'1password.com','Ciena':'ciena.com','EfficientIP':'efficientip.com','Ericsson':'ericsson.com','Extreme Networks':'extremenetworks.com','Juniper Networks':'juniper.net','Nokia':'nokia.com','Ruckus Networks':'ruckusnetworks.com','Weblib':'weblib.fr','AudioCodes':'audiocodes.com','Avaya':'avaya.com','AWS':'aws.amazon.com','Microsoft':'microsoft.com','Penguin Solutions':'penguinsolutions.com','UiPath':'uipath.com'};
-  function domainHint(v){return OFFICIAL_DOMAINS[v]||'google.com';}
-  function gdeltTimespan(days){if(days<=30)return '1m';if(days<=120)return '3m';return '1y';}
-  async function gdeltQuery(query,days=90,max=60){const url='https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent(query)+'&mode=artlist&format=json&sort=datedesc&maxrecords='+Math.min(100,max)+'&timespan='+gdeltTimespan(days);const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),9000);try{const r=await fetch(url,{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!r.ok)throw new Error('GDELT '+r.status);const j=await r.json();const rows=j.articles||j.items||[];return rows.map(a=>({title:a.title||a.name||'',url:a.url||a.link||'',publisher:a.domain||a.source||'',publishedAt:a.seendate||a.date||a.publishedAt||'',language:a.language||'',sourcecountry:a.sourcecountry||'',query})).filter(x=>x.title&&x.url);}finally{clearTimeout(timer);}}
-  function evidenceDomain(e){try{return new URL(e.url).hostname.replace(/^www\./,'').toLowerCase()}catch{return String(e.publisher||'').toLowerCase().replace(/^www\./,'')}}
-  function evidenceAuthority(e,vendor=''){const d=evidenceDomain(e),t=String(e.title||'').toLowerCase();let score=45,kind='media';if(ANALYST_DOMAINS.some(x=>d===x||d.endsWith('.'+x))){score=98;kind='analyst-direct';}else if(vendor&&OFFICIAL_DOMAINS[vendor]&&(d===OFFICIAL_DOMAINS[vendor]||d.endsWith('.'+OFFICIAL_DOMAINS[vendor]))){score=90;kind='vendor-official';}else if(TRUSTED_MEDIA.some(x=>d===x||d.endsWith('.'+x))){score=78;kind='trusted-media';}if(/gartner|forrester|marketscape|idc |omdia|gigaom|isg |canalys|kuppinger/.test(t))score+=8;if(/leader|leaders|magic quadrant|wave|marketscape|market leader|strong performer|challenger|visionary/.test(t))score+=5;return {score:Math.min(100,score),kind};}
-  function normalizeRuntimeEvidence(items,vendor=''){const seen=new Set(),out=[];for(const e of items||[]){const k=(e.url||'')+'|'+(e.title||'');if(!e.url||seen.has(k))continue;seen.add(k);const a=evidenceAuthority(e,vendor),title=String(e.title||'').trim(),analysts=['Gartner','Forrester','IDC','Omdia','GigaOm','ISG','Canalys','KuppingerCole'].filter(x=>title.toLowerCase().includes(x.toLowerCase()));out.push({...e,analysts,confidence:a.score>=90?'high':a.score>=72?'medium':'low',authorityScore:a.score,kind:a.kind});}return out.sort((a,b)=>(b.authorityScore||0)-(a.authorityScore||0)||String(b.publishedAt||'').localeCompare(String(a.publishedAt||'')));}
-  async function mapLimit(tasks,limit=5){const results=[];let idx=0;async function worker(){while(idx<tasks.length){const i=idx++;try{results[i]=await tasks[i]();}catch(e){results[i]=[];runtimeIntel.errors.push(String(e?.message||e));}}}await Promise.all(Array.from({length:Math.min(limit,tasks.length)},worker));return results;}
-  function loadRuntimeCache(key){
-    try{
-      const root=JSON.parse(localStorage.getItem(runtimeCacheKey)||'{}'),entry=root.entries?.[key];
-      if(entry&&Date.now()-new Date(entry.savedAt||0).getTime()<24*3600*1000)return entry;
-    }catch{}return null;
-  }
-  function saveRuntimeCache(key,payload){
-    try{
-      const root=JSON.parse(localStorage.getItem(runtimeCacheKey)||'{}'),entries=root.entries||{};
-      entries[key]={...payload,savedAt:new Date().toISOString()};
-      const ordered=Object.entries(entries).sort((a,b)=>String(b[1].savedAt||'').localeCompare(String(a[1].savedAt||''))).slice(0,30);
-      localStorage.setItem(runtimeCacheKey,JSON.stringify({version:2,entries:Object.fromEntries(ordered)}));
-    }catch{}
-  }
-  async function runtimeDeepResearch(m){
-    const key=[m.partner,m.primaryRole,m.researchHorizon,m.objective,m.technologies,m.roleData?.useCase,...selectedVendorNames(m).slice(0,6)].join('|').toLowerCase(),cache=loadRuntimeCache(key);
-    if(cache){runtimeIntel.partner=cache.partner||runtimeIntel.partner;runtimeIntel.vendors=cache.vendors||runtimeIntel.vendors;runtimeIntel.lastRun=cache.savedAt;return runtimeIntel;}
-    const tasks=[],meta=[],days=m.researchHorizon||90,partner=m.partner,vendorNames=prioritizedVendorNames(m).slice(0,depthFromMeeting(m)==='deep'?5:3);
-    const push=(type,name,q)=>{meta.push({type,name,q});tasks.push(()=>gdeltQuery(q,days,80));};
-    push('partner','partner',`"${partner}" (strategy OR partnership OR alliance OR certification OR acquisition OR investment OR cybersecurity OR networking OR cloud OR AI)`);
-    push('partner','partner',`"${partner}" (customer OR project OR contract OR award OR expansion OR transformation)`);
-    push('partner','partner',`"${partner}" (hiring OR careers OR architect OR engineer OR consultant OR practice)`);
-    push('partner','partner',`"${partner}" (Cisco OR Microsoft OR Palo Alto OR CrowdStrike OR Fortinet OR Check Point OR AWS OR Juniper OR Extreme OR Zscaler OR Okta)`);
-    if(vendorNames.length)push('partner','partner',`"${partner}" (${vendorNames.map(x=>'"'+x+'"').join(' OR ')})`);
-    for(const name of vendorNames){
-      const dom=domainHint(name), p=vendorIntel(name), comps=(p?.competitors||[]).slice(0,4);
-      push('vendor',name,`"${name}" (Gartner OR Forrester OR "IDC MarketScape" OR Omdia OR GigaOm OR ISG OR Canalys OR KuppingerCole)`);
-      push('vendor',name,`"${name}" (domainis:gartner.com OR domainis:forrester.com OR domainis:idc.com OR domainis:omdia.tech OR domainis:canalys.com OR domainis:gigaom.com OR domainis:isg-one.com OR domainis:kuppingercole.com)`);
-      push('vendor',name,`"${name}" (customer OR "case study" OR deployment OR success OR reference)`);
-      push('vendor',name,`"${name}" (award OR innovation OR launch OR acquisition OR partnership OR roadmap OR platform)`);
-      push('vendor',name,`"${name}" domainis:${dom} (report OR analyst OR customer OR partner OR award OR architecture OR launch OR certification)`);
-      push('vendor',name,`"${name}" "${partner}"`);
-      if(comps.length)push('vendor',name,`"${name}" (${comps.map(x=>'"'+x+'"').join(' OR ')}) (comparison OR versus OR alternative OR migration OR differentiation)`);
-      if(m.primaryRole==='vsm'||(m.supportRoles||[]).includes('vsm'))push('vendor',name,`"${name}" ("partner program" OR certification OR specialization OR channel OR incentive OR MDF OR rebate OR enablement)`);
-      if(m.primaryRole==='sa'||(m.supportRoles||[]).includes('sa'))push('vendor',name,`"${name}" (${m.roleData.useCase||m.technologies||'architecture'} OR integration OR benchmark OR performance OR reference design OR deployment OR interoperability)`);
-      if(inferredVerticalFor(m))push('vendor',name,`"${name}" "${inferredVerticalFor(m)}" (customer OR case OR solution OR deployment)`);
-    }
-    const groups=await mapLimit(tasks,5),partnerEv=[],vendorEv={};
-    groups.forEach((rows,i)=>{const x=meta[i];if(x.type==='partner')partnerEv.push(...rows);else vendorEv[x.name]=(vendorEv[x.name]||[]).concat(rows);});
-    runtimeIntel.partner={evidence:normalizeRuntimeEvidence(partnerEv).slice(0,20),updatedAt:new Date().toISOString()};
-    for(const [name,rows] of Object.entries(vendorEv))runtimeIntel.vendors[name]={evidence:normalizeRuntimeEvidence(rows,name).slice(0,30),updatedAt:new Date().toISOString(),status:'runtime'};
-    runtimeIntel.lastRun=new Date().toISOString();saveRuntimeCache(key,{partner:runtimeIntel.partner,vendors:runtimeIntel.vendors});return runtimeIntel;
-  }
-  function vendorIntel(name){return VI?.vendors?.[name]||null;}
-  function liveVendorIntel(name){const base=LIVE?.vendors?.[name]||{evidence:[],status:'not-refreshed'},rt=runtimeIntel.vendors?.[name]||{evidence:[]};return {...base,evidence:normalizeRuntimeEvidence([...(rt.evidence||[]),...(base.evidence||[])],name),runtimeUpdatedAt:rt.updatedAt};}
-  function intelligenceFreshness(){const d=runtimeIntel.lastRun||LIVE?.generatedAt;if(!d)return 'Se actualizará al preparar la reunión';try{return `Actualizado ${new Date(d).toLocaleString('es-ES')}`;}catch{return String(d);}}
-  function vendorVerticalAngle(name,vertical){
-    const p=vendorIntel(name); if(!p) return [];
-    if(p.verticalAngles?.[vertical]?.length)return p.verticalAngles[vertical].slice(0,3);
-    const tokens=(VI?.verticalSignals?.[vertical]||[]).map(x=>String(x).toLowerCase());
-    const source=[...(p.buyingTriggers||[]),...(p.approvedAdvantages||[])];
-    const scored=source.map(text=>({text,score:tokens.reduce((n,t)=>n+(String(text).toLowerCase().includes(t)?2:0),0)})).sort((a,b)=>b.score-a.score);
-    return scored.slice(0,3).map(x=>x.text);
-  }
-  function analystEvidenceFor(name){return (liveVendorIntel(name).evidence||[]).filter(x=>x?.title&&((x.analysts||[]).length||/gartner|forrester|idc|marketscape|omdia|gigaom|isg|canalys|kuppinger/i.test(x.title))&&(x.authorityScore===undefined||x.authorityScore>=68)).slice(0,8);}
-  function marketEvidenceFor(name){return (liveVendorIntel(name).evidence||[]).filter(x=>x?.title&&(x.authorityScore===undefined||x.authorityScore>=72)).slice(0,12);}
-  function partnerKey(name){return (name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
-  function sharedPartnerIntel(name){
-    const key=partnerKey(name), all=PARTNERS?.partners||{};
-    if(all[key])return all[key];
-    return Object.values(all).find(x=>partnerKey(x?.name||'')===key)||null;
-  }
-  function partnerEvidenceFor(name=''){
-    const shared=sharedPartnerIntel(name||state.currentMeeting?.partner||'');
-    return normalizeRuntimeEvidence([...(runtimeIntel.partner?.evidence||[]),...(shared?.evidence||[])])
-      .filter(x=>x?.title&&(x.authorityScore===undefined||x.authorityScore>=60)).slice(0,16);
-  }
-
-  // ---------- Persistent Partner Intelligence ----------
-  const PARTNER_TECH_SIGNALS={
-    'Ciberseguridad':['cybersecurity','ciberseguridad','security','soc','zero trust','sase','xdr','edr','iam','identity','ot security','siem','ransomware'],
-    'Networking':['networking','network','campus','wi-fi','wifi','switching','routing','sd-wan','5g','ddi','dns','ipam','optical'],
-    'Cloud / Data / IA':['cloud','azure','aws','data','ai','ia','automation','automatización','rpa','contact center','teams','edge']
-  };
-  const PARTNER_VERTICAL_SIGNALS={
-    'Banca y seguros':['bank','banca','financial','finance','insurance','seguros','fintech'],
-    'Administración pública':['government','public sector','administración','ayuntamiento','ministerio','sector público','public administration'],
-    'Industria y utilities':['industrial','manufacturing','factory','fábrica','energy','energía','utility','utilities','ot','plant'],
-    'Retail':['retail','ecommerce','e-commerce','store','tienda','commerce','checkout']
-  };
-  function loadPartnerMemory(){try{return JSON.parse(localStorage.getItem(partnerMemoryKey)||'{}')}catch{return {}}}
-  function memoriesFor(partner){
-    const all=loadPartnerMemory(), key=partnerKey(partner);return (all[key]||[]).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
-  }
-  function savePartnerOutcome(data){
-    const all=loadPartnerMemory(),key=partnerKey(data.partner);if(!key)return;
-    all[key]=[{id:crypto.randomUUID?.()||String(Date.now()),createdAt:nowIso(),...data},...(all[key]||[])].slice(0,30);
-    localStorage.setItem(partnerMemoryKey,JSON.stringify(all));
-  }
-  function partnerProfile(m){
-    const ev=partnerEvidenceFor(m.partner), memories=memoriesFor(m.partner);
-    const text=ev.map(x=>`${x.title||''} ${x.description||''} ${x.publisher||''}`).join(' ').toLowerCase();
-    const vendorMentions=(K.vendors||[]).map(v=>({name:v.name,count:(text.match(new RegExp(String(v.name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&').toLowerCase(),'g'))||[]).length}))
-      .filter(x=>x.count>0).sort((a,b)=>b.count-a.count).slice(0,6);
-    const capabilities=Object.entries(PARTNER_TECH_SIGNALS).map(([name,terms])=>({name,score:terms.reduce((n,t)=>n+(text.includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-    const verticals=Object.entries(PARTNER_VERTICAL_SIGNALS).map(([name,terms])=>({name,score:terms.reduce((n,t)=>n+(text.includes(t)?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-    const strategy=ev.filter(x=>/acquisition|adquis|investment|invers|partnership|alianza|expansion|expans|award|certif|launch|lanz|hiring|contrat|strategy|estrateg/i.test(`${x.title||''} ${x.description||''}`)).slice(0,4);
-    const high=ev.filter(x=>(x.authorityScore||0)>=78).length;
-    return {
-      evidence:ev, memories, vendorMentions, capabilities, verticals, strategy,
-      inferredVertical:verticals[0]?.name||'',
-      confidence:ev.length>=6&&high>=3?'alta':ev.length>=3?'media':'limitada',
-      sources:ev.length,
-      lastMeeting:memories[0]||null
-    };
-  }
-  function inferredVerticalFor(m){return m.vertical||partnerProfile(m).inferredVertical||'';}
-  function depthFromMeeting(m){
-    if(m.outputs?.depth&&m.outputs.depth!=='auto')return m.outputs.depth;
-    const mins=parseInt(m.duration)||60;
-    if(mins<=30)return 'short';
-    if(mins>=90)return 'deep';
-    return 'standard';
-  }
-  function slideBudgetFor(m){
-    const mins=parseInt(m.duration)||60, depth=depthFromMeeting(m);
-    if(depth==='short')return Math.min(10,Math.max(8,Math.round(mins/3.5)));
-    if(depth==='deep')return Math.min(24,Math.max(17,Math.round(mins/4.5)));
-    return Math.min(16,Math.max(12,Math.round(mins/4)));
-  }
-  function slideLibraryCandidates(m,limit=14){
-    const text=[m.objective,m.desiredOutcome,m.technologies,m.roleData?.useCase,m.roleData?.requirements].filter(Boolean).join(' ').toLowerCase(),vendors=selectedVendorNames(m),vertical=inferredVerticalFor(m);
-    return (SLIDES.slides||[]).map((x,i)=>{let score=0;const tags=[x.title,x.subtitle,x.area,...(x.tags||[]),...(x.vendors||[])].join(' ').toLowerCase();if((x.roles||[]).includes(m.primaryRole))score+=3;if((x.vendors||[]).some(v=>vendors.includes(v)))score+=14;if(vertical&&x.vertical===vertical)score+=11;if(x.type==='vertical-datasheet'&&vertical)score+=5;if(x.type==='service'&&m.includeServices)score+=3;for(const token of text.split(/[^a-z0-9áéíóúñ]+/).filter(t=>t.length>4))if(tags.includes(token))score+=1;if((x.tags||[]).includes('playbook')||(x.tags||[]).includes('mensajes clave'))score-=100;return {...x,score,i};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,limit);
-  }
-  function directorPlan(m){
-    const profile=partnerProfile(m),depth=depthFromMeeting(m),budget=slideBudgetFor(m);
-    const first=m.meetingType==='first'||profile.memories.length===0&&m.meetingType==='development';
-    let general='none';
-    if(m.includeGeneral!==false)general=first?'full':'compact';
-    if(m.primaryRole==='psm'&&['business-review','qbr'].includes(m.meetingType))general='compact';
-    if(m.primaryRole==='vsm'&&m.meetingType==='vendor-focus')general='compact';
-    if(m.primaryRole==='sa'&&m.meetingType==='technical')general='compact';
-    const vendors=prioritizedVendorNames(m);
-    const vendorLimit=Math.min(vendors.length,depth==='short'?1:depth==='deep'?4:2);
-    const effectiveVertical=inferredVerticalFor(m);
-    const sourceSlides=slideLibraryCandidates(m,18);
-    return {
-      depth,budget,first,general,vendors:vendors.slice(0,vendorLimit),allVendors:vendors,effectiveVertical,
-      partnerSnapshot:profile.sources>=2||!!profile.lastMeeting,
-      memoryContinuation:!!profile.lastMeeting,
-      includeAnalyst:vendors.some(v=>analystEvidenceFor(v).length>0),
-      includeMarket:vendors.some(v=>marketEvidenceFor(v).length>0),
-      includeVertical:!!effectiveVertical,
-      sourceLibraryCount:sourceSlides.length,
-      rationale:[
-        `${budget} slides objetivo para ${m.duration||'60 min'}`,
-        general==='full'?'Introducción Westcon completa por tipo de reunión':general==='compact'?'Introducción Westcon compacta para evitar repetir lo conocido':'Sin introducción general',
-        vendorLimit?`${vendorLimit} fabricante${vendorLimit>1?'s':''} priorizado${vendorLimit>1?'s':''} para mantener foco`:'El fabricante se inferirá por tecnología y contexto',
-        effectiveVertical?`Vertical de trabajo: ${effectiveVertical}${m.vertical?'':' (inferida de señales públicas)'}`:'Sin vertical forzada',
-        profile.lastMeeting?'Continúa acuerdos y temas de la última reunión registrada':'Sin memoria previa registrada en este navegador',
-        `${sourceSlides.length} piezas del corpus FY27 han superado el filtro semántico inicial`
-      ]
-    };
-  }
-  function vendorSalesInsights(m){
-    const out=[];
-    for(const name of selectedVendorNames(m).slice(0,6)){
-      const p=vendorIntel(name); if(!p) continue;
-      out.push({type:'good',text:`${name}: ${p.tagline||p.category}. Señales de compra: ${(p.buyingTriggers||[]).slice(0,2).join(' · ')}`});
-      const ev=analystEvidenceFor(name); if(ev.length) out.push({type:'good',text:`${name}: ${ev.length} señales públicas de analistas disponibles (${[...new Set(ev.flatMap(x=>x.analysts||[]))].join(', ')||'fuentes públicas'}).`});
-    }
-    return out;
-  }
-  function vendorFit(m,name){
-    const p=vendorIntel(name); if(!p)return {score:10,reasons:['Seleccionado por el usuario']};
-    let score=20; const reasons=[]; const focus=m.roleData?.vendor, profile=partnerProfile(m);
-    if(focus===name){score+=25;reasons.push('fabricante foco del rol');}
-    const text=[m.objective,m.desiredOutcome,m.technologies,m.roleData?.useCase,m.roleData?.requirements,m.roleData?.current,m.roleData?.whitespace].filter(Boolean).join(' ').toLowerCase();
-    const terms=[...(p.category||'').split(/[\s/,+()-]+/),...(p.buyingTriggers||[]).flatMap(x=>String(x).split(/\s+/))].map(x=>x.toLowerCase()).filter(x=>x.length>4);
-    const hits=[...new Set(terms.filter(t=>text.includes(t)))].slice(0,5); if(hits.length){score+=Math.min(20,hits.length*4);reasons.push('encaje con objetivo/tecnología');}
-    const vertical=inferredVerticalFor(m);
-    if(vertical&&vertical!=='Otros'&&vendorVerticalAngle(name,vertical).length){score+=15;reasons.push(`encaje ${vertical}`);}
-    if(profile.vendorMentions.some(x=>x.name===name)){score+=8;reasons.push('presencia detectada en señales públicas del partner');}
-    const area=((K.vendors||[]).find(x=>x.name===name)?.area||'').toLowerCase();
-    if(profile.capabilities.some(x=>area.includes(x.name.toLowerCase().split(' ')[0]))){score+=6;reasons.push('encaje con capacidades públicas detectadas');}
-    const memText=profile.memories.slice(0,3).map(x=>`${x.summary||''} ${x.objections||''} ${x.nextStep||''}`).join(' ').toLowerCase();
-    if(memText.includes(name.toLowerCase())){score+=10;reasons.push('continuidad con reuniones anteriores');}
-    if(m.primaryRole==='psm'){
-      const r=(m.roleData.business||[]).find(x=>x.vendor===name); if(r?.fy27){score+=8;reasons.push('negocio FY27 existente');} if(r?.pipeline){score+=12;reasons.push('pipeline declarado');}
-    }
-    if(analystEvidenceFor(name).length){score+=5;reasons.push('evidencia pública reciente');}
-    return {score:Math.min(100,score),reasons:reasons.length?reasons:['selección explícita del usuario']};
-  }
-  function prioritizedVendorNames(m){
-    return selectedVendorNames(m).map((name,i)=>({name,i,...vendorFit(m,name)})).sort((a,b)=>b.score-a.score||a.i-b.i).map(x=>x.name);
-  }
-  function recommendedSlides(m){
-    const d=directorPlan(m),profile=partnerProfile(m),slides=[];const add=(title,purpose,tag='Generada')=>slides.push({title,purpose,tag});
-    add(`${m.partner||'Partner'} · apertura`,m.objective||'Enmarcar la conversación y el resultado esperado','Generada');
-    if(d.general==='full'){add('Westcon Comstor','Credenciales y especialización relevantes para la conversación','Corporativa');add('Cómo ampliamos el valor del partner','Portfolio, servicios y capacidades que acompañan el ciclo completo','Corporativa');if(d.depth!=='short')add('Portfolio FY27','Mapa de fabricantes y áreas que sostienen la propuesta','Corporativa');}
-    else if(d.general==='compact')add('Westcon Comstor · capacidades relevantes','Solo el contexto de Westcon necesario para esta reunión','Corporativa');
-    add('Objetivo y foco de la sesión','Qué queremos resolver hoy y cuál sería un buen siguiente paso','Generada');
-    if(d.partnerSnapshot)add(`${m.partner} · puntos de partida`,'Señales públicas y continuidad de conversaciones anteriores que ayudan a contextualizar la sesión','Enriquecida');
-    if(m.primaryRole==='psm'){
-      if((m.roleData.business||[]).length)add('Evolución de negocio conjunto','Facturación, evolución, mix y objetivos introducidos por el PSM','Generada');
-      if((m.roleData.opportunities||[]).length)add('Oportunidades en curso','Pipeline compartido, estado y próximos hitos','Generada');
-      add('Áreas de crecimiento conjunto','Capacidades, fabricantes, servicios y verticales con mayor encaje','Generada');
-    }
-    if(m.primaryRole==='vsm'){
-      const v=m.roleData.vendor||d.vendors[0]||'fabricante';
-      if(m.roleData.revenue||m.roleData.target||m.roleData.tier)add(`Evolución conjunta con ${v}`,'Negocio, relación y objetivos compartidos','Generada');
-      if(m.roleData.certs||m.roleData.certsNext||m.roleData.incentives)add('Capacidades para el siguiente nivel','Certificaciones, especializaciones y palancas disponibles','Generada');
-    }
-    if(m.primaryRole==='sa'){
-      const v=m.roleData.vendor||d.vendors[0]||'solución';
-      add('Necesidad y criterios de diseño',m.roleData.useCase||m.objective||'Caso de uso y criterios que debe cumplir la solución','Generada');
-      if(m.roleData.poc||d.depth!=='short')add('Prueba de valor','Cómo validar la solución con criterios medibles y un escenario representativo','Generada');
-    }
-    if(m.primaryRole!=='sa'&&(m.supportRoles||[]).includes('sa'))add('Encaje técnico y prueba de valor','Arquitectura de referencia y criterios técnicos para la prioridad principal','Generada');
-    if(d.includeVertical)add(`${d.effectiveVertical} · casos de uso relevantes`,'Casos de uso FY27 seleccionados para la conversación','Generada');
-    for(const v of d.vendors){
-      const hasEvidence=analystEvidenceFor(v).length||marketEvidenceFor(v).length;
-      if(d.depth==='deep'){add(`${v} · propuesta para este contexto`,vendorIntel(v)?.tagline||'Propuesta de valor y encaje para esta conversación','Generada');add(`${v} · diferenciación y criterios`,'Capacidades diferenciales, criterios de decisión y cómo demostrar valor','Generada');}
-      else if(d.depth==='standard'&&m.primaryRole==='sa')add(`${v} · diferenciación y criterios`,'Criterios técnicos y de decisión para el caso de uso','Generada');
-      if(hasEvidence)add(`${v} · evidencia externa`,'Analistas, casos y señales públicas recientes con fuente y fecha','Enriquecida');
-      add(`${v} · contenido FY27`,'Ficha corporativa existente como apoyo a la conversación','Corporativa');
-    }
-    if(d.includeVertical)add(`${d.effectiveVertical} · visión sectorial FY27`,'Datasheet sectorial con retos, casos de uso e impacto esperado','Corporativa');
-    if(m.includeServices)add('Cómo puede ayudar Westcon','Preventa, PoC, enablement, demanda, servicios, FLEX y lifecycle según el caso','Corporativa');
-    add('Próximos pasos','Pocas acciones, responsables y fecha objetivo','Generada');
-    return slides.slice(0,d.budget);
-  }
-
-  function questionsFor(m){
-    const q=[],profile=partnerProfile(m);
-    if(profile.lastMeeting?.nextStep)q.push(`En la última reunión acordamos "${profile.lastMeeting.nextStep}". ¿Qué ha cambiado desde entonces y qué necesitamos desbloquear hoy?`);
-    if(m.primaryRole==='psm') q.push('¿Qué fabricantes queréis hacer crecer de verdad este FY y cuáles están perdiendo prioridad?','¿Dónde se está quedando pipeline parado y qué ayuda concreta necesitáis de Westcon?','¿Qué capacidad o certificación os impide abordar hoy oportunidades que sí veis en el mercado?','¿Qué tres acciones deberían estar cerradas antes de nuestra próxima revisión?');
-    if(m.primaryRole==='vsm') q.push('¿Qué tendría que ocurrir para que este fabricante pase a ser estratégico para vosotros?','¿Qué certificación o requisito del programa de canal está frenando el siguiente nivel?','¿Qué incentivos o MDF tendrían impacto real en pipeline y no solo actividad?','¿Qué cuentas o verticales justifican un plan conjunto de 90 días?');
-    if(m.primaryRole==='sa') q.push('¿Qué requisito técnico es realmente no negociable en esta arquitectura?','¿Qué tecnología actual queréis conservar y cuál estaríais dispuestos a sustituir?','¿Contra qué alternativa debemos demostrar valor para que el PoC sea concluyente?','¿Qué KPI técnico u operativo haría que el diseño fuese aprobado?');
-    if(profile.capabilities[0])q.push(`Hemos visto actividad pública relacionada con ${profile.capabilities[0].name}. ¿Es una prioridad real de crecimiento o responde a proyectos puntuales?`);
-    return [...new Set(q)].slice(0,6);
-  }
-  function genericInsights(m){
-    const out=[],profile=partnerProfile(m),d=directorPlan(m);
-    if(m.vendors.length===0)out.push({type:'warn',text:'No hay fabricante seleccionado: el motor partirá de tecnología, objetivo, señales del partner y portfolio FY27 para priorizar.'});
-    if(m.vendors.length>6)out.push({type:'warn',text:`Hay ${m.vendors.length} fabricantes seleccionados. Presentation Director priorizará solo los que caben en una conversación coherente.`});
-    if(m.primaryRole==='vsm'&&m.roleData.target&&m.roleData.revenue){const att=m.roleData.revenue/m.roleData.target*100;out.push({type:att>=60?'good':'warn',text:`Avance declarado hacia objetivo FY: ${att.toFixed(0)}%. La narrativa conectará la distancia con palancas concretas.`});}
-    if(m.primaryRole==='sa'&&!m.roleData.competitors)out.push({type:'good',text:'Las alternativas y trade-offs se investigan automáticamente; solo hace falta introducirlos si ya existe un condicionante conocido.'});
-    if(m.knownSources)out.push({type:'good',text:'Hay fuentes conocidas aportadas por el usuario: tienen prioridad sobre inferencias genéricas.'});
-    if(profile.sources)out.push({type:'good',text:`Partner Intelligence: ${profile.sources} señales públicas útiles, confianza ${profile.confidence}${profile.inferredVertical&&!m.vertical?` y vertical probable ${profile.inferredVertical}`:''}.`});
-    if(profile.lastMeeting)out.push({type:'good',text:`Memoria activa: la presentación continuará desde el último resultado registrado (${String(profile.lastMeeting.createdAt||'').slice(0,10)}).`});
-    out.push({type:'good',text:`Presentation Director: ${d.budget} slides objetivo, profundidad ${d.depth}, ${d.vendors.length||'sin'} fabricante(s) priorizado(s).`});
-    return out;
-  }
-
-
-  async function buildBlueprint(){
-    const m=gatherMeeting(),score=computeCompleteness(m);
-    if(!m.partner||!m.objective||!m.primaryRole){alert('Completa partner, objetivo y perfil.');return;}
-    state.currentId=m.id;state.currentMeeting=m;
-    const btn=$('#buildBlueprintBtn'),old=btn.textContent;btn.disabled=true;btn.textContent='Investigando y dirigiendo la presentación…';
-    $('#readySubtitle').textContent='Partner Intelligence y Vendor Intelligence están contrastando señales públicas. Las fuentes fallidas no detienen el proceso.';
-    try{await runtimeDeepResearch(m);}catch(e){console.warn('runtime research fallback',e);}finally{btn.disabled=false;btn.textContent=old;}
-    const d=directorPlan(m),profile=partnerProfile(m),slides=recommendedSlides(m),
-      insights=[...derivedBusinessInsights(m),...genericInsights(m),...vendorSalesInsights(m)],
-      queries=researchQueries(m),questions=questionsFor(m),partnerEv=partnerEvidenceFor(m.partner),
-      vendorEv=d.vendors.flatMap(v=>analystEvidenceFor(v).map(e=>({...e,vendor:v}))).slice(0,8);
-    const partnerSignals=[
-      profile.capabilities.length?{label:'Capacidades detectadas',value:profile.capabilities.slice(0,3).map(x=>x.name).join(' · ')}:null,
-      profile.vendorMentions.length?{label:'Fabricantes visibles públicamente',value:profile.vendorMentions.slice(0,4).map(x=>x.name).join(' · ')}:null,
-      profile.verticals.length?{label:'Verticales con señales',value:profile.verticals.slice(0,3).map(x=>x.name).join(' · ')}:null,
-      profile.lastMeeting?{label:'Continuidad',value:`Última memoria: ${String(profile.lastMeeting.createdAt||'').slice(0,10)} · ${profile.lastMeeting.nextStep||profile.lastMeeting.summary||'seguimiento pendiente'}`}:null
-    ].filter(Boolean);
-    const host=$('#blueprint');host.classList.remove('hidden');
-    host.innerHTML=`<div class="blueprint-head"><div><span class="eyebrow">PRESENTACIÓN DIRIGIDA AUTOMÁTICAMENTE</span><h2>${esc(m.partner)}</h2><p>${esc(m.objective)}</p></div><div class="score-badge">Contexto ${score}%</div></div>
-      <div class="kpi-strip">${blueprintKpis(m,d).map(x=>`<div class="kpi"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong></div>`).join('')}</div>
-      <div class="blueprint-grid">
-        <div class="card"><h3>Narrativa final propuesta</h3><div class="slide-list">${slides.map((x,i)=>`<div class="slide-item"><div class="slide-num">${i+1}</div><div><strong>${esc(x.title)}</strong><p>${esc(x.purpose)}</p></div><span class="slide-tag">${esc(x.tag)}</span></div>`).join('')}</div></div>
-        <div>
-          <div class="card"><h3>Presentation Director</h3><div class="director-card"><strong>${d.budget} slides objetivo · modo ${esc(d.depth)}</strong><span>${d.rationale.map(esc).join(' · ')}</span></div><div class="partner-signal-grid">${partnerSignals.map(x=>`<div class="partner-signal"><b>${esc(x.label)}</b><small>${esc(x.value)}</small></div>`).join('')||'<div class="partner-signal"><b>Partner Intelligence</b><small>La presentación se apoya en las señales disponibles y evita inferencias no sustentadas.</small></div>'}</div></div>
-          <div class="card" style="margin-top:16px"><h3>Inteligencia utilizada</h3><ul class="insight-list">${(insights.length?insights:[{type:'good',text:'Narrativa preparada con corpus FY27, memoria de relación y evidencia pública disponible.'}]).slice(0,8).map(x=>`<li class="${x.type||''}">${esc(x.text)}</li>`).join('')}</ul></div>
-          <div class="card" style="margin-top:16px"><h3>Señales públicas recientes</h3><ul class="research-list">${[...partnerEv.slice(0,4),...vendorEv.slice(0,4)].map(e=>`<li>${e.vendor?'<strong>'+esc(e.vendor)+'</strong> · ':''}${esc(e.title)}<br><small>${esc(e.publisher||evidenceDomain(e))}${e.publishedAt?' · '+esc(String(e.publishedAt).slice(0,10)):''}</small></li>`).join('')||'<li>Sin señal pública de suficiente confianza en esta ejecución. Se mantiene el corpus FY27 y la caché previa.</li>'}</ul></div>
-          <div class="card" style="margin-top:16px"><h3>Preguntas para el presentador</h3><ul class="question-list">${questions.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:16px"><h3>Generar y continuar la relación</h3><div class="callout magenta"><strong>Resultado partner-facing:</strong> la presentación solo muestra la historia final. Scoring, alternativas, research y razones de priorización permanecen en briefing/notas.</div><div class="output-bar"><button class="primary" id="downloadPptxBtn">Descargar PowerPoint</button><button class="secondary" id="downloadBriefBtn">Briefing interno</button><button class="secondary" id="printBtn">Imprimir / PDF</button><button class="ghost" id="saveBlueprintBtn">Guardar reunión</button><button class="ghost" id="recordOutcomeBtn">Registrar resultado</button></div></div>`;
-    $('#downloadPptxBtn').addEventListener('click',()=>generatePptx(m,slides,insights,questions,queries));
-    $('#downloadBriefBtn').addEventListener('click',()=>downloadBriefing(m,slides,insights,questions,queries));
-    $('#printBtn').addEventListener('click',()=>window.print());$('#saveBlueprintBtn').addEventListener('click',saveMeeting);
-    $('#recordOutcomeBtn').addEventListener('click',()=>openOutcomeDialog(m));
-    host.scrollIntoView({behavior:'smooth',block:'start'});
-    $('#readySubtitle').textContent=`Investigación completada · ${partnerEv.length} señales del partner · ${vendorEv.length} señales de fabricantes/analistas · ${profile.memories.length} memorias previas.`;
-  }
-  function blueprintKpis(m,d=directorPlan(m)){
-    const x=[{label:'Perfil',value:roleById(m.primaryRole)?.name||'—'},{label:'Slides objetivo',value:String(d.budget)},{label:'Duración',value:m.duration||'—'},{label:'Inteligencia',value:intelligenceFreshness().replace('Actualizado ','')}];
-    if(m.primaryRole==='psm'){const b=m.roleData.business||[];x[1]={label:'Negocio FY27',value:fmtMoney(b.reduce((a,r)=>a+r.fy27,0))};x[2]={label:'Pipeline',value:fmtMoney(b.reduce((a,r)=>a+r.pipeline,0)+(m.roleData.opportunities||[]).reduce((a,r)=>a+r.amount,0))};}
-    if(m.primaryRole==='vsm'){x[1]={label:'Vendor foco',value:m.roleData.vendor||d.vendors[0]||'—'};x[2]={label:'FY27 YTD',value:fmtMoney(m.roleData.revenue)};}
-    if(m.primaryRole==='sa'){x[1]={label:'Vendor foco',value:m.roleData.vendor||d.vendors[0]||'—'};x[2]={label:'Caso de uso',value:(m.roleData.useCase||m.objective||'Por definir').slice(0,22)};}
-    return x;
-  }
-
-  // ---------- Persistence ----------
-  function loadSaved(){
-    try{
-      const current=JSON.parse(localStorage.getItem(storageKey)||'[]');
-      if(current.length)return current;
-      const legacy=JSON.parse(localStorage.getItem(legacyStorageKey)||'[]');
-      if(legacy.length){localStorage.setItem(storageKey,JSON.stringify(legacy));return legacy;}
-      return [];
-    }catch{return[]}
-  }
-  function openOutcomeDialog(m=state.currentMeeting||gatherMeeting()){
-    const d=$('#outcomeDialog');if(!d)return;
-    setVal('outcomePartner',m.partner);setVal('outcomeSummary','');setVal('outcomeObjections','');setVal('outcomeNextStep','');setVal('outcomeNextDate','');
-    d.showModal();
-  }
-  function saveOutcomeFromDialog(){
-    const partner=getVal('outcomePartner')||state.currentMeeting?.partner;if(!partner)return;
-    const data={partner,summary:getVal('outcomeSummary'),objections:getVal('outcomeObjections'),nextStep:getVal('outcomeNextStep'),nextDate:getVal('outcomeNextDate'),meetingId:state.currentMeeting?.id||state.currentId,role:state.currentMeeting?.primaryRole||state.primaryRole,vendors:selectedVendorNames(state.currentMeeting||gatherMeeting())};
-    if(!data.summary&&!data.nextStep&&!data.objections){alert('Añade al menos un resultado, objeción o siguiente paso.');return;}
-    savePartnerOutcome(data);$('#outcomeDialog')?.close();renderSaved();renderKnowledge();
-    alert('Resultado guardado. La próxima reunión con este partner continuará desde aquí.');
-  }
-  function saveMeeting(){const m=gatherMeeting();if(!m.partner){alert('Añade el nombre del partner antes de guardar.');return;}state.currentId=m.id;const all=loadSaved();const idx=all.findIndex(x=>x.id===m.id);if(idx>=0)all[idx]=m;else all.unshift(m);localStorage.setItem(storageKey,JSON.stringify(all.slice(0,100)));renderSaved();alert('Reunión guardada en este navegador.');}
-  function renderSaved(){
-    const all=loadSaved();$('#savedCount').textContent=all.length;const h=$('#savedMeetings');if(!all.length){h.innerHTML='<div class="card empty">Todavía no hay reuniones guardadas en este navegador.</div>';return;}
-    h.innerHTML=all.map(m=>{const mem=memoriesFor(m.partner);return `<div class="card saved-item"><div class="saved-meta"><strong>${esc(m.partner)} · ${esc(roleById(m.primaryRole)?.name||m.primaryRole||'')}</strong><span>${esc(m.objective||'Sin objetivo')} · ${new Date(m.updatedAt).toLocaleString('es-ES')}</span>${mem.length?`<div class="saved-memory"><span class="memory-badge">${mem.length} memoria${mem.length>1?'s':''}</span> ${esc(mem[0].nextStep||mem[0].summary||'')}</div>`:''}</div><div class="saved-actions"><button class="secondary load-meeting" data-id="${m.id}">Abrir</button><button class="ghost outcome-meeting" data-id="${m.id}">Resultado</button><button class="ghost export-meeting" data-id="${m.id}">JSON</button><button class="icon-btn delete-meeting" data-id="${m.id}">×</button></div></div>`}).join('');
-    $$('.load-meeting',h).forEach(b=>b.onclick=()=>loadMeeting(all.find(x=>x.id===b.dataset.id)));
-    $$('.outcome-meeting',h).forEach(b=>b.onclick=()=>{const m=all.find(x=>x.id===b.dataset.id);state.currentMeeting=m;openOutcomeDialog(m)});
-    $$('.export-meeting',h).forEach(b=>b.onclick=()=>downloadJson(all.find(x=>x.id===b.dataset.id)));
-    $$('.delete-meeting',h).forEach(b=>b.onclick=()=>{const next=loadSaved().filter(x=>x.id!==b.dataset.id);localStorage.setItem(storageKey,JSON.stringify(next));renderSaved();});
-  }
-  function loadMeeting(m){
-    if(m?.primaryRole==='commercial'){m={...m,primaryRole:'psm',supportRoles:(m.supportRoles||[]).filter(r=>r!=='commercial'),roleData:{context:m.roleData?.messages||'',whitespace:m.roleData?.whitespace||'',business:[],opportunities:m.roleData?.opportunities||[],actions:m.roleData?.campaigns||''}};}if(!m)return;newMeeting(false);state.currentId=m.id;state.currentMeeting=m;setVal('partnerName',m.partner);setVal('country',m.country);state.meetingTypeTouched=true;setVal('meetingType',m.meetingType);setVal('duration',m.duration);setVal('objective',m.objective);setVal('desiredOutcome',m.desiredOutcome);selectPrimaryRole(m.primaryRole);state.supportRoles=new Set(m.supportRoles||[]);$$('#supportRoles input').forEach(i=>{i.checked=state.supportRoles.has(i.value);i.closest('.chip').classList.toggle('active',i.checked)});$$('#vendorGrid input').forEach(i=>{i.checked=(m.vendors||[]).includes(i.value);i.closest('.vendor-option').classList.toggle('selected',i.checked)});setVal('vertical',m.vertical);setVal('technologies',m.technologies);$('#includeGeneral').checked=m.includeGeneral!==false;$('#reserveVendorSlides').checked=!!m.reserveVendorSlides;$('#includeServices').checked=m.includeServices!==false;$$('#serviceChips input').forEach(i=>{i.checked=(m.services||[]).includes(i.value);i.closest('.chip').classList.toggle('active',i.checked)});renderResearch();$$('#researchGrid input').forEach(i=>{i.checked=(m.research||[]).includes(i.value);i.closest('.research-item').classList.toggle('checked',i.checked)});setVal('researchHorizon',m.researchHorizon);setVal('knownSources',m.knownSources);restoreRoleData(m);setVal('deckDepth',m.outputs?.depth);setVal('language',m.outputs?.language);setVal('tone',m.outputs?.tone);['pptx','brief','notes','questions','pdf','sources'].forEach(k=>{const e=$('#out'+k[0].toUpperCase()+k.slice(1));if(e)e.checked=m.outputs?.[k]!==false});showPanel('builder');updateProgress();}
-  function restoreRoleData(m){const d=m.roleData||{};if(m.primaryRole==='psm'){setVal('psmRelationship',d.relationship);setVal('psmTarget',d.target);setVal('psmPotential',d.potential);setVal('psmContext',d.context);$('#businessRows').innerHTML='';(d.business?.length?d.business:[{}]).forEach(addBusinessRow);$('#opportunityRows').innerHTML='';(d.opportunities?.length?d.opportunities:[{}]).forEach(addOpportunityRow);setVal('psmWhitespace',d.whitespace);setVal('psmActions',d.actions);}if(m.primaryRole==='vsm'){['vendor','tier','targetTier','revenue','target','relationship','certs','certsNext','channelPlan','incentives','blockers'].forEach(k=>setVal('vsm'+k[0].toUpperCase()+k.slice(1),d[k]));$('#opportunityRows').innerHTML='';(d.opportunities?.length?d.opportunities:[{}]).forEach(addOpportunityRow);}if(m.primaryRole==='sa'){['vendor','useCase','current','requirements','competitors','differentiators','analysts','poc','risks'].forEach(k=>setVal('sa'+k[0].toUpperCase()+k.slice(1),d[k]));}}
-
-  function newMeeting(confirmReset=true){if(confirmReset&&getVal('partnerName')&&!confirm('¿Crear una reunión nueva? Se limpiará el formulario no guardado.'))return;state.primaryRole=null;state.supportRoles=new Set();state.currentId=null;state.currentMeeting=null;state.meetingTypeTouched=false;$('#meetingForm').reset();$$('.role-card').forEach(x=>x.classList.remove('selected'));$$('#supportRoles input').forEach(x=>{x.checked=false;x.disabled=false;x.closest('.chip').classList.remove('active')});$$('#vendorGrid input').forEach(x=>{x.checked=false;x.closest('.vendor-option').classList.remove('selected')});$$('#serviceChips input').forEach(x=>{x.checked=false;x.closest('.chip').classList.remove('active')});$('#activeRoleBadge').textContent='Sin seleccionar';$('#roleFields').className='role-fields empty-state';$('#roleFields').innerHTML='<p>Selecciona PSM, VSM o Solution Architect para adaptar esta sección.</p>';$('#blueprint').classList.add('hidden');renderResearch();updateProgress();showPanel('builder');}
-
-  function downloadJson(obj=gatherMeeting()){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});downloadBlob(blob,`${slug(obj.partner)}-${obj.primaryRole||'meeting'}.json`)}
-  function downloadBlob(blob,filename){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},400);}
-  function importJson(file){const r=new FileReader();r.onload=()=>{try{loadMeeting(JSON.parse(r.result))}catch{alert('El archivo no contiene una reunión válida.')}};r.readAsText(file);}
-
-  // ---------- Briefing ----------
-  function downloadBriefing(m,slides=recommendedSlides(m),insights=[...derivedBusinessInsights(m),...genericInsights(m),...vendorSalesInsights(m)],questions=questionsFor(m),queries=researchQueries(m)){
-    const d=directorPlan(m),profile=partnerProfile(m),partnerEv=partnerEvidenceFor(m.partner),vendors=d.vendors;
-    const evidence=[...partnerEv.map(e=>({...e,scope:'Partner'})),...vendors.flatMap(v=>marketEvidenceFor(v).slice(0,8).map(e=>({...e,scope:v})))].slice(0,30);
-    const fit=vendors.map(v=>({vendor:v,...vendorFit(m,v)}));
-    const memories=profile.memories.slice(0,5);
-    const html=`<!doctype html><html lang="es"><meta charset="utf-8"><title>Briefing ${esc(m.partner)}</title><style>body{font-family:Arial,sans-serif;max-width:1040px;margin:40px auto;color:#173142;line-height:1.45;padding:0 24px}h1{font-size:34px}h2{margin-top:30px;color:#082a3a}.meta{padding:15px;background:#eef7f8;border-left:5px solid #08a7b5}.slide{padding:10px 0;border-bottom:1px solid #ddd}.tag{font-size:10px;background:#eee;border-radius:99px;padding:3px 7px}.q{padding:10px;background:#f7f9fa;margin:7px 0}.src{font-size:12px;color:#647984}.ev{padding:10px 0;border-bottom:1px solid #e6ecef}.ev a{color:#087c84}.pill{display:inline-block;padding:3px 7px;border-radius:99px;background:#eef4f6;font-size:10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{padding:12px;border:1px solid #dfe7ec;border-radius:10px}</style><body>
-      <h1>${esc(m.partner)} · ${esc(roleById(m.primaryRole)?.name||'')}</h1>
-      <div class="meta"><strong>Objetivo:</strong> ${esc(m.objective)}<br><strong>Resultado buscado:</strong> ${esc(m.desiredOutcome||'—')}<br><strong>Fabricantes priorizados:</strong> ${esc(vendors.join(', ')||'Por inferir')}<br><strong>Vertical:</strong> ${esc(d.effectiveVertical||'—')}<br><strong>Director:</strong> ${d.budget} slides · ${esc(d.depth)} · intro ${esc(d.general)}</div>
-      <h2>Partner Intelligence</h2><div class="grid"><div class="box"><strong>Capacidades detectadas</strong><br>${esc(profile.capabilities.slice(0,5).map(x=>x.name).join(' · ')||'Sin señal suficiente')}</div><div class="box"><strong>Ecosistema visible</strong><br>${esc(profile.vendorMentions.slice(0,7).map(x=>x.name).join(' · ')||'Sin señal suficiente')}</div><div class="box"><strong>Verticales con señales</strong><br>${esc(profile.verticals.slice(0,4).map(x=>x.name).join(' · ')||'Sin señal suficiente')}</div><div class="box"><strong>Confianza</strong><br>${esc(profile.confidence)} · ${profile.sources} evidencias públicas</div></div>
-      ${memories.length?`<h2>Memoria de reuniones</h2>${memories.map(x=>`<div class="ev"><strong>${esc(String(x.createdAt||'').slice(0,10))}</strong> · ${esc(x.summary||'')} ${x.nextStep?`<br><b>Siguiente paso:</b> ${esc(x.nextStep)} ${x.nextDate?`(${esc(x.nextDate)})`:''}`:''}${x.objections?`<br><b>Pendiente:</b> ${esc(x.objections)}`:''}</div>`).join('')}`:''}
-      <h2>Razones de priorización</h2>${fit.map(x=>`<p><strong>${esc(x.vendor)}</strong> · ${x.score}/100 · ${esc(x.reasons.join(' · '))}</p>`).join('')||'<p>Sin fabricantes priorizados.</p>'}
-      <h2>Lecturas previas</h2>${insights.map(x=>`<p>• ${esc(x.text)}</p>`).join('')}
-      <h2>Narrativa</h2>${slides.map((x,i)=>`<div class="slide"><strong>${i+1}. ${esc(x.title)}</strong> <span class="tag">${esc(x.tag)}</span><br>${esc(x.purpose)}</div>`).join('')}
-      <h2>Preguntas</h2>${questions.map(q=>`<div class="q">${esc(q)}</div>`).join('')}
-      <h2>Evidencias</h2>${evidence.map(e=>`<div class="ev"><span class="pill">${esc(e.scope)}</span> <strong>${esc(e.title)}</strong><br><span class="src">${esc(e.publisher||evidenceDomain(e))}${e.publishedAt?' · '+esc(String(e.publishedAt).slice(0,10)):''}</span><br><a href="${esc(e.url)}">${esc(e.url)}</a></div>`).join('')||'<p>Sin evidencias públicas adicionales en esta ejecución.</p>'}
-      <h2>Consultas y líneas de investigación</h2>${queries.map(q=>`<p class="src">${esc(q)}</p>`).join('')}
-      <h2>Datos internos estructurados</h2><pre>${esc(JSON.stringify(m.roleData,null,2))}</pre></body></html>`;
-    downloadBlob(new Blob([html],{type:'text/html;charset=utf-8'}),`${slug(m.partner)}-briefing.html`);
-  }
-
-
-  // ---------- PowerPoint ----------
-  // v2.1: el PPTX reutiliza slides corporativas y recompone los datasheets verticales FY27 en 16:9 sin deformarlos
-  // y genera las slides variables con la misma gramática visual Westcon FY27.
-  const _assetCache=new Map();
-  async function assetData(url){
-    if(_assetCache.has(url)) return _assetCache.get(url);
-    const p=fetch(url).then(r=>{if(!r.ok)throw new Error(`No se pudo cargar ${url}`);return r.blob()}).then(blob=>new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=reject;fr.readAsDataURL(blob);}));
-    _assetCache.set(url,p);return p;
-  }
-  const sourceAsset=(kind,n)=>`assets/source-slides/${kind}/slide-${String(n).padStart(2,'0')}.png`;
-  const vendorSourceSlides={
-    'Anomali':[8],'AttackIQ':[9],'Certes Networks':[10],'Cisco':[11,41],'Claroty':[12],'CrowdStrike':[13],'F5':[14],
-    'FireMon':[15],'Fortanix':[16],'Ivanti':[17],'LevelBlue':[18],'Menlo Security':[19],'NETSCOUT':[20],
-    'Noname / Akamai API Security':[21],'Okta':[22],'Palo Alto Networks':[23],'Ping Identity':[24],'Proofpoint':[25],
-    'Vectra AI':[26],'XM Cyber':[27],'Zscaler':[28],'1Password':[29],'Ciena':[40],'EfficientIP':[42],'Ericsson':[43],
-    'Extreme Networks':[44],'Juniper Networks':[45],'Nokia':[46],'Ruckus Networks':[47],'Weblib':[48],
-    'AudioCodes':[59],'Avaya':[60],'AWS':[61],'Microsoft':[62],'Penguin Solutions':[63],'UiPath':[64]
-  };
-  const verticalSourceMap={
-    'Banca y seguros':{cyber:{playbook:30,message:31,datasheet:1},network:{playbook:49,message:50,datasheet:5},cloud:{playbook:65,message:66,datasheet:9}},
-    'Administración pública':{cyber:{playbook:32,message:33,datasheet:2},network:{playbook:51,message:52,datasheet:6},cloud:{playbook:67,message:68,datasheet:10}},
-    'Industria y utilities':{cyber:{playbook:34,message:35,datasheet:3},network:{playbook:53,message:54,datasheet:7},cloud:{playbook:69,message:70,datasheet:11}},
-    'Retail':{cyber:{playbook:36,message:37,datasheet:4},network:{playbook:55,message:56,datasheet:8},cloud:{playbook:71,message:72,datasheet:12}}
-  };
-  function inferredVendors(m,limit=4){
-    const text=[m.objective,m.desiredOutcome,m.technologies,m.vertical,...((m.roleData?.business||[]).map(x=>x.vendor))].filter(Boolean).join(' ').toLowerCase();
-    if(!text)return [];
-    return (K.vendors||[]).map((v,i)=>{const terms=[v.name,v.area,...(v.tags||[])].flatMap(x=>String(x).toLowerCase().split(/[\s/,+()_-]+/)).filter(x=>x.length>3);const hits=[...new Set(terms.filter(t=>text.includes(t)))];return {name:v.name,score:hits.length,i};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,limit).map(x=>x.name);
-  }
-  function selectedVendorNames(m){
-    const out=[...(m.vendors||[])];
-    const focus=m.roleData?.vendor;
-    if(focus&&!out.includes(focus))out.unshift(focus);
-    if(m.primaryRole==='psm')for(const r of (m.roleData?.business||[])){if(r.vendor&&!out.includes(r.vendor))out.push(r.vendor);}
-    const dedup=[...new Set(out.filter(Boolean))];
-    if(dedup.length)return dedup;
-    const inferred=inferredVendors(m,6);if(inferred.length)return inferred;
-    // Autopilot PSM: when the user only gives partner + objective, build candidates from public partner signals.
-    if(m.primaryRole==='psm'){
-      const profile=partnerProfile(m),capText=profile.capabilities.map(x=>x.name).join(' ').toLowerCase(),vertical=inferredVerticalFor(m),memVendors=new Set(profile.memories.flatMap(x=>x.vendors||[]));
-      const ranked=(K.vendors||[]).map((v,i)=>{let score=0;const area=(v.area||'').toLowerCase();if(capText.includes('ciber')&&area.includes('ciber'))score+=4;if(capText.includes('network')&&area.includes('network'))score+=4;if((capText.includes('cloud')||capText.includes('ia'))&&(area.includes('cloud')||area.includes('automat')))score+=4;if(profile.vendorMentions.some(x=>x.name===v.name))score+=3;if(memVendors.has(v.name))score+=5;if(vertical&&vendorVerticalAngle(v.name,vertical).length)score+=2;return {name:v.name,score,i};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,5).map(x=>x.name);
-      if(ranked.length)return ranked;
-    }
-    return [];
-  }
-  function vendorAreasForMeeting(m){
-    const a=new Set();
-    selectedVendorNames(m).forEach(name=>{
-      const v=(K.vendors||[]).find(x=>x.name===name);const area=(v?.area||'').toLowerCase();
-      if(area.includes('ciber'))a.add('cyber');if(area.includes('network'))a.add('network');if(area.includes('cloud')||area.includes('automat'))a.add('cloud');
+    c.vendors.forEach(function(v){
+      out.push({kind:"vendor-diff",vendor:v,title:v+" · diferenciación",subtitle:"Capacidades, criterios y prueba de valor",category:"generated"});
+      if(liveEvidence(v).length)out.push({kind:"vendor-evidence",vendor:v,title:v+" · analistas y mercado",subtitle:liveEvidence(v).length+" evidencias públicas disponibles",category:"generated"});
     });
-    const t=(m.technologies||'').toLowerCase();
-    if(/security|ciber|zero trust|sase|xdr|iam|soc|api|ot|siem|edr|firewall/.test(t))a.add('cyber');
-    if(/network|wifi|wi-fi|switch|routing|wan|5g|dns|ddi|ipam|optical|campus/.test(t))a.add('network');
-    if(/cloud|azure|aws|automat|rpa|uc|contact center|collaboration|edge|ia|ai/.test(t))a.add('cloud');
-    if(!a.size&&m.vertical&&m.vertical!=='Otros') ['cyber','network','cloud'].forEach(x=>a.add(x));
-    return [...a];
+    out.push({kind:"custom-new",title:"Slide libre",subtitle:"Añade contenido propio",category:"generated"});
+    return out;
   }
-  function serviceSourceSlides(m){
-    const chosen=m.services||[];const out=[];const has=q=>chosen.some(s=>s.toLowerCase().includes(q));
-    if(has('preventa')||has('rfi')||has('poc'))out.push(73);
-    if(has('demo')||has('3d'))out.push(74);
-    if(has('skill')||has('academy')||has('lms'))out.push(75);
-    if(has('benchmark'))out.push(76);
-    if(has('lifecycle')||has('customer success')||has('renov'))out.push(77);
-    if(has('gds')||has('staging')||has('soporte'))out.push(78,79);
-    if(has('flex'))out.push(80);
-    if(has('intelligent demand')||has('campaña')||has('webinar'))out.push(81);
-    if(!out.length&&m.includeServices){
-      if(m.primaryRole==='psm')out.push(78,81,80);
-      else if(m.primaryRole==='vsm')out.push(75,81,78);
-      else out.push(73,74,76);
-      if((m.supportRoles||[]).includes('sa'))out.push(73,74);
-      if((m.supportRoles||[]).includes('vsm'))out.push(75,81);
-    }
-    return [...new Set(out)];
+  function libraryItems(){return generatedItems().concat(sourceSlides().map(sourceItem));}
+  function filterItem(x){
+    if(state.filter==="all")return true;
+    if(state.filter==="vertical")return x.kind==="vertical";
+    if(state.filter==="generated")return ["cover","agenda","partner","next","vendor-diff","vendor-evidence","custom-new"].indexOf(x.kind)>=0;
+    return x.category===state.filter;
   }
 
-  async function generatePptx(m,slides,insights,questions,queries){
-    if(typeof window.PptxGenJS==='undefined'){alert('No se ha podido cargar el generador PowerPoint.');return;}
-    const pptx=new window.PptxGenJS();pptx.layout='LAYOUT_WIDE';pptx.author='Westcon Meeting Intelligence';pptx.subject=`Reunión con ${m.partner}`;pptx.title=`${m.partner} · ${roleById(m.primaryRole)?.name||''}`;pptx.company='Westcon Comstor';pptx.lang='es-ES';
-    const C={navy:'1A2E44',navy2:'113A50',navy3:'082335',magenta:'E5007D',cyan:'12C7C0',amber:'FFAE00',purple:'6C5CA3',white:'FFFFFF',muted:'AEBECA',line:'24506A',green:'169F82',soft:'DDE6EB'};
-    const roleAccent=m.primaryRole==='sa'?C.cyan:m.primaryRole==='vsm'?C.purple:C.magenta;
-    const d=directorPlan(m),profile=partnerProfile(m),deckDepth=d.depth;
-    let logoData=null;try{logoData=await assetData('assets/westcon-comstor.png')}catch{}
-    const addFooter=(s,accent=roleAccent)=>{s.addShape(pptx.ShapeType.rect,{x:0,y:7.36,w:13.333,h:.14,fill:{color:accent},line:{color:accent}});s.addText('FY2027 — Westcon Comstor España',{x:.45,y:7.12,w:4.2,h:.16,fontFace:'Corbel',fontSize:7.5,color:C.muted,margin:0});s.addText(m.partner||'Partner',{x:8.0,y:7.12,w:4.85,h:.16,fontFace:'Corbel',fontSize:7.5,color:C.muted,align:'right',margin:0,fit:'shrink'});};
-    const addBrand=(s,section,title,subtitle='',accent=roleAccent)=>{s.background={color:C.navy};if(logoData){s.addShape(pptx.ShapeType.roundRect,{x:10.92,y:.22,w:1.9,h:.55,rectRadius:.05,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logoData,x:11.08,y:.365,w:1.55,h:.255});}s.addText(String(section||'WESTCON COMSTOR').toUpperCase(),{x:.48,y:.27,w:5.2,h:.23,fontFace:'Corbel',fontSize:10,bold:true,color:accent,charSpacing:1.2,margin:0});s.addText(title,{x:.48,y:.68,w:10.0,h:.62,fontFace:'Corbel',fontSize:27,bold:true,color:C.white,margin:0,fit:'shrink'});if(subtitle)s.addText(subtitle,{x:.5,y:1.36,w:11.8,h:.42,fontFace:'Corbel',fontSize:12,color:C.muted,margin:0,fit:'shrink'});addFooter(s,accent);};
-    const addCard=(s,x,y,w,h,title,text,accent=roleAccent)=>{s.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:.06,fill:{color:C.navy2,transparency:3},line:{color:accent,pt:1.1}});if(title)s.addText(title.toUpperCase(),{x:x+.18,y:y+.14,w:w-.36,h:.24,fontFace:'Corbel',fontSize:10,bold:true,color:accent,margin:0,fit:'shrink'});if(text)s.addText(String(text),{x:x+.18,y:y+(title?0.52:0.2),w:w-.36,h:h-(title?0.66:0.36),fontFace:'Corbel',fontSize:13,color:C.white,margin:.01,fit:'shrink',valign:'mid'});};
-    const addKpi=(s,x,y,w,label,value,accent=roleAccent)=>{s.addShape(pptx.ShapeType.roundRect,{x,y,w,h:1.02,rectRadius:.05,fill:{color:C.navy2},line:{color:accent,pt:1}});s.addText(String(value||'—'),{x:x+.1,y:y+.16,w:w-.2,h:.37,fontFace:'Corbel',fontSize:19,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});s.addText(label,{x:x+.1,y:y+.62,w:w-.2,h:.2,fontFace:'Corbel',fontSize:8.5,color:C.muted,align:'center',margin:0,fit:'shrink'});};
-    const addBullets=(s,items,x=.65,y=2.05,w=12,h=4.7,fs=15)=>{const runs=[];items.filter(Boolean).forEach(t=>runs.push({text:String(t),options:{bullet:{indent:14},breakLine:true}}));s.addText(runs,{x,y,w,h,fontFace:'Corbel',fontSize:fs,color:C.white,margin:.02,paraSpaceAfterPt:9,fit:'shrink'});};
-    const addOriginal=async(kind,n,notes='')=>{const s=pptx.addSlide();try{s.addImage({data:await assetData(sourceAsset(kind,n)),x:0,y:0,w:13.333,h:7.5});}catch(e){addBrand(s,'CONTENIDO CORPORATIVO',`Slide ${n} no disponible`,String(e.message||e));}if(notes&&m.outputs.notes)try{s.addNotes(notes)}catch{}return s;};
-    const addPlaceholder=(vendor)=>{const s=pptx.addSlide();addBrand(s,'FABRICANTE',`Slides oficiales de ${vendor}`,'Espacio reservado para incorporar contenido oficial específico de esta reunión.',C.purple);s.addShape(pptx.ShapeType.roundRect,{x:1.05,y:2.35,w:11.2,h:2.5,rectRadius:.08,fill:{color:C.navy2},line:{color:C.purple,pt:1.3,dash:'dash'}});s.addText('INSERTAR AQUÍ SLIDES OFICIALES DEL FABRICANTE',{x:1.4,y:3.2,w:10.5,h:.45,fontFace:'Corbel',fontSize:20,bold:true,color:C.muted,align:'center',margin:0});return s;};
-    const addSourceLine=(s,text)=>s.addText(text,{x:.62,y:6.82,w:12.05,h:.2,fontFace:'Corbel',fontSize:7.2,color:C.muted,margin:0,fit:'shrink'});
-    const canAdd=(reserve=1)=>(pptx._slides?.length||0)<Math.max(1,d.budget-reserve);
-    const addVendorSalesSlide=(name)=>{
-      const p=vendorIntel(name);if(!p)return null;const sl=pptx.addSlide();addBrand(sl,`SOLUCIÓN · ${name}`,`Por qué ${name}`,p.tagline||p.category,C.magenta);addCard(sl,.55,1.92,5.95,1.52,'PROPUESTA DE VALOR',p.valueProposition||'Propuesta de valor por completar.',C.magenta);addCard(sl,6.82,1.92,5.95,1.52,'DÓNDE APORTA MÁS',(p.buyingTriggers||[]).slice(0,4).map(x=>'• '+x).join('\n')||'Casos de uso a priorizar según el contexto del partner.',C.cyan);const adv=(p.approvedAdvantages||[]).slice(0,4);adv.forEach((x,i)=>{const col=i%2,row=Math.floor(i/2),xx=.55+col*6.27,yy=3.78+row*1.2;addCard(sl,xx,yy,5.95,1.0,`DIFERENCIAL ${i+1}`,x,i%2?C.amber:C.green);});addSourceLine(sl,`Westcon Comstor España FY2027 · ${p.category||''}`);if(m.outputs.notes)try{sl.addNotes(`Contexto interno. Señales de oportunidad: ${(p.buyingTriggers||[]).join('; ')}. Alternativas a considerar internamente: ${(p.competitors||[]).join('; ')}.`)}catch{}return sl;
-    };
-    const addVendorCompetitiveSlide=(name)=>{
-      const p=vendorIntel(name);if(!p)return null;const sl=pptx.addSlide();addBrand(sl,`DIFERENCIACIÓN · ${name}`,'Qué hace diferente esta propuesta','Capacidades y criterios que conviene validar en el contexto real del partner.',C.purple);addCard(sl,.55,1.95,3.85,3.95,'CAPACIDADES DIFERENCIALES',(p.approvedAdvantages||[]).slice(0,5).map(x=>'• '+x).join('\n'),C.magenta);addCard(sl,4.72,1.95,3.85,3.95,'CRITERIOS DE DECISIÓN',(p.decisionCriteria||p.buyingTriggers||[]).slice(0,5).map(x=>'• '+x).join('\n'),C.cyan);addCard(sl,8.89,1.95,3.85,3.95,'CÓMO DEMOSTRARLO',(p.proofThemes||['PoC/PoV con KPI del caso de uso','Integración con el stack actual','Operación, automatización y lifecycle','Escalabilidad y coste total','Referencias públicas aplicables']).slice(0,5).map(x=>'• '+x).join('\n'),C.amber);addSourceLine(sl,'Westcon Comstor FY2027 · criterios adaptados al contexto de la reunión.');if(m.outputs.notes)try{sl.addNotes(`Alternativas/competidores para preparar la conversación, no mostrados por defecto: ${(p.competitors||[]).join('; ')}.`)}catch{}return sl;
-    };
-    const addVendorAnalystSlide=(name)=>{
-      const p=vendorIntel(name);if(!p)return null;const evidence=analystEvidenceFor(name).slice(0,4);if(!evidence.length)return null;
-      const sl=pptx.addSlide();addBrand(sl,`ANALISTAS · ${name}`,'Validación externa y posicionamiento público','Solo evidencia pública, fechada y atribuible; no se infieren posiciones que la fuente no declare.',C.cyan);
-      evidence.forEach((e,i)=>{const col=i%2,row=Math.floor(i/2),xx=.55+col*6.25,yy=1.95+row*2.08,label=(e.analysts||[]).join(' / ')||'Analista',date=e.publishedAt?String(e.publishedAt).slice(0,10):'fecha pública no disponible';addCard(sl,xx,yy,5.95,1.75,`${label} · ${date}`,`${e.title}\n${e.publisher||evidenceDomain(e)}`,i%2?C.purple:C.cyan);});
-      addSourceLine(sl,'Fuentes públicas · URLs completas y contexto adicional en notas del presentador.');
-      if(m.outputs.notes)try{sl.addNotes('Evidencias públicas para '+name+':\n'+evidence.map(e=>`- ${e.title} | ${e.publisher||evidenceDomain(e)} | ${e.publishedAt||''} | ${e.url}`).join('\n'))}catch{}
-      return sl;
-    };
-    const addVendorMomentumSlide=(name)=>{
-      const p=vendorIntel(name);if(!p)return null;
-      const analystUrls=new Set(analystEvidenceFor(name).map(x=>x.url));
-      const evidence=marketEvidenceFor(name).filter(x=>!analystUrls.has(x.url)).slice(0,4);
-      if(!evidence.length)return null;
-      const sl=pptx.addSlide();addBrand(sl,`MERCADO · ${name}`,'Momentum, innovación y referencias públicas','Señales recientes que ayudan a contextualizar la propuesta más allá de la ficha de producto.',C.amber);
-      evidence.forEach((e,i)=>{const col=i%2,row=Math.floor(i/2),xx=.55+col*6.25,yy=1.95+row*2.08,date=e.publishedAt?String(e.publishedAt).slice(0,10):'fecha no disponible',label=e.kind==='vendor-official'?'FUENTE OFICIAL':e.kind==='trusted-media'?'MEDIO ESPECIALIZADO':'SEÑAL DE MERCADO';addCard(sl,xx,yy,5.95,1.75,`${label} · ${date}`,`${e.title}\n${e.publisher||evidenceDomain(e)}`,i%2?C.purple:C.amber);});
-      addSourceLine(sl,'Fuentes públicas · URLs completas en notas del presentador.');
-      if(m.outputs.notes)try{sl.addNotes('Señales públicas para '+name+':\n'+evidence.map(e=>`- ${e.title} | ${e.publisher||evidenceDomain(e)} | ${e.publishedAt||''} | ${e.url}`).join('\n'))}catch{}
-      return sl;
-    };
-    const addVendorEvidenceSlide=(name)=>{
-      const p=vendorIntel(name);if(!p)return null;
-      const analyst=analystEvidenceFor(name).slice(0,2),aUrls=new Set(analyst.map(x=>x.url));
-      const market=marketEvidenceFor(name).filter(x=>!aUrls.has(x.url)).slice(0,2),evidence=[...analyst,...market];
-      if(!evidence.length)return null;
-      const sl=pptx.addSlide();addBrand(sl,`EVIDENCIA EXTERNA · ${name}`,'Analistas, mercado y referencias públicas','Evidencia pública seleccionada por autoridad, actualidad y relevancia para esta conversación.',C.cyan);
-      evidence.forEach((e,i)=>{const col=i%2,row=Math.floor(i/2),xx=.55+col*6.25,yy=1.95+row*2.08,date=e.publishedAt?String(e.publishedAt).slice(0,10):'fecha no disponible',anal=(e.analysts||[]).join(' / '),label=anal|| (e.kind==='vendor-official'?'FUENTE OFICIAL':e.kind==='trusted-media'?'MEDIO ESPECIALIZADO':'SEÑAL PÚBLICA');addCard(sl,xx,yy,5.95,1.75,`${label} · ${date}`,`${e.title}\n${e.publisher||evidenceDomain(e)}`,i%2?C.purple:C.cyan);});
-      addSourceLine(sl,'Fuentes públicas verificables · detalle y URLs completas en notas.');
-      if(m.outputs.notes)try{sl.addNotes('Evidencia externa para '+name+':\n'+evidence.map(e=>`- ${e.title} | ${e.publisher||evidenceDomain(e)} | ${e.publishedAt||''} | ${e.url}`).join('\n'))}catch{}
-      return sl;
-    };
-    const addPartnerSnapshotSlide=()=>{
-      if(!d.partnerSnapshot)return null;const sl=pptx.addSlide();
-      addBrand(sl,'CONTEXTO DE LA CONVERSACIÓN',`${m.partner} · puntos de partida`,'Señales públicas y continuidad de conversaciones anteriores que ayudan a enfocar la sesión.',C.cyan);
-      const caps=profile.capabilities.slice(0,3).map(x=>x.name).join(' · ')||m.technologies||'Prioridades a validar en la conversación';
-      const ecosystem=profile.vendorMentions.slice(0,5).map(x=>x.name).join(' · ')||d.vendors.join(' · ')||'Ecosistema a concretar';
-      const verts=profile.verticals.slice(0,3).map(x=>x.name).join(' · ')||d.effectiveVertical||'Foco sectorial a confirmar';
-      const continuity=profile.lastMeeting?(profile.lastMeeting.nextStep||profile.lastMeeting.summary||'Continuidad de la relación'):(profile.strategy[0]?.title||'Señales recientes a contrastar durante la reunión');
-      addCard(sl,.55,1.95,5.95,1.65,'CAPACIDADES / FOCO',caps,C.cyan);addCard(sl,6.82,1.95,5.95,1.65,'ECOSISTEMA RELEVANTE',ecosystem,C.magenta);
-      addCard(sl,.55,3.95,5.95,1.65,'VERTICALES / MERCADO',verts,C.amber);addCard(sl,6.82,3.95,5.95,1.65,profile.lastMeeting?'CONTINUIDAD':'SEÑAL RECIENTE',continuity,C.green);
-      addSourceLine(sl,`Contexto público consultado · confianza ${profile.confidence} · ${profile.sources} evidencias${profile.lastMeeting?' · memoria de reunión incluida':''}.`);
-      if(m.outputs.notes)try{sl.addNotes(`Partner Intelligence · ${m.partner}\n`+profile.evidence.slice(0,10).map(e=>`- ${e.title} | ${e.publisher||evidenceDomain(e)} | ${e.publishedAt||''} | ${e.url}`).join('\n')+(profile.lastMeeting?`\nÚltima memoria: ${JSON.stringify(profile.lastMeeting)}`:''))}catch{}
-      return sl;
-    };
-    const _imgDimCache=new Map();
-    const imageDimensions=async(data)=>{
-      if(_imgDimCache.has(data))return _imgDimCache.get(data);
-      const size=await new Promise(resolve=>{const im=new Image();im.onload=()=>resolve({w:im.naturalWidth||1,h:im.naturalHeight||1});im.onerror=()=>resolve({w:1,h:1});im.src=data;});
-      _imgDimCache.set(data,size);return size;
-    };
-    const addLogoContained=async(sl,name,x,y,w,h,selected=false,accent=roleAccent)=>{
-      try{
-        const data=await assetData(vendorLogo(name)),dim=await imageDimensions(data),r=Math.max(.05,dim.w/dim.h);
-        let iw=w*.82,ih=iw/r;if(ih>h*.64){ih=h*.64;iw=ih*r;}
-        sl.addShape(pptx.ShapeType.roundRect,{x,y,w,h,rectRadius:.035,fill:{color:'FFFFFF'},line:{color:selected?accent:'D8E0E6',pt:selected?1.2:.55}});
-        sl.addImage({data,x:x+(w-iw)/2,y:y+(h-ih)/2,w:iw,h:ih});
-      }catch{}
-    };
-    const addVerticalLandscapeSlide=async(vertical,area)=>{
-      const vd=VERTICAL_CONTENT.verticals?.[vertical]?.[area];if(!vd)return null;
-      const accent=area==='cyber'?C.magenta:area==='network'?C.cyan:C.amber;
-      const header=area==='cyber'?'4A174F':area==='network'?'075B64':'515023';
-      const pale=area==='cyber'?'FCE5F1':area==='network'?'DFF7F5':'FFF1CC';
-      const dark='1D2C38',muted='667783',body='F4F7FA',line='D5DEE5';
-      const sl=pptx.addSlide();sl.background={color:body};
-      // Cabecera inspirada directamente en los datasheets FY27, pero adaptada a formato 16:9.
-      sl.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:1.55,fill:{color:header},line:{color:header}});
-      sl.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:.055,fill:{color:accent},line:{color:accent}});
-      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:.24,w:2.35,h:.36,rectRadius:.04,fill:{color:C.navy3},line:{color:C.navy3}});
-      sl.addText(vd.areaLabel,{x:.67,y:.33,w:2.1,h:.12,fontFace:'Corbel',fontSize:7.8,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
-      sl.addText(vertical.toUpperCase(),{x:.55,y:.72,w:5.5,h:.18,fontFace:'Corbel',fontSize:9.5,bold:true,color:C.white,charSpacing:1.05,margin:0,fit:'shrink'});
-      sl.addText(vd.title,{x:.55,y:.98,w:10.55,h:.42,fontFace:'Corbel',fontSize:22.5,bold:true,color:C.white,margin:0,fit:'shrink'});
-      if(logoData){sl.addShape(pptx.ShapeType.roundRect,{x:11.15,y:.25,w:1.6,h:.48,rectRadius:.05,fill:{color:C.white},line:{color:C.white}});sl.addImage({data:logoData,x:11.34,y:.365,w:1.22,h:.20});}
-      // Por qué actuar ahora.
-      sl.addText('POR QUÉ ACTUAR AHORA',{x:.55,y:1.72,w:3.1,h:.18,fontFace:'Corbel',fontSize:9,bold:true,color:accent,margin:0});
-      vd.why.slice(0,3).forEach((it,i)=>{const x=.55+i*4.15;sl.addShape(pptx.ShapeType.roundRect,{x,y:1.96,w:3.86,h:.72,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.rect,{x,y:1.96,w:.055,h:.72,fill:{color:accent},line:{color:accent}});sl.addText(it[0],{x:x+.16,y:2.07,w:3.53,h:.17,fontFace:'Corbel',fontSize:8.7,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(it[1],{x:x+.16,y:2.29,w:3.53,h:.27,fontFace:'Corbel',fontSize:7.4,color:muted,margin:0,fit:'shrink'});});
-      // El reto.
-      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:2.84,w:12.23,h:.58,rectRadius:.04,fill:{color:pale},line:{color:pale}});
-      sl.addShape(pptx.ShapeType.ellipse,{x:.73,y:2.95,w:.32,h:.32,fill:{color:accent},line:{color:accent}});sl.addText('!',{x:.73,y:3.00,w:.32,h:.12,fontFace:'Corbel',fontSize:9,bold:true,color:C.white,align:'center',margin:0});
-      sl.addText('EL RETO',{x:1.17,y:2.92,w:.9,h:.15,fontFace:'Corbel',fontSize:7.6,bold:true,color:accent,margin:0});
-      sl.addText(vd.challenge,{x:1.17,y:3.08,w:11.15,h:.22,fontFace:'Corbel',fontSize:11.3,bold:true,color:dark,margin:0,fit:'shrink'});
-      // Casos de uso + impacto esperado.
-      sl.addText('CASOS DE USO QUE MUEVEN LA CONVERSACIÓN',{x:.55,y:3.58,w:5.2,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
-      vd.cases.slice(0,4).forEach((it,i)=>{const col=i%2,row=Math.floor(i/2),x=.55+col*4.12,y=3.83+row*.91;sl.addShape(pptx.ShapeType.roundRect,{x,y,w:3.83,h:.76,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.ellipse,{x:x+.14,y:y+.14,w:.29,h:.29,fill:{color:accent},line:{color:accent}});sl.addText(String(i+1),{x:x+.14,y:y+.205,w:.29,h:.08,fontFace:'Corbel',fontSize:6.6,bold:true,color:C.white,align:'center',margin:0});sl.addText(it[0],{x:x+.53,y:y+.12,w:3.1,h:.14,fontFace:'Corbel',fontSize:7.7,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(it[1],{x:x+.53,y:y+.34,w:3.1,h:.28,fontFace:'Corbel',fontSize:6.9,color:muted,margin:0,fit:'shrink'});});
-      sl.addText('IMPACTO ESPERADO',{x:8.88,y:3.58,w:2.6,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
-      sl.addShape(pptx.ShapeType.roundRect,{x:8.88,y:3.83,w:3.90,h:1.67,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});
-      vd.impacts.slice(0,4).forEach((it,i)=>{const y=3.99+i*.36,val=Math.max(0,Math.min(100,Number(it[1]||0)));sl.addText(it[0],{x:9.08,y,w:2.35,h:.11,fontFace:'Corbel',fontSize:7.4,bold:true,color:dark,margin:0,fit:'shrink'});sl.addText(String(val),{x:11.82,y,w:.55,h:.11,fontFace:'Corbel',fontSize:7.3,bold:true,color:accent,align:'right',margin:0});sl.addShape(pptx.ShapeType.roundRect,{x:9.08,y:y+.16,w:3.03,h:.08,rectRadius:.03,fill:{color:'E6ECF0'},line:{color:'E6ECF0'}});sl.addShape(pptx.ShapeType.roundRect,{x:9.08,y:y+.16,w:3.03*val/100,h:.08,rectRadius:.03,fill:{color:accent},line:{color:accent}});});
-      // Cómo lo resolvemos: conserva la taxonomía y los fabricantes del datasheet; los seleccionados se destacan.
-      sl.addText('CÓMO LO RESOLVEMOS',{x:.55,y:5.61,w:3.2,h:.18,fontFace:'Corbel',fontSize:8.8,bold:true,color:accent,margin:0});
-      const selected=new Set(d.vendors||[]);
-      for(let i=0;i<Math.min(4,vd.solutions.length);i++){const group=vd.solutions[i],x=.55+i*3.07;sl.addShape(pptx.ShapeType.roundRect,{x,y:5.84,w:2.82,h:.80,rectRadius:.04,fill:{color:'FFFFFF'},line:{color:line,pt:.65}});sl.addShape(pptx.ShapeType.rect,{x,y:5.84,w:2.82,h:.20,fill:{color:accent},line:{color:accent}});sl.addText(group[0],{x:x+.08,y:5.895,w:2.66,h:.08,fontFace:'Corbel',fontSize:6.9,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});const vendors=group[1].slice(0,4),cols=vendors.length>2?2:vendors.length,rows=vendors.length>2?2:1,cellW=2.54/Math.max(1,cols),cellH=.52/rows;for(let j=0;j<vendors.length;j++){const c=j%cols,r=Math.floor(j/cols);await addLogoContained(sl,vendors[j],x+.14+c*cellW,6.08+r*cellH,cellW-.08,cellH-.05,selected.has(vendors[j]),accent);}}
-      // Cómo empezar + siguiente paso, igual que el datasheet pero condensado para 16:9.
-      sl.addText('CÓMO EMPEZAR',{x:.55,y:6.76,w:1.8,h:.15,fontFace:'Corbel',fontSize:8.4,bold:true,color:accent,margin:0});
-      vd.start.slice(0,3).forEach((txt,i)=>{const x=2.12+i*2.64;sl.addShape(pptx.ShapeType.ellipse,{x,y:6.72,w:.27,h:.27,fill:{color:accent},line:{color:accent}});sl.addText(String(i+1),{x,y:6.785,w:.27,h:.07,fontFace:'Corbel',fontSize:6.3,bold:true,color:C.white,align:'center',margin:0});sl.addText(txt,{x:x+.36,y:6.71,w:2.17,h:.29,fontFace:'Corbel',fontSize:7.1,bold:true,color:dark,margin:0,fit:'shrink'});});
-      sl.addText('FUENTES',{x:10.23,y:6.74,w:.72,h:.12,fontFace:'Corbel',fontSize:6.5,bold:true,color:accent,margin:0});sl.addText(vd.references,{x:10.93,y:6.70,w:1.85,h:.28,fontFace:'Corbel',fontSize:5.4,color:muted,margin:0,fit:'shrink'});
-      sl.addShape(pptx.ShapeType.roundRect,{x:.55,y:7.10,w:12.23,h:.22,rectRadius:.03,fill:{color:accent},line:{color:accent}});sl.addText(`Próximo paso recomendado: ${vd.nextStep}`,{x:.72,y:7.155,w:11.9,h:.08,fontFace:'Corbel',fontSize:6.6,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
-      sl.addShape(pptx.ShapeType.rect,{x:0,y:7.40,w:13.333,h:.10,fill:{color:C.navy3},line:{color:C.navy3}});
-      if(m.outputs.notes)try{const page=verticalSourceMap?.[vertical]?.[area]?.datasheet;sl.addNotes(`Contenido y estructura derivados del datasheet FY27 ${page?`(página ${page})`:''}: ${vertical} · ${vd.areaLabel}.\nFuentes del datasheet: ${vd.references}\nFabricantes seleccionados destacados visualmente: ${(d.vendors||[]).join(', ')||'ninguno'}.`)}catch{}
-      return sl;
-    };
-    let s=pptx.addSlide();s.background={color:C.navy};
-    let heroData=null;try{heroData=await assetData('assets/hero.jpeg')}catch{}
-    if(heroData){s.addImage({data:heroData,x:7.15,y:0,w:6.183,h:6.88});s.addShape(pptx.ShapeType.rect,{x:7.15,y:0,w:6.183,h:6.88,fill:{color:C.navy3,transparency:32},line:{color:C.navy3,transparency:100}});}
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:5.6,h:1.08,fill:{color:'A72A80'},line:{color:'A72A80'}});
-    if(logoData){s.addShape(pptx.ShapeType.roundRect,{x:.72,y:.16,w:3.82,h:.76,rectRadius:.08,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logoData,x:1.05,y:.305,w:3.15,h:.52});}
-    s.addText('WESTCON COMSTOR · FY2027',{x:.6,y:1.54,w:5.95,h:.25,fontFace:'Corbel',fontSize:10,bold:true,color:roleAccent,charSpacing:1.3,margin:0});
-    s.addText((m.partner||'PARTNER').toUpperCase(),{x:.6,y:1.92,w:5.95,h:.7,fontFace:'Corbel',fontSize:31,bold:true,color:C.white,margin:0,fit:'shrink'});
-    s.addText(m.objective||'Reunión de trabajo',{x:.62,y:2.82,w:5.75,h:.68,fontFace:'Corbel',fontSize:18,color:C.white,margin:0,fit:'shrink'});
-    const vendorLine=prioritizedVendorNames(m).slice(0,4).join(' · ');
-    if(vendorLine)s.addText(vendorLine,{x:.62,y:3.67,w:5.75,h:.31,fontFace:'Corbel',fontSize:11,bold:true,color:C.cyan,margin:0,fit:'shrink'});
-    const coverContext=[d.effectiveVertical&&d.effectiveVertical!=='Otros'?d.effectiveVertical:'Reunión de trabajo',m.duration].filter(Boolean).join(' · ');
-    s.addText(coverContext,{x:.62,y:4.22,w:5.75,h:.28,fontFace:'Corbel',fontSize:10.5,bold:true,color:C.amber,margin:0,fit:'shrink'});
-    s.addText(new Date().toLocaleDateString('es-ES',{month:'long',year:'numeric'}).toUpperCase(),{x:.62,y:5.82,w:3.8,h:.3,fontFace:'Corbel',fontSize:13,bold:true,color:C.amber,margin:0});
-    s.addShape(pptx.ShapeType.rect,{x:0,y:6.88,w:13.333,h:.62,fill:{color:'3599BC'},line:{color:'3599BC'}});
-    if(m.outputs.notes)try{s.addNotes(`Objetivo: ${m.objective}\nResultado buscado: ${m.desiredOutcome||'por validar'}\nFabricantes: ${vendorLine||'por priorizar'}\nPreguntas sugeridas:\n- ${questions.join('\n- ')}`)}catch{}
+  function renderVerticals(){
+    var s=$("#vertical"),current=s.value;
+    s.innerHTML='<option value="">Sin vertical</option>';
+    Object.keys(VERTICAL.verticals||{}).forEach(function(v){var o=document.createElement("option");o.value=o.textContent=v;s.appendChild(o);});
+    if(current)s.value=current;
+  }
+  function renderVendors(){
+    var host=$("#vendorChips");host.innerHTML="";
+    (K.vendors||[]).forEach(function(v){
+      var b=document.createElement("button");b.type="button";b.className="chip"+(state.vendors.has(v.name)?" active":"");b.textContent=v.name;
+      b.addEventListener("click",function(){state.vendors.has(v.name)?state.vendors.delete(v.name):state.vendors.add(v.name);renderVendors();renderLibrary();save();});
+      host.appendChild(b);
+    });
+  }
+  function renderLibrary(){
+    var q=$("#searchSlides").value.trim().toLowerCase(),host=$("#slideLibrary");host.innerHTML="";
+    var c=ctx();
+    var items=libraryItems().filter(filterItem).filter(function(x){
+      var blob=[x.title,x.subtitle,x.area].concat(x.vendors||[],x.tags||[]).join(" ").toLowerCase();
+      return !q||blob.indexOf(q)>=0;
+    });
+    items.sort(function(a,b){
+      var aa=(a.vendors||[]).some(function(v){return c.vendors.indexOf(v)>=0;})?-5:0;
+      var bb=(b.vendors||[]).some(function(v){return c.vendors.indexOf(v)>=0;})?-5:0;
+      return aa-bb||String(a.title).localeCompare(String(b.title),"es");
+    });
+    $("#libraryCount").textContent=items.length;
+    items.forEach(function(item){
+      var card=document.createElement("article");card.className="library-card";
+      var thumb=item.asset?'<div class="thumb"><img src="'+esc(item.asset)+'" alt=""></div>':'<div class="thumb generated"><b>'+esc(item.title)+'</b><span>'+esc(item.subtitle||"Contenido generado")+'</span></div>';
+      card.innerHTML=thumb+'<div class="lib-body"><strong>'+esc(item.title)+'</strong><small>'+esc(item.subtitle||"")+'</small><button type="button">＋ Añadir</button></div>';
+      $("button",card).addEventListener("click",function(){if(item.kind==="custom-new"){$("#customDialog").showModal();return;}addToDeck(item);});
+      host.appendChild(card);
+    });
+  }
+  function addToDeck(item){state.deck.push(Object.assign({},item,{uid:uid()}));renderDeck();save();}
+  function removeAt(i){state.deck.splice(i,1);renderDeck();save();}
+  function moveAt(i,d){var j=i+d;if(j<0||j>=state.deck.length)return;var x=state.deck.splice(i,1)[0];state.deck.splice(j,0,x);renderDeck();save();}
+  function duplicateAt(i){state.deck.splice(i+1,0,Object.assign({},state.deck[i],{uid:uid()}));renderDeck();save();}
+  function renderDeck(){
+    var host=$("#deckList");host.innerHTML="";
+    $("#deckEmpty").classList.toggle("hidden",state.deck.length>0);
+    $("#deckCount").textContent=state.deck.length;$("#deckSummary").textContent=state.deck.length+" slide"+(state.deck.length===1?"":"s");
+    state.deck.forEach(function(item,i){
+      var row=document.createElement("div");row.className="deck-item";row.draggable=true;row.dataset.index=i;
+      var thumb=item.asset?'<div class="deck-thumb"><img src="'+esc(item.asset)+'" alt=""></div>':'<div class="deck-thumb generated">'+esc(item.kind==="vertical"?"VERTICAL":item.kind==="vendor-evidence"?"EVIDENCIA":"GENERADA")+'</div>';
+      row.innerHTML='<div class="deck-num">'+(i+1)+'</div>'+thumb+'<div class="deck-copy"><strong>'+esc(item.title)+'</strong><small>'+esc(item.subtitle||item.area||"")+'</small></div><div class="deck-actions"><button title="Subir">↑</button><button title="Bajar">↓</button><button title="Duplicar">⧉</button><button title="Eliminar">×</button></div>';
+      var bs=$$("button",row);bs[0].onclick=function(){moveAt(i,-1);};bs[1].onclick=function(){moveAt(i,1);};bs[2].onclick=function(){duplicateAt(i);};bs[3].onclick=function(){removeAt(i);};
+      row.addEventListener("dragstart",function(){state.drag=i;row.classList.add("dragging");});
+      row.addEventListener("dragend",function(){row.classList.remove("dragging");state.drag=null;});
+      row.addEventListener("dragover",function(e){e.preventDefault();});
+      row.addEventListener("drop",function(e){e.preventDefault();if(state.drag===null||state.drag===i)return;var x=state.deck.splice(state.drag,1)[0];state.deck.splice(i,0,x);state.drag=null;renderDeck();save();});
+      host.appendChild(row);
+    });
+  }
+  function addBaseWestcon(){
+    ["corp-02","corp-03","corp-05"].forEach(function(id){var x=(SLIDES.slides||[]).find(function(s){return s.id===id;});if(x&&!state.deck.some(function(d){return d.sourceId===id;}))addToDeck(sourceItem(x));});
+  }
+  function inferVendors(){
+    if(state.vendors.size)return;
+    var text=($("#objective").value||"").toLowerCase();
+    (K.vendors||[]).forEach(function(v){if(text.indexOf(String(v.name).toLowerCase())>=0)state.vendors.add(v.name);});
+    renderVendors();
+  }
+  function suggestDeck(){
+    inferVendors();
+    var c=ctx();state.deck=[];
+    addToDeck({kind:"cover",title:"Portada personalizada",subtitle:c.partner||"Westcon Comstor",category:"generated"});
+    var s2=(SLIDES.slides||[]).find(function(s){return s.id==="corp-02";});if(s2)addToDeck(sourceItem(s2));
+    if(c.role!=="sa"){var s3=(SLIDES.slides||[]).find(function(s){return s.id==="corp-03";});if(s3)addToDeck(sourceItem(s3));}
+    addToDeck({kind:"agenda",title:"Objetivo y agenda",subtitle:c.objective||"Foco de la sesión",category:"generated"});
+    if(c.partner&&partnerIntel(c.partner))addToDeck({kind:"partner",title:c.partner+" · contexto",subtitle:"Señales públicas relevantes",category:"generated"});
+    if(c.vertical&&VERTICAL.verticals&&VERTICAL.verticals[c.vertical]){
+      var areas=areaKeys(c.vendors);if(!areas.length)areas=["cyber"];
+      areas.slice(0,c.role==="psm"?2:1).forEach(function(a){var d=VERTICAL.verticals[c.vertical][a];if(d)addToDeck({kind:"vertical",vertical:c.vertical,area:a,title:c.vertical+" · "+d.areaLabel,subtitle:d.title,category:"vertical"});});
+    }
+    c.vendors.forEach(function(v){
+      var p=vendorIntel(v),page=(p.sourceSlides||[])[0],x=(SLIDES.slides||[]).find(function(s){return s.source==="corporate"&&s.page===page;});
+      if(x)addToDeck(sourceItem(x));
+      addToDeck({kind:"vendor-diff",vendor:v,title:v+" · diferenciación",subtitle:"Capacidades, criterios y prueba de valor",category:"generated"});
+      if(liveEvidence(v).length)addToDeck({kind:"vendor-evidence",vendor:v,title:v+" · analistas y mercado",subtitle:"Evidencia pública reciente",category:"generated"});
+    });
+    if(c.role==="sa")[73,74].forEach(function(page){var x=(SLIDES.slides||[]).find(function(s){return s.source==="corporate"&&s.page===page;});if(x)addToDeck(sourceItem(x));});
+    addToDeck({kind:"next",title:"Siguientes pasos",subtitle:"Plan de acción",category:"generated"});
+    $("#suggestionNote").textContent="Deck propuesto con "+state.deck.length+" slides. Puedes editarlo libremente.";
+    save();
+  }
 
-    // Introducción corporativa dirigida: no repetimos catálogo cuando el partner ya conoce Westcon.
-    if(d.general==='full'){
-      await addOriginal('corporate',2,'Quiénes somos — slide original FY27.');
-      await addOriginal('corporate',3,'Propuesta de valor — slide original FY27.');
-      if(deckDepth!=='short')await addOriginal('corporate',5,'Portfolio de fabricantes — slide original FY27.');
-      if(m.primaryRole==='psm'&&deckDepth==='deep')await addOriginal('corporate',4,'Framework BLUEPRINT — slide original FY27.');
-    }else if(d.general==='compact'){
-      await addOriginal('corporate',3,'Propuesta de valor Westcon Comstor — contexto compacto FY27.');
-      if(d.vendors.length>2&&deckDepth==='deep')await addOriginal('corporate',5,'Portfolio FY27 — solo como mapa de contexto.');
+  async function assetData(url){var r=await fetch(url);if(!r.ok)throw new Error(url);var b=await r.blob();return await new Promise(function(resolve,reject){var fr=new FileReader();fr.onload=function(){resolve(fr.result);};fr.onerror=reject;fr.readAsDataURL(b);});}
+  function evidenceFor(v){
+    var all=liveEvidence(v);
+    var analysts=/gartner|forrester|idc|marketscape|omdia|gigaom|isg|canalys|kuppinger/i;
+    return all.filter(function(e){return analysts.test([e.title,e.publisher,(e.analysts||[]).join(" ")].join(" "));}).concat(all.filter(function(e){return !analysts.test([e.title,e.publisher].join(" "));})).slice(0,4);
+  }
+  async function generatePptx(){
+    if(!state.deck.length){alert("Añade al menos una slide.");return;}
+    if(typeof window.PptxGenJS==="undefined"){alert("No se ha cargado el generador PowerPoint.");return;}
+    var c=ctx(),pptx=new window.PptxGenJS();pptx.layout="LAYOUT_WIDE";pptx.author="Westcon Comstor";pptx.company="Westcon Comstor";pptx.subject=c.objective||"Presentación ad-hoc";pptx.title=(c.partner||"Westcon")+" · presentación";
+    var C={navy:"09283A",navy2:"123D53",white:"FFFFFF",magenta:"E5007D",cyan:"12B8BB",amber:"F7AA00",purple:"6D5AA5",green:"169F82",muted:"A9C0CB",light:"E5ECEF",dark:"173448"};
+    var logo=null,hero=null;try{logo=await assetData("assets/westcon-comstor.png");}catch(e){}try{hero=await assetData("assets/hero.jpeg");}catch(e){}
+    function footer(s,color){s.addShape(pptx.ShapeType.rect,{x:0,y:7.35,w:13.333,h:.15,fill:{color:color||C.magenta},line:{color:color||C.magenta}});s.addText("FY2027 · Westcon Comstor España",{x:.45,y:7.11,w:4,h:.18,fontFace:"Corbel",fontSize:7.5,color:"AEBECA",margin:0});}
+    function brand(s,kicker,title,sub,accent){s.background={color:C.navy};if(logo){s.addShape(pptx.ShapeType.roundRect,{x:10.95,y:.22,w:1.88,h:.56,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logo,x:11.12,y:.36,w:1.54,h:.25});}s.addText(String(kicker||"WESTCON COMSTOR").toUpperCase(),{x:.48,y:.28,w:6,h:.22,fontFace:"Corbel",fontSize:10,bold:true,color:accent||C.cyan,charSpacing:1.2,margin:0});s.addText(title,{x:.48,y:.73,w:11.7,h:.58,fontFace:"Corbel",fontSize:27,bold:true,color:C.white,margin:0,fit:"shrink"});if(sub)s.addText(sub,{x:.5,y:1.38,w:11.7,h:.36,fontFace:"Corbel",fontSize:12,color:C.muted,margin:0,fit:"shrink"});footer(s,accent||C.magenta);}
+    function card(s,x,y,w,h,title,text,accent){s.addShape(pptx.ShapeType.roundRect,{x:x,y:y,w:w,h:h,rectRadius:.05,fill:{color:C.navy2},line:{color:accent||C.cyan,pt:1}});s.addText(String(title||"").toUpperCase(),{x:x+.18,y:y+.15,w:w-.36,h:.23,fontFace:"Corbel",fontSize:9.5,bold:true,color:accent||C.cyan,margin:0,fit:"shrink"});s.addText(String(text||""),{x:x+.18,y:y+.53,w:w-.36,h:h-.67,fontFace:"Corbel",fontSize:12.5,color:C.white,margin:.01,fit:"shrink",valign:"mid"});}
+    async function original(item){var s=pptx.addSlide();var data=await assetData(item.asset||("assets/source-slides/corporate/slide-"+String(item.page).padStart(2,"0")+".png"));s.addImage({data:data,x:0,y:0,w:13.333,h:7.5});}
+    async function vertical(item){
+      var d=VERTICAL.verticals&&VERTICAL.verticals[item.vertical]&&VERTICAL.verticals[item.vertical][item.area];if(!d)return;
+      var accent=item.area==="cyber"?C.magenta:item.area==="network"?C.cyan:C.amber,s=pptx.addSlide();s.background={color:"F5F8FA"};
+      s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.333,h:1.48,fill:{color:item.area==="cyber"?"4A174F":item.area==="network"?"075B64":"515023"},line:{color:"FFFFFF",transparency:100}});
+      s.addText(d.areaLabel,{x:.58,y:.24,w:2.8,h:.18,fontFace:"Corbel",fontSize:9,bold:true,color:C.white,margin:0});
+      s.addText(item.vertical.toUpperCase(),{x:.58,y:.62,w:4.8,h:.18,fontFace:"Corbel",fontSize:9.5,bold:true,color:C.white,charSpacing:1,margin:0});
+      s.addText(d.title,{x:.58,y:.93,w:10.4,h:.36,fontFace:"Corbel",fontSize:21,bold:true,color:C.white,margin:0,fit:"shrink"});
+      s.addText("POR QUÉ ACTUAR AHORA",{x:.58,y:1.68,w:2.4,h:.18,fontFace:"Corbel",fontSize:8.5,bold:true,color:accent,margin:0});
+      (d.why||[]).slice(0,3).forEach(function(it,i){card(s,.58+i*4.13,1.92,3.84,.9,it[0],it[1],accent);});
+      s.addShape(pptx.ShapeType.roundRect,{x:.58,y:2.98,w:12.17,h:.58,fill:{color:item.area==="cyber"?"FCE5F1":item.area==="network"?"DFF7F5":"FFF1CC"},line:{color:item.area==="cyber"?"F2B4D4":item.area==="network"?"B9EAE7":"F5D778"}});s.addText("EL RETO",{x:.8,y:3.12,w:.75,h:.15,fontFace:"Corbel",fontSize:7.5,bold:true,color:accent,margin:0});s.addText(d.challenge||"",{x:1.55,y:3.08,w:10.75,h:.22,fontFace:"Corbel",fontSize:10.5,bold:true,color:C.dark,margin:0,fit:"shrink"});
+      s.addText("CASOS DE USO",{x:.58,y:3.78,w:2,h:.18,fontFace:"Corbel",fontSize:8.5,bold:true,color:accent,margin:0});
+      (d.cases||[]).slice(0,4).forEach(function(it,i){var col=i%2,row=Math.floor(i/2);s.addShape(pptx.ShapeType.roundRect,{x:.58+col*4.15,y:4.03+row*.93,w:3.85,h:.76,fill:{color:C.white},line:{color:"D9E2E7"}});s.addText((i+1)+"  "+it[0],{x:.72+col*4.15,y:4.14+row*.93,w:3.55,h:.14,fontFace:"Corbel",fontSize:7.7,bold:true,color:C.dark,margin:0,fit:"shrink"});s.addText(it[1],{x:.72+col*4.15,y:4.36+row*.93,w:3.55,h:.28,fontFace:"Corbel",fontSize:7,color:"667783",margin:0,fit:"shrink"});});
+      s.addText("IMPACTO ESPERADO",{x:9.05,y:3.78,w:2.2,h:.18,fontFace:"Corbel",fontSize:8.5,bold:true,color:accent,margin:0});
+      (d.impacts||[]).slice(0,4).forEach(function(it,i){var y=4.08+i*.47,val=Math.max(0,Math.min(100,Number(it[1]||0)));s.addText(it[0],{x:9.05,y:y,w:2.1,h:.13,fontFace:"Corbel",fontSize:7.5,bold:true,color:C.dark,margin:0});s.addText(String(val),{x:12.05,y:y,w:.45,h:.13,fontFace:"Corbel",fontSize:7.5,bold:true,color:accent,align:"right",margin:0});s.addShape(pptx.ShapeType.rect,{x:9.05,y:y+.2,w:3.35,h:.07,fill:{color:"E3EAED"},line:{color:"E3EAED"}});s.addShape(pptx.ShapeType.rect,{x:9.05,y:y+.2,w:3.35*val/100,h:.07,fill:{color:accent},line:{color:accent}});});
+      s.addText("CÓMO EMPEZAR",{x:.58,y:6.15,w:1.7,h:.16,fontFace:"Corbel",fontSize:8,bold:true,color:accent,margin:0});
+      (d.start||[]).slice(0,3).forEach(function(t,i){s.addText((i+1)+". "+t,{x:2.05+i*2.75,y:6.11,w:2.5,h:.28,fontFace:"Corbel",fontSize:8,bold:true,color:C.dark,margin:0,fit:"shrink"});});
+      s.addShape(pptx.ShapeType.roundRect,{x:.58,y:6.65,w:12.17,h:.36,fill:{color:accent},line:{color:accent}});s.addText("Próximo paso recomendado: "+(d.nextStep||""),{x:.75,y:6.74,w:11.8,h:.1,fontFace:"Corbel",fontSize:7.5,bold:true,color:C.white,align:"center",margin:0,fit:"shrink"});
+      footer(s,accent);
     }
 
-    // Agenda partner-facing. La información interna solo orienta la selección y las notas.
-    s=pptx.addSlide();addBrand(s,'AGENDA','Objetivo y foco de la sesión','Una conversación orientada a oportunidades concretas y próximos pasos.');
-    addCard(s,.55,2.05,3.85,1.55,'OBJETIVO',m.objective||'Alinear prioridades y oportunidades',roleAccent);
-    addCard(s,4.72,2.05,3.85,1.55,'ÁMBITO',d.effectiveVertical||m.technologies||'Tecnología, negocio y desarrollo conjunto',C.cyan);
-    addCard(s,8.89,2.05,3.85,1.55,'FABRICANTES',selectedVendorNames(m).join(', ')||'Portfolio relevante',C.amber);
-    addCard(s,.55,3.95,5.95,1.75,'TEMAS PRINCIPALES',m.primaryRole==='sa'?(m.roleData.useCase||'Arquitectura, criterios de diseño y prueba de valor'):m.primaryRole==='vsm'?'Desarrollo de capacidades, oportunidades y plan conjunto':'Evolución del negocio, oportunidades y plan conjunto',C.magenta);
-    addCard(s,6.82,3.95,5.92,1.75,'SIGUIENTE PASO',m.desiredOutcome||'Acordar acciones concretas, responsables y fecha.',C.green);
-
-    if(d.partnerSnapshot&&canAdd(1))addPartnerSnapshotSlide();
-
-    if(m.primaryRole==='psm'){
-      const b=(m.roleData.business||[]).filter(r=>r.vendor);const opp=(m.roleData.opportunities||[]).filter(o=>o.name||o.vendor||o.amount);
-      const total27=b.reduce((a,r)=>a+Number(r.fy27||0),0),totalTarget=b.reduce((a,r)=>a+Number(r.target||0),0),pipe=b.reduce((a,r)=>a+Number(r.pipeline||0),0)+opp.reduce((a,r)=>a+Number(r.amount||0),0);
-      if(b.length){
-        s=pptx.addSlide();addBrand(s,'EVOLUCIÓN CONJUNTA','Negocio por fabricante','Una lectura compartida para decidir dónde acelerar y dónde abrir nuevas oportunidades.');
-        addKpi(s,.72,1.92,3.55,'FY27 YTD',fmtMoney(total27),C.magenta);addKpi(s,4.89,1.92,3.55,'Objetivo FY27',fmtMoney(totalTarget),C.cyan);addKpi(s,9.06,1.92,3.55,'Pipeline',fmtMoney(pipe),C.amber);
-        const rows=b.slice(0,deckDepth==='deep'?7:5);const max=Math.max(1,...rows.flatMap(r=>[Number(r.fy26||0),Number(r.fy27||0),Number(r.target||0),Number(r.pipeline||0)]));
-        rows.forEach((r,i)=>{const y=3.25+i*.58;s.addText(r.vendor,{x:.72,y,w:2.15,h:.26,fontFace:'Corbel',fontSize:10.2,bold:true,color:C.white,margin:0,fit:'shrink'});[[r.fy26,C.purple,3.05,'FY26'],[r.fy27,C.magenta,5.25,'FY27'],[r.target,C.cyan,7.45,'OBJ'],[r.pipeline,C.amber,9.65,'PIPE']].forEach(([val,col,x,label])=>{const n=Number(val||0);s.addText(label,{x,y:y-.02,w:.55,h:.18,fontFace:'Corbel',fontSize:6.5,color:C.muted,margin:0});s.addShape(pptx.ShapeType.roundRect,{x:x+.53,y:y+.01,w:1.65,h:.2,rectRadius:.02,fill:{color:C.navy2},line:{color:C.line,pt:.4}});if(n>0)s.addShape(pptx.ShapeType.roundRect,{x:x+.53,y:y+.01,w:Math.max(.06,1.65*n/max),h:.2,rectRadius:.02,fill:{color:col},line:{color:col}});s.addText(fmtMoney(n),{x:x+.53,y:y+.26,w:1.65,h:.16,fontFace:'Corbel',fontSize:6.8,color:C.muted,align:'center',margin:0,fit:'shrink'});});});
+    for(var n=0;n<state.deck.length;n++){
+      var item=state.deck[n];
+      if(item.kind==="source"){await original(item);continue;}
+      if(item.kind==="vertical"){await vertical(item);continue;}
+      if(item.kind==="cover"){
+        var s=pptx.addSlide();s.background={color:C.navy};if(hero){s.addImage({data:hero,x:7.2,y:0,w:6.133,h:6.88});s.addShape(pptx.ShapeType.rect,{x:7.2,y:0,w:6.133,h:6.88,fill:{color:C.navy,transparency:38},line:{color:C.navy,transparency:100}});}if(logo){s.addShape(pptx.ShapeType.roundRect,{x:.72,y:.18,w:3.4,h:.76,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logo,x:1.47,y:.31,w:1.9,h:.42});}s.addText("WESTCON COMSTOR · FY2027",{x:.62,y:1.55,w:5.9,h:.22,fontFace:"Corbel",fontSize:10,bold:true,color:C.magenta,charSpacing:1.2,margin:0});s.addText((c.partner||"PRESENTACIÓN").toUpperCase(),{x:.62,y:1.95,w:5.95,h:.7,fontFace:"Corbel",fontSize:31,bold:true,color:C.white,margin:0,fit:"shrink"});s.addText(c.objective||"Presentación ad-hoc",{x:.62,y:2.85,w:5.7,h:.75,fontFace:"Corbel",fontSize:18,color:C.white,margin:0,fit:"shrink"});if(c.vendors.length)s.addText(c.vendors.join(" · "),{x:.62,y:3.82,w:5.7,h:.32,fontFace:"Corbel",fontSize:11,bold:true,color:C.cyan,margin:0,fit:"shrink"});if(c.vertical)s.addText(c.vertical,{x:.62,y:4.28,w:5.7,h:.28,fontFace:"Corbel",fontSize:10.5,bold:true,color:C.amber,margin:0});s.addShape(pptx.ShapeType.rect,{x:0,y:6.88,w:13.333,h:.62,fill:{color:"3599BC"},line:{color:"3599BC"}});continue;
       }
-      if(opp.length)addOpportunitySlideBranded(pptx,m,C,addBrand,roleAccent);
-      s=pptx.addSlide();addBrand(s,'CRECIMIENTO CONJUNTO','Oportunidades que merece la pena explorar','Priorizadas por encaje tecnológico, vertical, portfolio y contexto público del partner.');
-      const psmNames=prioritizedVendorNames(m).slice(0,4);psmNames.forEach((name,i)=>{const p=vendorIntel(name),col=i%2,row=Math.floor(i/2),xx=.58+col*6.2,yy=1.95+row*2.08;addCard(s,xx,yy,5.9,1.78,name,`${p?.category||''}\n${(vendorVerticalAngle(name,d.effectiveVertical).length?vendorVerticalAngle(name,d.effectiveVertical):(p?.buyingTriggers||[])).slice(0,3).map(x=>'• '+x).join('\n')}`,i%2?C.cyan:C.magenta);});
-      if(!psmNames.length)addCard(s,.72,2.1,11.8,2.4,'FOCO','Seleccionar un fabricante o una tecnología permitirá construir oportunidades concretas.',C.cyan);
-      addSourceLine(s,'Westcon Comstor FY2027 · selección apoyada por información pública actualizada.');
-    } else if(m.primaryRole==='vsm'){
-      const v=m.roleData.vendor||selectedVendorNames(m)[0]||'Fabricante',hasBusiness=Number(m.roleData.revenue||0)||Number(m.roleData.target||0)||m.roleData.tier||m.roleData.targetTier;
-      if(hasBusiness){s=pptx.addSlide();addBrand(s,`DESARROLLO CONJUNTO · ${v}`,'Evolución y objetivos','Una visión compartida para hacer crecer la relación con el fabricante.');addKpi(s,.8,2.0,2.7,'FY27 YTD',fmtMoney(m.roleData.revenue),C.magenta);addKpi(s,3.86,2.0,2.7,'Objetivo',fmtMoney(m.roleData.target),C.amber);addKpi(s,6.92,2.0,2.7,'Nivel actual',m.roleData.tier||'—',C.purple);addKpi(s,9.98,2.0,2.55,'Próximo nivel',m.roleData.targetTier||'—',C.cyan);addCard(s,.8,3.55,11.73,1.7,'PLAN CONJUNTO',m.roleData.channelPlan||'Alinear capacidades, generación de demanda, oportunidades y recursos del fabricante.',C.green);}
-      if(m.roleData.certs||m.roleData.certsNext||m.roleData.incentives){s=pptx.addSlide();addBrand(s,`CAPACIDADES · ${v}`,'Preparados para crecer','Certificaciones, especializaciones y palancas disponibles para ampliar el negocio.');addCard(s,.65,2.0,3.8,2.05,'CAPACIDADES ACTUALES',m.roleData.certs||'Capacidades por revisar conjuntamente',C.green);addCard(s,4.77,2.0,3.8,2.05,'PRÓXIMOS HITOS',m.roleData.certsNext||'Definir certificaciones y especializaciones prioritarias',C.amber);addCard(s,8.89,2.0,3.8,2.05,'PROGRAMAS E INCENTIVOS',m.roleData.incentives||'Revisar programas aplicables y su impacto en el plan',C.purple);}
-      if((m.roleData.opportunities||[]).some(o=>o.name||o.vendor||o.amount))addOpportunitySlideBranded(pptx,m,C,addBrand,roleAccent);
-    } else if(m.primaryRole==='sa'){
-      const v=m.roleData.vendor||selectedVendorNames(m)[0]||'Solución',p=vendorIntel(v);
-      s=pptx.addSlide();addBrand(s,`ARQUITECTURA · ${v}`,'Necesidad y criterios de diseño',m.roleData.useCase||m.objective||'Caso de uso y criterios que debe resolver la solución.');
-      addCard(s,.65,2.0,5.85,2.0,'PUNTO DE PARTIDA',m.roleData.current||'Partimos del entorno y las dependencias actuales para evitar rediseños innecesarios.',C.cyan);addCard(s,6.8,2.0,5.85,2.0,'CRITERIOS CLAVE',m.roleData.requirements||((p?.buyingTriggers||[]).slice(0,4).map(x=>'• '+x).join('\n')||'Rendimiento, seguridad, operación, integración y escalabilidad.'),C.magenta);addCard(s,.65,4.35,12.0,1.35,'CONDICIONES DE ÉXITO',m.roleData.poc||'Validar la solución con métricas representativas del caso de uso y del entorno real.',C.amber);
-      if(deckDepth!=='short'||m.roleData.poc){s=pptx.addSlide();addBrand(s,`PRUEBA DE VALOR · ${v}`,'De la arquitectura a una decisión medible','Una PoC/PoV centrada en los criterios que realmente decidirán la solución.');addCard(s,.85,2.05,3.55,2.25,'1 · BASELINE','Acordar la situación actual y las métricas de partida.',C.cyan);addCard(s,4.88,2.05,3.55,2.25,'2 · ESCENARIO','Probar un caso representativo, integrado con el entorno real.',C.amber);addCard(s,8.91,2.05,3.55,2.25,'3 · DECISIÓN','Definir umbrales de éxito antes de comenzar la prueba.',C.green);addCard(s,.85,4.7,11.61,1.15,'CRITERIOS PROPUESTOS',m.roleData.poc||'Rendimiento · experiencia · seguridad · operación · integración · escalabilidad · coste total',C.magenta);}
-      if(m.outputs.notes&&m.roleData.competitors)try{s.addNotes(`Alternativas indicadas para preparar la sesión, no mostradas al partner por defecto: ${m.roleData.competitors}`)}catch{}
-    }
-
-    if(m.primaryRole!=='sa'&&(m.supportRoles||[]).includes('sa')){
-      const v=prioritizedVendorNames(m)[0],p=v?vendorIntel(v):null;
-      if(v&&p){s=pptx.addSlide();addBrand(s,`ARQUITECTURA · ${v}`,'Encaje técnico y prueba de valor','Un puente entre la oportunidad de negocio y los criterios técnicos que permitirán validarla.');addCard(s,.65,2.0,5.85,2.0,'CAPACIDADES CLAVE',(p.approvedAdvantages||[]).slice(0,4).map(x=>'• '+x).join('\n'),C.cyan);addCard(s,6.8,2.0,5.85,2.0,'CRITERIOS A VALIDAR',(p.buyingTriggers||[]).slice(0,4).map(x=>'• '+x).join('\n'),C.magenta);addCard(s,.65,4.35,12.0,1.35,'PRÓXIMO HITO TÉCNICO','Definir una demo, workshop o PoC/PoV con baseline, escenario representativo y umbral de éxito.',C.amber);}
-    }
-
-    // Vendor Intelligence: la investigación interna se sintetiza en argumentos finales, evidencia y casos de uso.
-    const intelVendors=d.vendors;
-    if(d.includeVertical&&d.effectiveVertical&&d.effectiveVertical!=='Otros'){
-      const areas=vendorAreasForMeeting({...m,vertical:d.effectiveVertical}),areaLimit=deckDepth==='deep'?Math.min(2,areas.length):Math.min(1,areas.length);
-      for(const area of areas.slice(0,areaLimit)){if(!canAdd(2))break;await addVerticalLandscapeSlide(d.effectiveVertical,area);}
-    }
-    for(const name of intelVendors){
-      if(!canAdd(2))break;
-      if(deckDepth==='deep'){
-        if(canAdd(4))addVendorSalesSlide(name);
-        if(canAdd(3))addVendorCompetitiveSlide(name);
-        if(canAdd(2))addVendorAnalystSlide(name);
-        if(canAdd(2))addVendorMomentumSlide(name);
-      }else if(deckDepth==='standard'){
-        if(m.primaryRole==='sa'&&canAdd(3))addVendorCompetitiveSlide(name);
-        if(canAdd(2))addVendorEvidenceSlide(name);
-      }else{
-        if(canAdd(2))addVendorEvidenceSlide(name);
+      if(item.kind==="agenda"){
+        var a=pptx.addSlide();brand(a,"OBJETIVO","Una conversación con foco",c.objective||"Alinear prioridades y acordar próximos pasos.",C.magenta);card(a,.7,2.05,3.7,2.15,"1 · CONTEXTO",c.partner?"Punto de partida con "+c.partner+".":"Punto de partida y prioridades compartidas.",C.cyan);card(a,4.82,2.05,3.7,2.15,"2 · PROPUESTA",c.vendors.length?"Capacidades y casos de uso de "+c.vendors.join(", ")+".":"Capacidades relevantes del portfolio Westcon.",C.magenta);card(a,8.94,2.05,3.7,2.15,"3 · SIGUIENTE PASO","Concretar una acción, responsable y fecha.",C.amber);continue;
+      }
+      if(item.kind==="partner"){
+        var p=pptx.addSlide(),pi=partnerIntel(c.partner),ev=(pi&&((pi.evidence||pi.signals)||[]))||[];brand(p,"PARTNER",(c.partner||"Partner")+" · contexto relevante","Solo señales públicas disponibles en la base compartida.",C.cyan);
+        if(ev.length){ev.slice(0,6).forEach(function(e,i){var col=i%2,row=Math.floor(i/2);card(p,.6+col*6.1,1.95+row*1.55,5.8,1.28,e.publisher||e.kind||"SEÑAL PÚBLICA",e.title||e.description||String(e),i%2?C.purple:C.cyan);});}else card(p,.8,2.2,11.7,2.2,"SIN DOSSIER CACHEADO","Ejecuta “Research partner dossier” en GitHub Actions para enriquecer esta capa con señales públicas verificadas.",C.amber);continue;
+      }
+      if(item.kind==="vendor-diff"){
+        var vd=vendorIntel(item.vendor),d=pptx.addSlide();brand(d,"DIFERENCIACIÓN · "+item.vendor,"Qué hace diferente esta propuesta",vd.tagline||vd.valueProposition||vd.category||"",C.purple);
+        card(d,.55,1.95,3.85,3.95,"CAPACIDADES DIFERENCIALES",(vd.approvedAdvantages||[]).slice(0,5).map(function(x){return "• "+x;}).join("\n"),C.magenta);
+        card(d,4.72,1.95,3.85,3.95,"CRITERIOS DE DECISIÓN",(vd.decisionCriteria||vd.buyingTriggers||[]).slice(0,5).map(function(x){return "• "+x;}).join("\n"),C.cyan);
+        card(d,8.89,1.95,3.85,3.95,"CÓMO DEMOSTRARLO",(vd.proofThemes||[]).slice(0,5).map(function(x){return "• "+x;}).join("\n"),C.amber);continue;
+      }
+      if(item.kind==="vendor-evidence"){
+        var ve=pptx.addSlide(),evidence=evidenceFor(item.vendor);brand(ve,"MERCADO · "+item.vendor,"Analistas y señales públicas","Evidencia atribuible disponible en la caché; no se infieren posiciones no declaradas.",C.cyan);
+        if(evidence.length)evidence.forEach(function(e,i){var col=i%2,row=Math.floor(i/2),date=e.publishedAt?String(e.publishedAt).slice(0,10):"";card(ve,.55+col*6.25,1.95+row*2.05,5.95,1.75,(e.publisher||"FUENTE")+(date?" · "+date:""),e.title||"",i%2?C.purple:C.cyan);});else card(ve,.8,2.2,11.7,2.2,"SIN EVIDENCIA CACHEADA","Ejecuta “Update public market intelligence” en GitHub Actions para poblar esta capa.",C.amber);
+        try{if(evidence.length&&ve.addNotes)ve.addNotes(evidence.map(function(e){return (e.title||"")+" | "+(e.url||"");}).join("\n"));}catch(e){}continue;
+      }
+      if(item.kind==="next"){
+        var nx=pptx.addSlide();brand(nx,"SIGUIENTE PASO","De la conversación a la acción","Un cierre simple, medible y compartido.",C.magenta);card(nx,.7,2.05,3.7,2.15,"WESTCON","Activar especialistas, fabricante y servicios necesarios.",C.magenta);card(nx,4.82,2.05,3.7,2.15,"PARTNER","Confirmar caso de uso, responsables y datos necesarios.",C.cyan);card(nx,8.94,2.05,3.7,2.15,"FABRICANTE","Alinear recursos, preventa o programa cuando aplique.",C.purple);card(nx,.7,4.65,11.95,1.15,"RESULTADO","Siguiente paso concreto, responsable y fecha.",C.amber);continue;
+      }
+      if(item.kind==="custom"){
+        var cu=pptx.addSlide();brand(cu,"CONTENIDO AD-HOC",item.title,"",C.magenta);var lines=String(item.body||"").split(/\n+/).filter(Boolean);if(lines.length>1)cu.addText(lines.map(function(t){return {text:t,options:{bullet:{indent:14},breakLine:true}};}),{x:.75,y:2.0,w:11.8,h:4.3,fontFace:"Corbel",fontSize:17,color:C.white,fit:"shrink",margin:.02,paraSpaceAfterPt:8});else cu.addText(item.body||"",{x:.8,y:2.15,w:11.7,h:3.8,fontFace:"Corbel",fontSize:20,color:C.white,fit:"shrink",margin:0,valign:"mid"});continue;
       }
     }
-
-    // Verticales FY27: ya se han sintetizado en 16:9 con la misma gramática visual del datasheet fuente.
-    // Los originales en formato vertical permanecen en la base de conocimiento, pero no se deforman dentro del PPT partner-facing.
-
-    // Fichas originales FY27 de los fabricantes prioritarios; complementan, no duplican, la narrativa generada.
-    const vendors=d.vendors;const maxVendorSlides=deckDepth==='short'?1:deckDepth==='standard'?Math.min(2,vendors.length):Math.min(4,vendors.length);let vendorCount=0;
-    for(const vendor of vendors){
-      const nums=vendorSourceSlides[vendor]||[];
-      for(const n of nums.slice(0,1)){if(vendorCount>=maxVendorSlides||!canAdd(2))break;await addOriginal('corporate',n,`Ficha corporativa FY27 de ${vendor}.`);vendorCount++;}
-      if(m.reserveVendorSlides&&deckDepth==='deep')addPlaceholder(vendor);
-      if(vendorCount>=maxVendorSlides)break;
-    }
-
-    // Servicios: selección compacta por perfil; el director evita convertir la reunión en catálogo.
-    if(m.includeServices&&canAdd(2)){const ss=serviceSourceSlides(m);const lim=deckDepth==='short'?1:deckDepth==='standard'?1:2;for(const n of ss.slice(0,lim)){if(!canAdd(2))break;await addOriginal('corporate',n,'Capacidad/servicio Westcon Comstor FY27.');}}
-
-    // Cierre con plan concreto, no research interno visible al partner.
-    s=pptx.addSlide();addBrand(s,'SIGUIENTE PASO','Plan de acción acordado','Salir de la reunión con pocas acciones, responsables y fecha.');
-    addCard(s,.7,2.0,3.75,2.15,'WESTCON','Activar los recursos, especialistas, fabricante y servicios necesarios para el siguiente hito.',C.magenta);
-    addCard(s,4.78,2.0,3.75,2.15,'PARTNER','Confirmar responsables, oportunidad/caso de uso prioritario y datos necesarios.',C.cyan);
-    addCard(s,8.86,2.0,3.75,2.15,'FABRICANTE','Alinear recursos, programa, preventa o soporte especializado cuando aplique.',C.purple);
-    addCard(s,.7,4.55,11.91,1.18,'RESULTADO QUE BUSCAMOS',m.desiredOutcome||'Un siguiente paso concreto, medible y con fecha.',C.amber);
-    if(m.outputs.notes)try{s.addNotes(`Preguntas recomendadas:\n- ${questions.join('\n- ')}\n\nFuentes y líneas de investigación utilizadas para preparar la reunión:\n- ${queries.join('\n- ')}`)}catch{}
-    if(deckDepth==='deep'&&canAdd(0))await addOriginal('corporate',84,'Cierre corporativo original FY27.');
-
-    try{await pptx.writeFile({fileName:`${slug(m.partner)}-${m.primaryRole||'meeting'}-westcon-fy27.pptx`});}catch(e){console.error(e);alert('No se pudo generar el PowerPoint. Revisa la consola y vuelve a intentarlo.');}
+    try{await pptx.writeFile({fileName:slug(c.partner||"westcon")+"-presentacion-ad-hoc-fy27.pptx"});}catch(err){console.error(err);alert("No se pudo generar el PowerPoint. Revisa la consola del navegador.");}
   }
 
-  function addOpportunitySlideBranded(pptx,m,C,addBrand,accent){
-    const opp=(m.roleData.opportunities||[]).filter(o=>o.name||o.vendor||o.amount);const s=pptx.addSlide();addBrand(s,'OPORTUNIDADES EN CURSO','Pipeline y próximos hitos','Una visión compartida de las oportunidades que queremos acelerar.',accent);
-    if(!opp.length){s.addText('Todavía no se han cargado oportunidades.',{x:.8,y:2.35,w:11.7,h:.45,fontFace:'Corbel',fontSize:20,bold:true,color:C.white,align:'center',margin:0});s.addText('Utiliza la reunión para discovery y añade después oportunidad, fabricante, solución, importe, fase y probabilidad.',{x:1.25,y:3.0,w:10.8,h:.7,fontFace:'Corbel',fontSize:13,color:C.muted,align:'center',margin:0});return;}
-    opp.slice(0,6).forEach((o,i)=>{const col=i%2,row=Math.floor(i/2),x=.62+col*6.08,y=1.95+row*1.55;s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.78,h:1.28,rectRadius:.06,fill:{color:C.navy2},line:{color:i%3===0?C.magenta:i%3===1?C.cyan:C.amber,pt:1}});s.addText(o.name||o.solution||'Oportunidad',{x:x+.18,y:y+.14,w:3.8,h:.28,fontFace:'Corbel',fontSize:12,bold:true,color:C.white,margin:0,fit:'shrink'});s.addText(`${o.vendor||'Vendor por definir'} · ${o.stage||'Fase por definir'}`,{x:x+.18,y:y+.52,w:3.9,h:.22,fontFace:'Corbel',fontSize:9,color:C.muted,margin:0,fit:'shrink'});s.addText(fmtMoney(o.amount),{x:x+4.1,y:y+.18,w:1.45,h:.3,fontFace:'Corbel',fontSize:14,bold:true,color:C.amber,align:'right',margin:0,fit:'shrink'});s.addText(`${Number(o.prob||0)}%`,{x:x+4.25,y:y+.64,w:1.3,h:.24,fontFace:'Corbel',fontSize:11,bold:true,color:C.cyan,align:'right',margin:0});});
+  function bind(){
+    ["partner","role","objective","vertical"].forEach(function(id){$("#"+id).addEventListener("input",function(){renderLibrary();save();});});
+    $("#searchSlides").addEventListener("input",renderLibrary);
+    $$("#libraryTabs button").forEach(function(b){b.addEventListener("click",function(){state.filter=b.dataset.filter;$$("#libraryTabs button").forEach(function(x){x.classList.toggle("active",x===b);});renderLibrary();});});
+    $("#suggestBtn").addEventListener("click",suggestDeck);$("#baseBtn").addEventListener("click",addBaseWestcon);$("#clearDeckBtn").addEventListener("click",function(){state.deck=[];renderDeck();save();});
+    $("#resetBtn").addEventListener("click",function(){if(confirm("¿Vaciar el deck y el contexto actual?")){localStorage.removeItem(STORE);location.reload();}});
+    $("#generateBtn").addEventListener("click",generatePptx);$("#addCustomBtn").addEventListener("click",function(){$("#customDialog").showModal();});
+    $("#saveCustomBtn").addEventListener("click",function(){var t=$("#customTitle").value.trim();if(!t)return;addToDeck({kind:"custom",title:t,body:$("#customBody").value.trim(),subtitle:"Contenido propio",category:"generated"});$("#customTitle").value="";$("#customBody").value="";$("#customDialog").close();});
   }
-
-  // ---------- Knowledge / panels ----------
-  function renderKnowledge(){
-    const sc=$('#sourceCards');sc.innerHTML=(K.sourceDecks||[]).map(s=>`<div class="card source-card"><span class="badge ${s.type==='verticals'?'cyan':'magenta'}">${esc(s.type)}</span><h3>${esc(s.name)}</h3><p>${esc(s.slides)} slides · fuente semilla de la base de conocimiento.</p></div>`).join('');
-    const st=$('#intelligenceStatus');if(st){
-      const n=Object.keys(VI?.vendors||{}).length,liveN=Object.values(LIVE?.vendors||{}).filter(x=>(x.evidence||[]).length).length,
-        sharedPartners=Object.keys(PARTNERS?.partners||{}).length,localPartners=Object.values(loadPartnerMemory()).filter(x=>x?.length).length,slideN=(SLIDES.slides||[]).length;
-      st.innerHTML=`<div class="section-title"><div><h2>Motor de inteligencia</h2><p>${n} fichas de fabricante · ${liveN} con evidencia pública cacheada · ${slideN} slides indexadas semánticamente.</p></div><span class="section-hint">${esc(intelligenceFreshness())}</span></div><div class="kpi-strip"><div class="kpi"><span>Vendor Intelligence</span><strong>${n}/36</strong></div><div class="kpi"><span>Evidencia pública</span><strong>${liveN}/36</strong></div><div class="kpi"><span>Partner dossiers</span><strong>${sharedPartners+localPartners}</strong></div><div class="kpi"><span>Slide library</span><strong>${slideN}</strong></div></div><div class="callout cyan" style="margin-top:14px"><strong>Capas activas:</strong> Partner Intelligence persistente · Vendor Intelligence · Presentation Director · contenido corporativo FY27 · casos verticales · competencia · analistas · noticias · casos públicos · documentación técnica · memoria de reuniones · evidence-first.</div>`;
-    }
-    $('#vendorCount').textContent=`${(K.vendors||[]).length} fabricantes`;$('#knowledgeVendors').innerHTML=(K.vendors||[]).map(v=>`<div class="knowledge-vendor"><img src="${vendorLogo(v.name)}" alt=""><div><strong>${esc(v.name)}</strong><small>${esc(v.area)}</small></div></div>`).join('');
+  function init(){
+    renderVerticals();bind();
+    var d=load();if(d){var c=d.context||{};$("#partner").value=c.partner||"";$("#role").value=c.role||"";$("#objective").value=c.objective||"";$("#vertical").value=c.vertical||"";(c.vendors||[]).forEach(function(v){state.vendors.add(v);});state.deck=Array.isArray(d.deck)?d.deck:[];}
+    renderVendors();renderLibrary();renderDeck();
   }
-  function showPanel(id){$$('.panel').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.panel===id));window.scrollTo({top:0,behavior:'smooth'});}
-
-  function wireGlobal(){
-    $$('.nav-item').forEach(b=>b.addEventListener('click',()=>showPanel(b.dataset.panel)));$('#newMeetingBtn').addEventListener('click',()=>newMeeting(true));$('#saveBtn').addEventListener('click',saveMeeting);$('#exportBtn').addEventListener('click',()=>downloadJson());$('#buildBlueprintBtn').addEventListener('click',buildBlueprint);
-    $('#meetingType')?.addEventListener('change',()=>{state.meetingTypeTouched=true;});
-    $$('#meetingForm input, #meetingForm select, #meetingForm textarea').forEach(e=>e.addEventListener('input',updateProgress));
-    $('#saveOutcomeBtn')?.addEventListener('click',saveOutcomeFromDialog);
-    // Add import JSON control next to export
-    const imp=document.createElement('button');imp.type='button';imp.className='secondary';imp.textContent='Importar JSON';const fi=document.createElement('input');fi.type='file';fi.accept='.json,application/json';fi.hidden=true;imp.addEventListener('click',()=>fi.click());fi.addEventListener('change',()=>fi.files[0]&&importJson(fi.files[0]));$('#exportBtn').after(imp,fi);
-  }
-
-  function init(){renderRoles();renderVendors();renderServices();renderVerticals();renderResearch();renderKnowledge();renderSaved();wireGlobal();updateProgress();}
-  document.addEventListener('DOMContentLoaded',init);
+  init();
 })();
