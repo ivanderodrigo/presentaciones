@@ -3,65 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Westcon Presentation Builder — crea presentaciones ad-hoc a partir del corpus FY27 de Westcon Comstor." />
-  <title>Westcon Presentation Builder · v3</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Westcon Presentation Studio — construye presentaciones FY27 ad-hoc a partir del deck corporativo, verticales e inteligencia verificada." />
+  <title>Westcon Presentation Studio · v4</title>
+  <link rel="stylesheet" href="builder.css" />
 </head>
 <body>
-  <div class="shell">
+  <div class="studio-shell">
     <header class="topbar">
-      <div class="brand"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"><div><strong>Presentation Builder</strong><span>FY27 · v3</span></div></div>
-      <div class="top-actions"><button class="ghost" id="resetBtn">Nuevo deck</button><button class="primary" id="generateBtn">Generar PowerPoint</button></div>
+      <div class="brand">
+        <img src="assets/westcon-comstor.png" alt="Westcon Comstor" />
+        <div><strong>Presentation Studio</strong><span>FY27 · v4</span></div>
+      </div>
+      <div class="top-status"><span class="status-dot"></span><span>Inteligencia FY27 + mercado activo</span></div>
+      <div class="top-actions">
+        <button class="btn ghost" id="resetBtn">Nuevo deck</button>
+        <button class="btn primary" id="generateBtn">Generar PowerPoint</button>
+      </div>
     </header>
 
-    <main>
+    <main class="page">
       <section class="hero">
-        <div><span class="eyebrow">CONSTRUCTOR AD-HOC</span><h1>Empieza por la presentación original. Añade solo lo que aporta valor.</h1><p>Selecciona contexto mínimo y deja que el motor proponga un deck. Después puedes añadir, quitar y reordenar cualquier slide antes de generar el PowerPoint.</p></div>
-        <div class="hero-stat"><strong id="deckCount">0</strong><span>slides en el deck</span></div>
+        <div class="hero-copy">
+          <span class="eyebrow">CONSTRUCTOR DE PRESENTACIONES AD-HOC</span>
+          <h1>Parte del deck original. Añade solo lo que mejora la conversación.</h1>
+          <p>Elige fabricante, perfil o vertical si te ayudan. La aplicación propone una historia, pero tú decides qué slides entran y en qué orden.</p>
+        </div>
+        <div class="hero-score">
+          <strong id="deckCount">0</strong>
+          <span>slides</span>
+          <small id="deckQuality">Deck vacío</small>
+        </div>
       </section>
 
       <section class="context-card">
-        <div class="context-grid">
-          <label>Partner / integrador <input id="partner" placeholder="Ej. SATEC"></label>
-          <label>Perfil <select id="role"><option value="">Sin perfil</option><option value="psm">PSM</option><option value="vsm">VSM</option><option value="sa">Solution Architect</option></select></label>
-          <label>Objetivo <input id="objective" placeholder="Ej. presentar Extreme y detectar oportunidades"></label>
-          <label>Vertical <select id="vertical"><option value="">Sin vertical</option></select></label>
+        <div class="context-row primary-context">
+          <label class="grow">Partner / integrador
+            <input id="partner" placeholder="Ej. SATEC, Nunsys, Evolutio..." />
+          </label>
+          <label class="grow-2">Objetivo de la presentación
+            <input id="objective" placeholder="Ej. presentar AttackIQ para CTEM y acordar un workshop" />
+          </label>
         </div>
-        <div class="vendor-row"><span>Fabricantes</span><div id="vendorChips" class="chips"></div></div>
-        <div class="context-actions"><button class="secondary" id="suggestBtn">✨ Proponer deck</button><button class="ghost" id="baseBtn">Añadir base Westcon</button><span id="suggestionNote">Puedes empezar vacío o dejar que el motor te proponga una narrativa.</span></div>
+
+        <div class="context-section">
+          <div class="context-heading">
+            <div><span class="step">1</span><div><strong>¿Qué enfoque quieres?</strong><small>Opcional. Solo cambia qué contenido prioriza la propuesta automática.</small></div></div>
+            <button class="link-btn" id="clearRoleBtn" type="button">Sin perfil</button>
+          </div>
+          <div class="role-cards" id="roleCards">
+            <button type="button" data-role="psm" class="role-card">
+              <span class="role-kicker">PSM</span><strong>Negocio y relación</strong>
+              <small>Más ejecutivo: valor conjunto, portfolio, verticales, servicios y próximos pasos.</small>
+            </button>
+            <button type="button" data-role="vsm" class="role-card">
+              <span class="role-kicker">VSM</span><strong>Fabricante y desarrollo</strong>
+              <small>Más foco en propuesta de valor, diferenciación, evidencia y activación de canal.</small>
+            </button>
+            <button type="button" data-role="sa" class="role-card">
+              <span class="role-kicker">SA</span><strong>Solución y prueba</strong>
+              <small>Más técnico: casos de uso, criterios de diseño, PoV/PoC, servicios de preventa.</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="context-section">
+          <div class="context-heading">
+            <div><span class="step">2</span><div><strong>¿Quieres verticalizar?</strong><small>Opcional. Añade casos de uso y mensajes sectoriales del datasheet FY27.</small></div></div>
+            <button class="link-btn" id="clearVerticalBtn" type="button">Sin vertical</button>
+          </div>
+          <div class="vertical-cards" id="verticalCards"></div>
+        </div>
+
+        <div class="context-section vendors-section">
+          <div class="context-heading">
+            <div><span class="step">3</span><div><strong>Fabricantes</strong><small>Selecciona uno o varios. La biblioteca y los bloques se reorganizan automáticamente.</small></div></div>
+            <input id="vendorSearch" class="vendor-search" placeholder="Buscar fabricante..." />
+          </div>
+          <div id="vendorChips" class="chips"></div>
+        </div>
+
+        <div class="impact-strip" id="contextImpact">
+          <div class="impact-icon">AI</div>
+          <div><strong>Sin contexto adicional</strong><span>Puedes empezar directamente desde la biblioteca original FY27.</span></div>
+          <div class="impact-actions">
+            <button class="btn secondary" id="suggestBtn" type="button">✨ Proponer deck</button>
+            <button class="btn ghost" id="emptyBtn" type="button">Empezar vacío</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-blocks-section">
+        <div class="section-head">
+          <div><span class="eyebrow">BLOQUES RÁPIDOS</span><h2>Añade una historia completa con un clic</h2></div>
+          <small>Los bloques combinan slides originales + contenido generado solo cuando aporta profundidad.</small>
+        </div>
+        <div id="quickBlocks" class="quick-blocks"></div>
       </section>
 
       <section class="workspace">
         <aside class="library-panel">
-          <div class="panel-head"><div><span class="eyebrow">BIBLIOTECA</span><h2>Slides disponibles</h2></div><span id="libraryCount" class="pill">0</span></div>
-          <input id="searchSlides" class="search" placeholder="Buscar por fabricante, tecnología, servicio...">
+          <div class="panel-head">
+            <div><span class="eyebrow">BIBLIOTECA FY27</span><h2>Slides disponibles</h2></div>
+            <span id="libraryCount" class="pill">0</span>
+          </div>
+          <input id="searchSlides" class="search" placeholder="Buscar: AttackIQ, SASE, DDI, preventa..." />
           <div class="tabs" id="libraryTabs">
             <button class="active" data-filter="all">Todo</button>
             <button data-filter="corporate">Corporativo</button>
             <button data-filter="vendor">Fabricantes</button>
             <button data-filter="service">Servicios</button>
             <button data-filter="vertical">Verticales</button>
-            <button data-filter="generated">Inteligencia</button>
+            <button data-filter="generated">IA útil</button>
           </div>
-          <div id="slideLibrary" class="library-list"></div>
+          <div id="slideLibrary" class="library-grid"></div>
         </aside>
 
         <section class="deck-panel">
-          <div class="panel-head"><div><span class="eyebrow">TU PRESENTACIÓN</span><h2>Orden final</h2></div><div class="panel-actions"><button class="ghost small" id="addCustomBtn">＋ Slide libre</button><button class="ghost small" id="clearDeckBtn">Vaciar</button></div></div>
-          <div id="deckEmpty" class="empty"><strong>Tu deck está vacío.</strong><span>Añade slides desde la biblioteca o pulsa “Proponer deck”.</span></div>
+          <div class="panel-head deck-head">
+            <div><span class="eyebrow">TU PRESENTACIÓN</span><h2>Orden final</h2></div>
+            <div class="panel-actions">
+              <button class="btn ghost small" id="addCustomBtn" type="button">＋ Slide libre</button>
+              <button class="btn ghost small" id="clearDeckBtn" type="button">Vaciar</button>
+            </div>
+          </div>
+          <div id="deckEmpty" class="empty">
+            <div class="empty-visual">＋</div>
+            <strong>Tu deck está vacío.</strong>
+            <span>Añade slides desde la biblioteca, usa un bloque rápido o pulsa “Proponer deck”.</span>
+          </div>
           <div id="deckList" class="deck-list"></div>
-          <div class="deck-footer"><span>Arrastra para reordenar o usa ↑ ↓.</span><strong id="deckSummary">0 slides</strong></div>
+          <div class="deck-footer">
+            <span>Arrastra para reordenar · clic en una miniatura para previsualizar.</span>
+            <strong id="deckSummary">0 slides</strong>
+          </div>
         </section>
       </section>
     </main>
   </div>
 
-  <dialog id="customDialog">
+  <dialog id="previewDialog" class="preview-dialog">
+    <div class="preview-shell">
+      <div class="preview-bar">
+        <div><span class="eyebrow" id="previewKind">PREVISUALIZACIÓN</span><strong id="previewTitle">Slide</strong></div>
+        <div class="preview-actions">
+          <button class="btn secondary small" id="previewAddBtn" type="button">＋ Añadir al deck</button>
+          <button class="icon-btn" id="closePreviewBtn" type="button" aria-label="Cerrar">×</button>
+        </div>
+      </div>
+      <div id="previewStage" class="preview-stage"></div>
+    </div>
+  </dialog>
+
+  <dialog id="customDialog" class="custom-dialog">
     <form method="dialog" id="customForm">
-      <div class="dialog-head"><div><span class="eyebrow">SLIDE LIBRE</span><h2>Añadir contenido propio</h2></div><button value="cancel" class="icon-btn">×</button></div>
-      <label>Título <input id="customTitle" required placeholder="Título de la slide"></label>
-      <label>Contenido <textarea id="customBody" rows="8" placeholder="Texto, bullets o mensaje principal"></textarea></label>
-      <div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button type="button" id="saveCustomBtn" class="primary">Añadir slide</button></div>
+      <div class="dialog-head">
+        <div><span class="eyebrow">SLIDE LIBRE</span><h2>Añadir contenido propio</h2></div>
+        <button value="cancel" class="icon-btn">×</button>
+      </div>
+      <label>Título <input id="customTitle" required placeholder="Título de la slide" /></label>
+      <label>Mensaje / bullets <textarea id="customBody" rows="8" placeholder="Una idea por línea. La presentación la convertirá en una slide editable."></textarea></label>
+      <div class="dialog-actions"><button value="cancel" class="btn secondary">Cancelar</button><button type="button" id="saveCustomBtn" class="btn primary">Añadir slide</button></div>
     </form>
   </dialog>
 
@@ -73,6 +174,6 @@
   <script src="data/partner-intelligence.js"></script>
   <script src="data/slide-index.js"></script>
   <script src="data/vertical-content.js"></script>
-  <script src="app.js"></script>
+  <script src="builder.js"></script>
 </body>
 </html>
