@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Westcon Meeting Intelligence · public evidence refresh (v2.0).
+"""Westcon Presentation Builder · public evidence refresh (v5).
 
 Deep, free, fail-soft research for every vendor in the FY27 portfolio.
 The output is safe to publish in GitHub Pages: public titles, sources, dates,
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VENDOR_FILE = ROOT / "data/vendor-intelligence.json"
 OUT_JSON = ROOT / "data/live-intelligence.json"
 OUT_JS = ROOT / "data/live-intelligence.js"
-UA = "Mozilla/5.0 (compatible; WestconMeetingIntelligence/2.0; +https://github.com/)"
+UA = "Mozilla/5.0 (compatible; WestconPresentationBuilder/5.0; +https://github.com/)"
 CTX = ssl.create_default_context()
 
 ANALYSTS = ["Gartner", "Forrester", "IDC", "Omdia", "GigaOm", "ISG", "Canalys", "KuppingerCole"]
@@ -68,7 +68,7 @@ OFFICIAL_DOMAINS = {
     "Palo Alto Networks":"paloaltonetworks.com","Ping Identity":"pingidentity.com","Proofpoint":"proofpoint.com",
     "Vectra AI":"vectra.ai","XM Cyber":"xmcyber.com","Zscaler":"zscaler.com","1Password":"1password.com",
     "Ciena":"ciena.com","EfficientIP":"efficientip.com","Ericsson":"ericsson.com","Extreme Networks":"extremenetworks.com",
-    "Juniper Networks":"juniper.net","Nokia":"nokia.com","Ruckus Networks":"ruckusnetworks.com","Weblib":"weblib.fr",
+    "Cloudflare":"cloudflare.com","Sonar (SonarQube)":"sonarsource.com","Nokia":"nokia.com","Ruckus Networks":"ruckusnetworks.com","Weblib":"weblib.fr",
     "AudioCodes":"audiocodes.com","Avaya":"avaya.com","AWS":"aws.amazon.com","Microsoft":"microsoft.com",
     "Penguin Solutions":"penguinsolutions.com","UiPath":"uipath.com",
 }
