@@ -359,11 +359,7 @@ function verticalQuestionFor(item){
   var x=VERTICAL_QUESTION[item.vertical]||{};
   return x[item.area]||'¿Qué iniciativa prioritaria podemos convertir en un piloto medible?';
 }
-function verticalVendors(v){
-  var out=[];
-  (v.solutions||[]).forEach(function(s){(s[1]||[]).forEach(function(n){if(out.indexOf(n)<0)out.push(n)})});
-  return out.slice(0,6);
-}
+function verticalImpact(v){return (v.impacts||[]).slice(0,4).map(function(x){return x[0]+' '+x[1]}).join(' · ')}
 function verticalWhyWin(){
   return ['Portfolio multi-fabricante alineado al caso de uso','PoC, preventa y 3D Labs para demostrar valor','Servicios, FLEX y lifecycle para ampliar la oportunidad'];
 }
@@ -616,8 +612,8 @@ async function generatePptx(){
     s.addShape(pptx.ShapeType.roundRect,{x:sc(.180),y:sc(3.615),w:sc(2.212),h:sc(1.005),rectRadius:.05,fill:{color:'082335',transparency:5},line:{color:accent,pt:1}});
     s.addText('ABRE CON',{x:sc(.330),y:sc(3.765),w:sc(.750),h:sc(.135),fontFace:'Arial',fontSize:10.55,bold:true,color:accent,margin:0});
     s.addText(playbookQuestion(item),{x:sc(.330),y:sc(3.975),w:sc(1.845),h:sc(.465),fontFace:'Arial',fontSize:15.8,bold:true,color:C.white,margin:0,fit:'shrink'});
-    s.addText('FABRICANTES CLAVE',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
-    s.addText(verticalVendors(v).join(' · '),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.8,color:C.white,margin:0,fit:'shrink'});
+    s.addText('IMPACTO ESPERADO',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
+    s.addText(verticalImpact(v),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.3,color:C.white,margin:0,fit:'shrink'});
 
     s.addText(areaName(item.area),{x:sc(2.835),y:sc(.210),w:sc(3.375),h:sc(.165),fontFace:'Arial',fontSize:11.47,bold:true,color:accent,margin:0,fit:'shrink'});
     s.addText(meta.main,{x:sc(2.835),y:sc(.412),w:sc(5.025),h:sc(.360),fontFace:'Arial',fontSize:meta.mf,bold:true,color:C.white,margin:0,fit:'shrink'});
