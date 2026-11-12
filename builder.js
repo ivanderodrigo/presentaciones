@@ -12,7 +12,7 @@ var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelect
 var esc=function(s){return String(s==null?'':s).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})};
 var norm=function(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')};
 var slug=function(s){return norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'westcon-presentacion'};
-var STORAGE='westcon.presentationBuilder.v5.2';
+var STORAGE='westcon.presentationBuilder.v5.3';
 
 var C={
   navy:'082C3A',navy2:'17324A',navy3:'123F50',white:'FFFFFF',ink:'173744',
@@ -22,7 +22,7 @@ var C={
 
 var CURATED={
   'Cloudflare':{
-    accent:'#F48120',pptAccent:'F48120',
+    accent:'#24507B',pptAccent:'24507B',brandAccent:'#F48120',
     sources:[
       'https://www.cloudflare.com/products/',
       'https://developers.cloudflare.com/reference-architecture/architectures/sase/',
@@ -30,7 +30,7 @@ var CURATED={
     ]
   },
   'Sonar (SonarQube)':{
-    accent:'#D3121D',pptAccent:'D3121D',
+    accent:'#6C5CA3',pptAccent:'6C5CA3',brandAccent:'#D3121D',
     sources:[
       'https://www.sonarsource.com/products/sonarqube/',
       'https://www.sonarsource.com/resources/library/how-to-check-code-quality-using-sonarqube/'
@@ -64,8 +64,8 @@ function areaKey(area){
   return'corporate';
 }
 function areaName(area){return area==='cyber'?'CIBERSEGURIDAD':area==='network'?'NETWORKING':'CLOUD, UC Y AUTOMATIZACIÓN'}
-function areaAccent(area){return area==='cyber'?'#EC008C':area==='network'?'#00C7CD':'#F5A800'}
-function pptAccent(area){return area==='cyber'?C.magenta:area==='network'?C.cyan:C.orange}
+function areaAccent(area){return area==='cyber'?'#D40A82':area==='network'?'#12C7C0':'#F5AE2D'}
+function pptAccent(area){return area==='cyber'?'D40A82':area==='network'?'12C7C0':'F5AE2D'}
 
 function internalSlide(s){
   return s.type==='sector'||s.type==='vertical-datasheet'||/playbook|mensajes clave|abre con|preguntas que abren|uso del slide/i.test((s.title||'')+' '+(s.subtitle||''));
@@ -95,9 +95,7 @@ function vendorName(item){
   return '';
 }
 function allItems(){
-  var base=sourceSlides().concat(Object.keys(CURATED).map(curatedItem));
-  if(state.filter==='vertical'||state.query.trim())base=base.concat(allVerticalItems());
-  return base;
+  return sourceSlides().concat(Object.keys(CURATED).map(curatedItem)).concat(allVerticalItems());
 }
 function itemText(x){
   var extra='';
@@ -106,31 +104,42 @@ function itemText(x){
   return norm([x.title,x.subtitle,x.area,x.vendor,x.vertical].concat(x.vendors||[],x.tags||[]).join(' ')+' '+extra);
 }
 function matchesFilter(x){
-  if(state.filter==='all')return x.kind!=='vertical';
+  if(state.filter==='all')return true;
   if(state.filter==='corporate')return x.kind==='source'&&['corporate','section','taxonomy'].indexOf(x.type)>=0;
   if(state.filter==='service')return x.kind==='source'&&x.type==='service';
   if(state.filter==='vendor')return x.type==='vendor';
   if(state.filter==='vertical')return x.kind==='vertical';
-  if(state.filter==='cyber')return x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('ciber')>=0 || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cyber';
-  if(state.filter==='network')return x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('network')>=0 || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='network';
-  if(state.filter==='cloud')return x.kind!=='vertical'&&x.type==='vendor'&&(norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0) || x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cloud';
+  if(state.filter==='cyber')return (x.kind==='vertical'&&x.area==='cyber') || (x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('ciber')>=0) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cyber');
+  if(state.filter==='network')return (x.kind==='vertical'&&x.area==='network') || (x.kind!=='vertical'&&x.type==='vendor'&&norm(x.area).indexOf('network')>=0) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='network');
+  if(state.filter==='cloud')return (x.kind==='vertical'&&x.area==='cloud') || (x.kind!=='vertical'&&x.type==='vendor'&&(norm(x.area).indexOf('cloud')>=0||norm(x.area).indexOf('automat')>=0||norm(x.area).indexOf('uc')>=0)) || (x.kind==='source'&&(x.type==='section'||x.type==='taxonomy')&&areaKey(x.area)==='cloud');
   return true;
+}
+function presentationOrder(item){
+  var p=Number(item.page||0),name=vendorName(item),vertical=String(item.vertical||'');
+  var vRank=Object.keys(VERTICAL.verticals||{}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})}).indexOf(vertical);
+  var cyberNames=vendorSlidesForArea('cyber').map(vendorName);
+  var networkNames=vendorSlidesForArea('network').map(vendorName);
+  var cloudNames=vendorSlidesForArea('cloud').map(vendorName);
+  if(item.kind==='source'&&p>=1&&p<=5)return p;
+  if(item.kind==='source'&&(p===6||p===7))return 100+p;
+  if(item.type==='vendor'&&norm(item.area).indexOf('ciber')>=0)return 200+Math.max(0,cyberNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='cyber')return 300+Math.max(0,vRank);
+  if(item.kind==='source'&&(p===38||p===39))return 400+p;
+  if(item.type==='vendor'&&norm(item.area).indexOf('network')>=0)return 500+Math.max(0,networkNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='network')return 600+Math.max(0,vRank);
+  if(item.kind==='source'&&(p===57||p===58))return 700+p;
+  if(item.type==='vendor'&&(norm(item.area).indexOf('cloud')>=0||norm(item.area).indexOf('automat')>=0||norm(item.area).indexOf('uc')>=0))return 800+Math.max(0,cloudNames.indexOf(name));
+  if(item.kind==='vertical'&&item.area==='cloud')return 900+Math.max(0,vRank);
+  if(item.kind==='source'&&p>=73)return 1000+p;
+  return 1200+(p||999);
 }
 function filteredItems(){
   var q=norm(state.query);
   var items=allItems().filter(matchesFilter).filter(function(x){return !q||itemText(x).indexOf(q)>=0});
   return items.sort(function(a,b){
-    var aIntro=a.kind==='source'&&(a.type==='section'||a.type==='taxonomy');
-    var bIntro=b.kind==='source'&&(b.type==='section'||b.type==='taxonomy');
-    if(aIntro!==bIntro)return aIntro?-1:1;
-    if(aIntro&&bIntro)return (a.page||999)-(b.page||999);
+    var d=presentationOrder(a)-presentationOrder(b);
+    if(d)return d;
     if(a.type==='vendor'&&b.type==='vendor')return vendorName(a).localeCompare(vendorName(b),'es',{sensitivity:'base'});
-    if(a.kind==='vertical'&&b.kind==='vertical'){
-      var v=String(a.vertical).localeCompare(String(b.vertical),'es',{sensitivity:'base'});
-      if(v)return v;
-      return ['cyber','network','cloud'].indexOf(a.area)-['cyber','network','cloud'].indexOf(b.area);
-    }
-    if(a.kind==='source'&&b.kind==='source')return (a.page||999)-(b.page||999);
     return String(a.title).localeCompare(String(b.title),'es',{sensitivity:'base'});
   });
 }
@@ -155,7 +164,10 @@ function vendorSlidesForArea(area){
 function overviewItems(area){
   return (INDEX.slides||[]).filter(function(s){return s.source==='corporate'&&(s.type==='section'||s.type==='taxonomy')&&areaKey(s.area)===area}).map(sourceItem).sort(function(a,b){return (a.page||999)-(b.page||999)});
 }
-function areaBlockItems(area){return overviewItems(area).concat(vendorSlidesForArea(area))}
+function verticalAreaItems(area){
+  return Object.keys(VERTICAL.verticals||{}).sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'})}).map(function(v){return verticalItem(v,area)}).filter(Boolean);
+}
+function areaBlockItems(area){return overviewItems(area).concat(vendorSlidesForArea(area)).concat(verticalAreaItems(area))}
 function serviceBlock(){return (INDEX.slides||[]).filter(function(s){return s.source==='corporate'&&s.type==='service'&&Number(s.page)!==82}).map(sourceItem).sort(function(a,b){return (a.page||999)-(b.page||999)})}
 function baseBlock(){return [1,2,3,4,5].map(sourceByPage).filter(Boolean)}
 
@@ -211,6 +223,28 @@ function themeBlocks(){
   ];
 }
 
+function sourceOverlayHtml(page){
+  if(Number(page)===5){
+    return '<div class="portfolio-hide-juniper"></div>'+
+      '<div class="portfolio-new-card cloudflare"><img src="'+esc(logoUrl('Cloudflare')||'')+'" alt="Cloudflare"></div>'+
+      '<div class="portfolio-new-card sonar"><img src="'+esc(logoUrl('Sonar (SonarQube)')||'')+'" alt="Sonar"></div>';
+  }
+  if(Number(page)===7){
+    return '<div class="taxonomy-patch cyber-sase">• Palo Alto, Cisco, Zscaler, F5 y Cloudflare<br>• NGFW, SSE/SASE, ZTNA, DDoS<br>• Certes: cifrado persistente</div>'+
+      '<div class="taxonomy-patch cyber-apps">• F5/Cloudflare/Noname: WAAP, WAF y API Security<br>• Sonar: SAST, quality gates y DevSecOps<br>• Menlo: Secure Browser / RBI</div>';
+  }
+  if(Number(page)===39){
+    return '<div class="taxonomy-patch network-routing">• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G</div>'+
+      '<div class="taxonomy-patch network-campus">• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN<br>• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt<br>• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One</div>'+
+      '<div class="taxonomy-patch network-dc">• Cisco: Nexus, ACI, NDFC y switching DC<br>• Extreme: SLX, VSP/Universal Switching y Fabric Connect</div>'+
+      '<div class="taxonomy-patch network-branch">• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing<br>• Extreme: ExtremeCloud SD‑WAN<br>• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular</div>';
+  }
+  return '';
+}
+function sourceVisualHtml(item,showPage){
+  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+sourceOverlayHtml(item.page)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+}
+
 function opportunityHtml(){
   return OPPORTUNITY_LINES.map(function(it){return '<div><b>✓ '+esc(it[0])+':</b> '+esc(it[1])+'</div>'}).join('');
 }
@@ -232,26 +266,43 @@ function curatedThumb(item,full){
   '</div>';
 }
 
+function verticalQuestion(area){
+  if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
+  if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
+  return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
+}
+function verticalVendors(v){
+  var out=[];
+  (v.solutions||[]).forEach(function(s){(s[1]||[]).forEach(function(n){if(out.indexOf(n)<0)out.push(n)})});
+  return out.slice(0,6);
+}
+function verticalWhyWin(){
+  return ['Portfolio multi-fabricante alineado al caso de uso','PoC, preventa y 3D Labs para demostrar valor','Servicios, FLEX y lifecycle para ampliar la oportunidad'];
+}
+
 function verticalThumb(item,full){
-  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#EC008C';
-  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal"><b>'+esc(w[0])+'</b><span>'+esc(w[1])+'</span></div>'}).join('');
+  var v=verticalModel(item.vertical,item.area),accent=item.accent||'#D40A82';
+  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal">'+esc(w[0])+'</div>'}).join('');
   var cases=(v.cases||[]).slice(0,4).map(function(c,i){
     var sol=(v.solutions||[])[i]||['',[]];
     var logos=(sol[1]||[]).slice(0,4).map(function(name){var u=logoUrl(name);return u?'<img src="'+esc(u)+'" alt="'+esc(name)+'" title="'+esc(name)+'">':'<em>'+esc(name)+'</em>'}).join('');
-    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><small>'+esc(sol[0]||'Cómo lo resolvemos')+'</small><div class="vs-logo-row">'+logos+'</div></div>';
+    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><div class="vs-logo-row">'+logos+'</div></div>';
   }).join('');
-  var impact=(v.impacts||[]).slice(0,4).map(function(x){return '<span>'+esc(x[0])+' '+esc(x[1])+'</span>'}).join('');
+  var quick=(v.start||[]).slice(0,3).map(function(x){return '• '+esc(x)}).join('<br>');
+  var why=verticalWhyWin().map(function(x){return '• '+esc(x)}).join('<br>');
+  var vendors=verticalVendors(v).join(' · ');
   return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+'">'+
-    '<div class="vs-left"><em>SOLUCIÓN SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>EL RETO</b><span>'+esc(v.challenge)+'</span></div></div>'+
-    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>CÓMO EMPEZAR</b><span>'+esc((v.start||[]).join(' · '))+'</span></div><div><b>IMPACTO ESPERADO</b><span>'+impact+'</span></div></div><div class="vs-next">SIGUIENTE PASO · '+esc(v.nextStep)+'</div></div>'+
+    '<div class="vs-left"><em>PLAYBOOK SECTORIAL</em><h3>'+esc(item.vertical)+'</h3><strong>'+esc(areaName(item.area))+'</strong><div class="vs-challenge"><b>ABRE CON</b><span>'+esc(verticalQuestion(item.area))+'</span></div><div class="vs-proof"><b>FABRICANTES CLAVE</b><span>'+esc(vendors)+'</span></div></div>'+
+    '<div class="vs-main"><div class="vs-area">'+esc(areaName(item.area))+'</div><h3>'+esc(item.vertical)+'</h3><div class="vs-westcon"><img src="assets/westcon-comstor.png" alt="Westcon Comstor"></div><h5>SEÑALES DE OPORTUNIDAD</h5><div class="vs-signals">'+sig+'</div><div class="vs-cases">'+cases+'</div><div class="vs-bottom"><div><b>QUICK WINS</b><span>'+quick+'</span></div><div><b>POR QUÉ GANAMOS</b><span>'+why+'</span></div></div><div class="vs-next"><b>SIGUIENTE PASO</b><span>'+esc(v.nextStep)+'</span></div></div>'+
   '</div>';
 }
+
 function generatedMini(item){
   var accent=item.kind==='vertical'?item.accent:(CURATED[item.vendor]||{}).accent||'#EC008C';
   return '<div class="deck-mini-generated" style="--accent:'+accent+'">'+esc(item.kind==='vertical'?item.vertical:item.vendor||'PERSONALIZADA')+'</div>';
 }
 function thumbnail(item){
-  if(item.asset)return '<div class="thumb"><img src="'+esc(item.asset)+'" alt=""><span class="thumb-tag">P. '+item.page+'</span></div>';
+  if(item.asset)return '<div class="thumb">'+sourceVisualHtml(item,true)+'</div>';
   if(item.kind==='curated-vendor')return '<div class="thumb">'+curatedThumb(item,false)+'</div>';
   if(item.kind==='vertical')return '<div class="thumb">'+verticalThumb(item,false)+'</div>';
   return '<div class="thumb">'+generatedMini(item)+'</div>';
@@ -281,7 +332,7 @@ function renderDeck(){
   var host=$('#deckList');host.innerHTML='';$('#emptyDeck').classList.toggle('hidden',state.deck.length>0);$('#deckCount').textContent=state.deck.length;
   state.deck.forEach(function(item,i){
     var row=document.createElement('div');row.className='deck-item';row.draggable=true;
-    var mini=item.asset?'<div class="deck-thumb"><img src="'+esc(item.asset)+'" alt=""></div>':'<div class="deck-thumb">'+generatedMini(item)+'</div>';
+    var mini=item.asset?'<div class="deck-thumb">'+sourceVisualHtml(item,false)+'</div>':'<div class="deck-thumb">'+generatedMini(item)+'</div>';
     row.innerHTML='<div class="deck-num">'+(i+1)+'</div>'+mini+'<div class="deck-copy"><strong>'+esc(item.title)+'</strong><small>'+esc(item.subtitle||'')+'</small></div><div class="deck-actions"><button title="Subir">↑</button><button title="Bajar">↓</button><button title="Duplicar">⧉</button><button title="Quitar">×</button></div>';
     $('.deck-thumb',row).addEventListener('click',function(){openPreview(item)});
     var bs=$$('button',row);bs[0].onclick=function(){move(i,-1)};bs[1].onclick=function(){move(i,1)};bs[2].onclick=function(){duplicate(i)};bs[3].onclick=function(){state.deck.splice(i,1);renderDeck();renderLibrary();save()};
@@ -296,7 +347,7 @@ function openPreview(item){
   state.preview=item;$('#previewTitle').textContent=item.title;
   $('#previewKicker').textContent=item.kind==='vertical'?'VERTICAL':item.kind==='curated-vendor'?'FABRICANTE':'SLIDE FY27';
   var stage=$('#previewStage');stage.innerHTML='';
-  if(item.asset){var img=document.createElement('img');img.src=item.asset;img.alt=item.title;stage.appendChild(img)}
+  if(item.asset){stage.innerHTML='<div class="preview-source">'+sourceVisualHtml(item,false)+'</div>'}
   else if(item.kind==='curated-vendor')stage.innerHTML=curatedThumb(item,true);
   else if(item.kind==='vertical')stage.innerHTML=verticalThumb(item,true);
   else stage.innerHTML='<div class="preview-generated">'+generatedMini(item)+'</div>';
@@ -334,132 +385,181 @@ async function generatePptx(){
   pptx.theme={headFontFace:'Arial',bodyFontFace:'Arial',lang:'es-ES'};
   var westconLogo=null,hero=null;try{westconLogo=await assetData('assets/westcon-comstor.png')}catch(e){}try{hero=await assetData('assets/hero.jpeg')}catch(e){}
 
+  async function patchSourceSlide(s,page){
+    var S=4/3,sc=function(v){return v*S};
+    if(Number(page)===5){
+      s.addShape(pptx.ShapeType.rect,{x:sc(8.51),y:sc(1.68),w:sc(1.05),h:sc(.40),fill:{color:'1A2E44'},line:{color:'1A2E44'}});
+      for(const spec of [
+        {name:'Cloudflare',x:3.17},
+        {name:'Sonar (SonarQube)',x:4.59}
+      ]){
+        s.addShape(pptx.ShapeType.roundRect,{x:sc(spec.x),y:sc(3.41),w:sc(1.34),h:sc(.37),rectRadius:.03,fill:{color:C.white},line:{color:'3CAABE',pt:.5}});
+        await addLogo(s,spec.name,sc(spec.x+.10),sc(3.45),sc(1.14),sc(.29));
+      }
+    }
+    if(Number(page)===7){
+      var patches=[
+        {x:5.325,y:1.71,w:1.823,h:.585,text:'• Palo Alto, Cisco, Zscaler, F5 y Cloudflare\n• NGFW, SSE/SASE, ZTNA, DDoS\n• Certes: cifrado persistente'},
+        {x:7.62,y:1.71,w:1.823,h:.585,text:'• F5/Cloudflare/Noname: WAAP, WAF y API Security\n• Sonar: SAST, quality gates y DevSecOps\n• Menlo: Secure Browser / RBI'}
+      ];
+      patches.forEach(function(p){
+        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'113A50'},line:{color:'113A50'}});
+        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:9.4,color:C.white,margin:0,fit:'shrink',breakLine:false});
+      });
+    }
+    if(Number(page)===39){
+      var patches=[
+        {x:2.985,y:1.932,w:1.855,h:.326,text:'• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G'},
+        {x:5.24,y:1.819,w:1.855,h:.552,text:'• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN\n• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt\n• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One'},
+        {x:7.495,y:1.875,w:1.855,h:.439,text:'• Cisco: Nexus, ACI, NDFC y switching DC\n• Extreme: SLX, VSP/Universal Switching y Fabric Connect'},
+        {x:.73,y:3.727,w:2.553,h:.337,text:'• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing\n• Extreme: ExtremeCloud SD‑WAN\n• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular'}
+      ];
+      patches.forEach(function(p){
+        s.addShape(pptx.ShapeType.rect,{x:sc(p.x-.02),y:sc(p.y-.02),w:sc(p.w+.04),h:sc(p.h+.04),fill:{color:'173E5C'},line:{color:'173E5C'}});
+        s.addText(p.text,{x:sc(p.x),y:sc(p.y),w:sc(p.w),h:sc(p.h),fontFace:'Corbel',fontSize:8.9,color:C.white,margin:0,fit:'shrink'});
+      });
+    }
+  }
   async function addOriginal(page){
-    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});return s;
+    var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});await patchSourceSlide(s,page);return s;
   }
   function addNotes(s,lines){try{s.addNotes(lines.filter(Boolean).join('\n'))}catch(e){}}
+  var logoDimCache={};
+  async function logoDims(data){
+    if(logoDimCache[data])return logoDimCache[data];
+    return logoDimCache[data]=await new Promise(function(resolve){
+      var im=new Image();
+      im.onload=function(){resolve({w:im.naturalWidth||im.width||1,h:im.naturalHeight||im.height||1})};
+      im.onerror=function(){resolve({w:1,h:1})};
+      im.src=data;
+    });
+  }
   async function addLogo(s,name,x,y,w,h){
     var u=logoUrl(name);
     if(u){
-      try{var d=await assetData(u);s.addImage({data:d,x:x,y:y,w:w,h:h});return}catch(e){}
+      try{
+        var d=await assetData(u),dim=await logoDims(d),scale=Math.min(w/dim.w,h/dim.h),iw=dim.w*scale,ih=dim.h*scale;
+        s.addImage({data:d,x:x+(w-iw)/2,y:y+(h-ih)/2,w:iw,h:ih});
+        return;
+      }catch(e){}
     }
-    s.addText(name,{x:x,y:y+h*.27,w:w,h:h*.46,fontFace:'Arial',fontSize:7.5,bold:true,color:C.ink,align:'center',valign:'mid',fit:'shrink',margin:0});
+    s.addText(name,{x:x,y:y+h*.27,w:w,h:h*.46,fontFace:'Corbel',fontSize:7.5,bold:true,color:C.ink,align:'center',valign:'mid',fit:'shrink',margin:0});
   }
 
   async function addVendorSlide(item){
     var name=item.vendor,p=VI.vendors[name]||{},m=CURATED[name]||{},accent=m.pptAccent||C.purple,s=pptx.addSlide();
-    s.background={color:'17324A'};
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:5.28,h:7.18,fill:{color:'20354C'},line:{color:'20354C'}});
-    s.addShape(pptx.ShapeType.line,{x:5.28,y:0,w:0,h:7.18,line:{color:accent,pt:1.2}});
-    s.addShape(pptx.ShapeType.rect,{x:0,y:7.18,w:13.333,h:.32,fill:{color:accent},line:{color:accent}});
+    var S=4/3, sc=function(v){return v*S};
+    s.background={color:'1A2E44'};
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(.12),h:7.5,fill:{color:accent},line:{color:accent}});
 
-    s.addShape(pptx.ShapeType.rect,{x:.40,y:.24,w:4.48,h:.44,fill:{color:'31415C'},line:{color:accent,pt:.8}});
-    s.addText(p.headline||item.title,{x:.50,y:.37,w:4.25,h:.13,fontFace:'Arial',fontSize:10,bold:true,color:C.white,charSpacing:2,margin:0,fit:'shrink'});
+    s.addText(p.headline||item.title,{x:sc(.35),y:sc(.20),w:sc(3.20),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,charSpacing:2.5,margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.25),y:sc(.62),w:sc(3.45),h:sc(1.45),fill:{color:C.white},line:{color:accent,pt:1}});
+    await addLogo(s,name,sc(.35),sc(.72),sc(3.25),sc(1.25));
+    s.addText(p.tagline||'',{x:sc(.25),y:sc(2.20),w:sc(3.50),h:sc(.65),fontFace:'Corbel',fontSize:16.67,italic:true,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.rect,{x:.34,y:.83,w:4.62,h:1.94,fill:{color:'F7F7F7'},line:{color:accent,pt:.8}});
-    await addLogo(s,name,.70,1.12,3.90,1.30);
+    s.addShape(pptx.ShapeType.rect,{x:sc(4.0),y:sc(.15),w:sc(5.85),h:sc(2.38),fill:{color:accent,transparency:93},line:{color:accent,pt:.8}});
+    s.addText('¿Qué aporta '+name.replace(' (SonarQube)','')+'?',{x:sc(4.15),y:sc(.22),w:sc(5.55),h:sc(.38),fontFace:'Corbel',fontSize:16,bold:true,color:accent,margin:0,fit:'shrink'});
+    s.addText(p.valueProposition||'',{x:sc(4.15),y:sc(.65),w:sc(5.55),h:sc(1.82),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,fit:'shrink'});
 
-    s.addText(p.tagline||'',{x:.38,y:3.10,w:4.48,h:.56,fontFace:'Arial',fontSize:14.2,italic:true,color:C.white,margin:0,fit:'shrink'});
-
-    s.addShape(pptx.ShapeType.rect,{x:.26,y:4.03,w:4.80,h:.50,fill:{color:'695A34'},line:{color:C.orange,pt:1}});
-    s.addText('💼 OPORTUNIDAD PARA EL SOCIO',{x:.45,y:4.18,w:4.15,h:.14,fontFace:'Arial',fontSize:9.4,bold:true,color:C.white,margin:0});
-    s.addShape(pptx.ShapeType.rect,{x:.26,y:4.53,w:4.80,h:2.52,fill:{color:'1C304A'},line:{color:accent,pt:.85}});
-
-    var y=4.68;
-    OPPORTUNITY_LINES.forEach(function(it){
-      s.addText('✓ '+it[0]+':',{x:.43,y:y,w:1.70,h:.16,fontFace:'Arial',fontSize:8.7,bold:true,color:C.white,margin:0,fit:'shrink'});
-      s.addText(it[1],{x:2.00,y:y,w:2.78,h:.32,fontFace:'Arial',fontSize:8.5,color:C.white,margin:0,fit:'shrink'});
-      y+=.43;
-    });
-
-    s.addShape(pptx.ShapeType.rect,{x:5.42,y:.20,w:7.91,h:3.20,fill:{color:'243650'},line:{color:accent,pt:.9}});
-    s.addText('¿Qué aporta '+name.replace(' (SonarQube)','')+'?',{x:5.65,y:.46,w:6.9,h:.27,fontFace:'Arial',fontSize:14.5,bold:true,color:accent,margin:0});
-    s.addText(p.valueProposition||'',{x:5.66,y:1.50,w:7.02,h:1.06,fontFace:'Arial',fontSize:12.4,color:'E8ECEF',margin:0,fit:'shrink'});
-
-    s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:5.44,y:3.67,w:6.95,h:.20,fontFace:'Arial',fontSize:10.6,bold:true,color:C.orange,charSpacing:3,margin:0});
+    s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:sc(4.0),y:sc(2.65),w:sc(5.85),h:sc(.32),fontFace:'Corbel',fontSize:13.6,bold:true,color:C.orange,charSpacing:3.3,margin:0,fit:'shrink'});
     var adv=(p.approvedAdvantages||[]).slice(0,4);
-    var ay=5.05;
-    adv.forEach(function(t){
-      s.addText('•',{x:5.44,y:ay,w:.18,h:.13,fontFace:'Arial',fontSize:12,color:C.white,margin:0});
-      s.addText(t,{x:5.95,y:ay-.01,w:6.82,h:.34,fontFace:'Arial',fontSize:11.3,color:'E3E6E9',margin:0,fit:'shrink'});
-      ay+=.38;
+    var runs=[];
+    adv.forEach(function(t,i){
+      runs.push({text:'•  '+t,options:{breakLine:i<adv.length-1}});
     });
+    s.addText(runs,{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,breakLine:false,fit:'shrink',paraSpaceAfterPt:4});
+
+    s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(2.275),fill:{color:'1A2E44',transparency:40},line:{color:accent,pt:.8}});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(.38),fill:{color:'F09E0D',transparency:70},line:{color:'F09E0D',pt:1}});
+    s.addText('💼 OPORTUNIDAD PARA EL SOCIO',{x:sc(.30),y:sc(3.10),w:sc(3.35),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,margin:0,fit:'shrink'});
+    var oy=3.50;
+    OPPORTUNITY_LINES.forEach(function(it){
+      s.addText([
+        {text:'✓ ',options:{bold:true,color:'FFAE00'}},
+        {text:it[0],options:{bold:true,color:C.white}},
+        {text:': '+it[1],options:{bold:false,color:C.white}}
+      ],{x:sc(.30),y:sc(oy),w:sc(3.35),h:sc(.34),fontFace:'Corbel',fontSize:11.47,color:C.white,margin:0,fit:'shrink'});
+      oy+=.355;
+    });
+    s.addShape(pptx.ShapeType.rect,{x:0,y:sc(5.40),w:13.333,h:sc(.225),fill:{color:accent},line:{color:accent}});
     addNotes(s,(m.sources||[]).map(function(x){return 'Fuente oficial: '+x}));
     return s;
   }
 
-  function addPlaybookLeft(s,item,v,accent){
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:3.47,h:7.50,fill:{color:'092D3A'},line:{color:'092D3A'}});
-    if(hero){
-      s.addImage({data:hero,x:0,y:2.05,w:3.47,h:5.45});
-      s.addShape(pptx.ShapeType.rect,{x:0,y:2.05,w:3.47,h:5.45,fill:{color:'062B38',transparency:28},line:{color:'062B38',transparency:100}});
-    }
-    s.addShape(pptx.ShapeType.rect,{x:3.44,y:0,w:.04,h:7.50,fill:{color:accent},line:{color:accent}});
-    s.addText('SOLUCIÓN SECTORIAL',{x:.30,y:.36,w:2.25,h:.14,fontFace:'Arial',fontSize:9,bold:true,color:accent,charSpacing:1.1,margin:0});
-    s.addText(item.vertical.toUpperCase(),{x:.30,y:.81,w:2.85,h:.78,fontFace:'Arial',fontSize:25,bold:true,color:C.white,fit:'shrink',margin:0});
-    s.addText(areaName(item.area),{x:.30,y:1.64,w:2.65,h:.45,fontFace:'Arial',fontSize:13,bold:true,color:C.white,fit:'shrink',margin:0});
-
-    s.addShape(pptx.ShapeType.roundRect,{x:.23,y:4.70,w:2.96,h:1.56,rectRadius:.05,fill:{color:'082C3A',transparency:5},line:{color:accent,pt:1}});
-    s.addText('EL RETO',{x:.43,y:4.98,w:.85,h:.12,fontFace:'Arial',fontSize:8,bold:true,color:accent,margin:0});
-    s.addText(v.challenge,{x:.43,y:5.32,w:2.48,h:.65,fontFace:'Arial',fontSize:10.4,bold:true,color:C.white,fit:'shrink',margin:0});
-
-    if(westconLogo){
-      s.addShape(pptx.ShapeType.roundRect,{x:.31,y:6.65,w:2.50,h:.43,fill:{color:C.white},line:{color:accent,pt:.5}});
-      s.addImage({data:westconLogo,x:.74,y:6.75,w:1.65,h:.23});
-    }
+  function playbookQuestion(area){
+    if(area==='cyber')return '¿Qué servicio crítico no puede caer, filtrar datos ni perder trazabilidad?';
+    if(area==='network')return '¿Qué sede, proceso o usuario depende hoy de una conectividad frágil?';
+    return '¿Qué proceso sigue frenado por tareas manuales o tecnología legacy?';
   }
-
+  function playbookWhyWin(){
+    return ['• Portfolio multi-fabricante alineado al caso de uso','• PoC, preventa y 3D Labs para demostrar valor','• Servicios, FLEX y lifecycle para ampliar la oportunidad'].join('\n');
+  }
   async function addVerticalSlide(item){
     var v=verticalModel(item.vertical,item.area),accent=pptAccent(item.area),s=pptx.addSlide();
-    s.background={color:C.navy};
-    addPlaybookLeft(s,item,v,accent);
+    var S=4/3,sc=function(v){return v*S};
+    s.background={color:'082335'};
 
-    s.addText(areaName(item.area),{x:3.86,y:.30,w:3.2,h:.15,fontFace:'Arial',fontSize:9.5,bold:true,color:accent,charSpacing:.5,margin:0});
-    s.addText(item.vertical.toUpperCase(),{x:3.86,y:.66,w:6.75,h:.40,fontFace:'Arial',fontSize:24,bold:true,color:C.white,margin:0,fit:'shrink'});
+    if(hero){
+      s.addImage({data:hero,x:0,y:0,w:sc(2.587),h:7.5});
+      s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(2.587),h:7.5,fill:{color:'082335',transparency:34},line:{color:'082335',transparency:100}});
+    }else{
+      s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(2.587),h:7.5,fill:{color:'0B3140'},line:{color:'0B3140'}});
+    }
+    s.addShape(pptx.ShapeType.rect,{x:sc(2.542),y:0,w:sc(.045),h:7.5,fill:{color:accent},line:{color:accent}});
+
+    s.addText('PLAYBOOK SECTORIAL',{x:sc(.225),y:sc(.255),w:sc(2.025),h:sc(.165),fontFace:'Arial',fontSize:10.9,bold:true,color:accent,margin:0});
+    s.addText(item.vertical.toUpperCase(),{x:sc(.225),y:sc(.540),w:sc(2.115),h:sc(.615),fontFace:'Arial',fontSize:28.7,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText(areaName(item.area),{x:sc(.225),y:sc(1.170),w:sc(2.115),h:sc(.210),fontFace:'Arial',fontSize:13.5,bold:true,color:C.white,margin:0,fit:'shrink'});
+
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(.180),y:sc(3.615),w:sc(2.212),h:sc(1.005),rectRadius:.05,fill:{color:'082335',transparency:5},line:{color:accent,pt:1}});
+    s.addText('ABRE CON',{x:sc(.330),y:sc(3.765),w:sc(.750),h:sc(.135),fontFace:'Arial',fontSize:10.55,bold:true,color:accent,margin:0});
+    s.addText(playbookQuestion(item.area),{x:sc(.330),y:sc(3.975),w:sc(1.845),h:sc(.465),fontFace:'Arial',fontSize:15.8,bold:true,color:C.white,margin:0,fit:'shrink'});
+    s.addText('FABRICANTES CLAVE',{x:sc(.270),y:sc(4.710),w:sc(1.50),h:sc(.120),fontFace:'Arial',fontSize:9.4,bold:true,color:accent,margin:0});
+    s.addText(verticalVendors(v).join(' · '),{x:sc(.270),y:sc(4.875),w:sc(2.025),h:sc(.255),fontFace:'Arial',fontSize:8.8,color:C.white,margin:0,fit:'shrink'});
+
+    s.addText(areaName(item.area),{x:sc(2.835),y:sc(.210),w:sc(3.375),h:sc(.165),fontFace:'Arial',fontSize:11.47,bold:true,color:accent,margin:0,fit:'shrink'});
+    s.addText(item.vertical.toUpperCase(),{x:sc(2.835),y:sc(.412),w:sc(5.025),h:sc(.360),fontFace:'Arial',fontSize:29.8,bold:true,color:C.white,margin:0,fit:'shrink'});
     if(westconLogo){
-      s.addShape(pptx.ShapeType.roundRect,{x:11.20,y:.24,w:1.70,h:.58,fill:{color:C.white},line:{color:accent,pt:.6}});
-      s.addImage({data:westconLogo,x:11.51,y:.36,w:1.08,h:.29});
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(8.287),y:sc(.165),w:sc(1.462),h:sc(.540),fill:{color:C.white},line:{color:accent,pt:.7},rectRadius:.05});
+      s.addImage({data:westconLogo,x:sc(8.363),y:sc(.225),w:sc(1.312),h:sc(.420)});
     }
 
-    s.addText('SEÑALES DE OPORTUNIDAD',{x:3.86,y:1.18,w:2.35,h:.13,fontFace:'Arial',fontSize:8.5,bold:true,color:accent,margin:0});
+    s.addText('SEÑALES DE OPORTUNIDAD',{x:sc(2.835),y:sc(.840),w:sc(1.650),h:sc(.135),fontFace:'Arial',fontSize:10.9,bold:true,color:accent,margin:0});
     (v.why||[]).slice(0,3).forEach(function(it,i){
-      var x=3.86+i*3.07;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:1.39,w:2.84,h:.58,rectRadius:.04,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-      s.addText(it[0],{x:x+.12,y:1.47,w:2.60,h:.11,fontFace:'Arial',fontSize:7.8,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
-      s.addText(it[1],{x:x+.15,y:1.66,w:2.54,h:.14,fontFace:'Arial',fontSize:5.8,color:'D9E8EC',align:'center',margin:0,fit:'shrink'});
+      var x=[2.835,5.130,7.425][i];
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(x),y:sc(1.028),w:sc(2.175),h:sc(.315),rectRadius:.04,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+      s.addText(it[0],{x:sc(x+.060),y:sc(1.095),w:sc(2.055),h:sc(.135),fontFace:'Arial',fontSize:11.7,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
     });
 
+    var caseCoords=[
+      {x:2.835,y:1.485},{x:6.285,y:1.485},{x:2.835,y:2.768},{x:6.285,y:2.768}
+    ];
     for(var i=0;i<4;i++){
-      var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]];
-      var col=i%2,row=Math.floor(i/2),x=3.86+col*4.47,y=2.14+row*1.62;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:y,w:4.22,h:1.40,rectRadius:.06,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-      s.addText(ca[0],{x:x+.17,y:y+.16,w:3.75,h:.17,fontFace:'Arial',fontSize:10,bold:true,color:accent,margin:0,fit:'shrink'});
-      s.addText(ca[1],{x:x+.17,y:y+.48,w:3.75,h:.40,fontFace:'Arial',fontSize:8.5,color:C.white,margin:0,fit:'shrink'});
-      var names=(sol[1]||[]).slice(0,4),n=names.length,boxW=n<=2?1.70:n===3?1.13:.84,gap=.08,start=x+.17;
+      var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]],cc=caseCoords[i];
+      s.addShape(pptx.ShapeType.roundRect,{x:sc(cc.x),y:sc(cc.y),w:sc(3.315),h:sc(1.147),rectRadius:.06,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+      s.addText(ca[0],{x:sc(cc.x+.120),y:sc(cc.y+.090),w:sc(3.075),h:sc(.180),fontFace:'Arial',fontSize:14.33,bold:true,color:accent,margin:0,fit:'shrink'});
+      s.addText(ca[1],{x:sc(cc.x+.120),y:sc(cc.y+.315),w:sc(3.075),h:sc(.315),fontFace:'Arial',fontSize:12.15,color:C.white,margin:0,fit:'shrink'});
+      var names=(sol[1]||[]).slice(0,4),n=names.length;
+      var x0=cc.x+.120,slotW=n>=4?.724:n===3?.985:n===2?1.508:2.2,gap=n>=4?.060:n===3?.060:.060;
       for(var j=0;j<n;j++){
-        var bx=start+j*(boxW+gap);
-        s.addShape(pptx.ShapeType.roundRect,{x:bx,y:y+.98,w:boxW,h:.27,rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.35}});
-        await addLogo(s,names[j],bx+.04,y+1.015,boxW-.08,.19);
+        var bx=x0+j*(slotW+gap);
+        s.addShape(pptx.ShapeType.roundRect,{x:sc(bx),y:sc(cc.y+.795),w:sc(slotW),h:sc(.240),rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.45}});
+        await addLogo(s,names[j],sc(bx+.045),sc(cc.y+.828),sc(slotW-.090),sc(.175));
       }
     }
 
-    s.addShape(pptx.ShapeType.roundRect,{x:3.86,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-    s.addText('CÓMO EMPEZAR',{x:4.02,y:5.61,w:1.30,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
-    s.addText((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),{x:4.02,y:5.88,w:3.78,h:.52,fontFace:'Arial',fontSize:8.2,color:C.white,margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(2.835),y:sc(4.020),w:sc(3.315),h:sc(.990),rectRadius:.05,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+    s.addText('QUICK WINS',{x:sc(2.955),y:sc(4.110),w:sc(.938),h:sc(.135),fontFace:'Arial',fontSize:12.0,bold:true,color:accent,margin:0});
+    s.addText((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),{x:sc(2.970),y:sc(4.298),w:sc(3.038),h:sc(.600),fontFace:'Arial',fontSize:11.7,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.roundRect,{x:8.33,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-    s.addText('IMPACTO ESPERADO',{x:8.49,y:5.61,w:1.62,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
-    var impacts=(v.impacts||[]).slice(0,4);
-    var ix=8.49,iy=5.93;
-    impacts.forEach(function(it,j){
-      var cx=ix+(j%2)*1.88,cy=iy+Math.floor(j/2)*.34;
-      s.addText(it[0],{x:cx,y:cy,w:1.28,h:.10,fontFace:'Arial',fontSize:6.5,color:C.white,margin:0,fit:'shrink'});
-      s.addText(String(it[1]),{x:cx+1.30,y:cy,w:.32,h:.10,fontFace:'Arial',fontSize:6.8,bold:true,color:accent,align:'right',margin:0});
-    });
+    s.addShape(pptx.ShapeType.roundRect,{x:sc(6.285),y:sc(4.020),w:sc(3.315),h:sc(.990),rectRadius:.05,fill:{color:'113A50'},line:{color:accent,pt:.8}});
+    s.addText('POR QUÉ GANAMOS',{x:sc(6.405),y:sc(4.110),w:sc(1.312),h:sc(.135),fontFace:'Arial',fontSize:12.0,bold:true,color:accent,margin:0});
+    s.addText(playbookWhyWin(),{x:sc(6.420),y:sc(4.298),w:sc(3.038),h:sc(.600),fontFace:'Arial',fontSize:11.7,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.rect,{x:3.86,y:6.82,w:8.69,h:.40,fill:{color:accent},line:{color:accent}});
-    s.addText('SIGUIENTE PASO',{x:4.02,y:6.95,w:1.22,h:.10,fontFace:'Arial',fontSize:7.2,bold:true,color:item.area==='cloud'?C.navy:C.white,margin:0});
-    s.addText(v.nextStep,{x:5.43,y:6.91,w:6.78,h:.17,fontFace:'Arial',fontSize:8.7,bold:true,color:item.area==='cloud'?C.navy:C.white,align:'center',margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.rect,{x:sc(2.835),y:sc(5.175),w:sc(6.765),h:sc(.285),fill:{color:accent},line:{color:accent}});
+    s.addText('SIGUIENTE PASO',{x:sc(2.940),y:sc(5.235),w:sc(1.238),h:sc(.120),fontFace:'Arial',fontSize:9.75,bold:true,color:'082335',margin:0});
+    s.addText(v.nextStep,{x:sc(4.200),y:sc(5.220),w:sc(5.213),h:sc(.142),fontFace:'Arial',fontSize:12.27,bold:true,color:'082335',align:'center',margin:0,fit:'shrink'});
 
     addNotes(s,['Contenido estructurado a partir de Westcon Datasheets Verticales FY27.',v.references||'']);
     return s;
