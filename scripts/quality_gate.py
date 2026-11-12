@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural, portfolio and rendering quality gate for Westcon Presentation Builder v5.5."""
+"""Structural, portfolio and rendering quality gate for Westcon Presentation Builder v5.6."""
 from pathlib import Path
 import json, sys
 
@@ -106,10 +106,10 @@ index=(ROOT/"index.html").read_text(encoding="utf-8")
 builder=(ROOT/"builder.js").read_text(encoding="utf-8")
 css=(ROOT/"builder.css").read_text(encoding="utf-8")
 
-if "FY27 · v5.5" not in index:
-    errors.append("interface: v5.5 label missing")
-if "favicon.ico?v=55" not in index or "favicon.svg?v=55" not in index:
-    errors.append("interface: v5.5 favicon cache-bust missing")
+if "FY27 · v5.6" not in index:
+    errors.append("interface: v5.6 label missing")
+if "favicon.ico?v=56" not in index or "favicon.svg?v=56" not in index:
+    errors.append("interface: v5.6 favicon cache-bust missing")
 if "\\n" in index:
     errors.append("interface: literal \\n markup remains")
 if "data/taxonomy.js" not in index:
@@ -146,13 +146,25 @@ for token in [
 if "return overviewItems(a).concat(vendorSlidesForArea(a)).concat(verticalAreaItems(a))" not in builder:
     errors.append("builder: verticals must close each technology section")
 
-# Vertical fixed grid must have four use cases and four visible logo boxes.
+# Vertical fixed grid: four use cases, but logo boxes only for real vendors.
 for token in [
     "PLAYBOOK SECTORIAL","ABRE CON","IMPACTO ESPERADO","SEÑALES DE OPORTUNIDAD",
-    "QUICK WINS","POR QUÉ GANAMOS","SIGUIENTE PASO","for(var j=0;j<4;j++)"
+    "QUICK WINS","POR QUÉ GANAMOS","SIGUIENTE PASO",
+    "filter(Boolean).slice(0,4)","for(var j=0;j<count;j++)","if(count)"
 ]:
     if token not in builder:
         errors.append(f"builder: vertical fixed-grid invariant missing: {token}")
+if "for(var j=0;j<4;j++)" in builder:
+    errors.append("builder: verticals must not draw four logo boxes unconditionally")
+if "r.text(name,bx+.03,cc.y+.842" not in builder or "var name=names[j]" not in builder:
+    errors.append("builder: missing vendor-name fallback when a vertical logo cannot load")
+
+# Curated vendor advantages must match FY27 compact spacing.
+for token in ["var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.18","lh:1.0","yy+=Math.max(.34"]:
+    if token not in builder:
+        errors.append(f"builder: FY27 compact advantage spacing missing: {token}")
+if "yy=3.00" in builder:
+    errors.append("builder: curated advantages start too close to the heading")
 
 for obsolete in ["sourceOverlayHtml","patchSourceSlide","portfolio-hide-juniper","taxonomy-patch","vendorStoryModel","ROLE_META"]:
     if obsolete in builder:
@@ -164,7 +176,7 @@ for token in [".visual-placeholder",".preview-loading",".thumb>img",".deck-thumb
     if token not in css:
         errors.append(f"css: stable rendering style missing: {token}")
 
-print("WESTCON PRESENTATION BUILDER v5.5 · QUALITY GATE")
+print("WESTCON PRESENTATION BUILDER v5.6 · QUALITY GATE")
 print(f"Active vendors: {len(vendors)}/37 · Corporate assets: {len(corp)}/84")
 print(f"Taxonomy coverage: Cyber {len(area_members('cyber'))} · Networking {len(area_members('network'))} · Cloud {len(area_members('cloud'))}")
 print(f"Vertical sectors/models: {len(vc)}/9 · {models}/27")
@@ -175,4 +187,4 @@ for e in errors:
     print("ERROR ·",e)
 if errors:
     sys.exit(1)
-print("OK · v5.5 stable visual/library quality gate passed")
+print("OK · v5.6 stable visual/library quality gate passed")

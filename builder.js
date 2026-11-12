@@ -216,11 +216,13 @@ async function renderVendor(item,mode){
   r.rect(4.14,.20,5.58,.40,rightBox);r.text('¿Qué aporta '+item.vendor.replace(' (SonarQube)','')+'?',4.15,.22,5.55,.38,{pt:12,min:10.5,bold:true,family:'Corbel',color:accent,lh:1});
   r.rect(4.14,.60,5.58,1.87,rightBox);r.text(p.valueProposition||'',4.15,.65,5.55,1.82,{pt:11,min:9.7,family:'Corbel',color:'#E7E6E6',lh:1.15});
   r.rect(3.96,3.00,5.90,2.31,'#1A2E44');
-  var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.00;
+  // Match the FY27 manufacturer cards: clear gap after the orange heading,
+  // then compact single-spaced bullets (no double vertical spacing).
+  var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.18;
   adv.forEach(function(a){
-    r.text('•',4.00,yy,.25,.28,{pt:11,family:'Corbel',color:'#E7E6E6'});
-    var tx=r.text(a,4.38,yy,5.30,.48,{pt:11,min:9.8,family:'Corbel',color:'#E7E6E6',lh:1.08});
-    yy+=Math.max(.42,tx.height/r.P(1)+.055);
+    r.text('•',4.00,yy,.22,.22,{pt:11,family:'Corbel',color:'#E7E6E6',lh:1.0});
+    var tx=r.text(a,4.28,yy,5.42,.38,{pt:11,min:9.8,family:'Corbel',color:'#E7E6E6',lh:1.0});
+    yy+=Math.max(.34,tx.height/r.P(1)+.018);
   });
   return canvas.toDataURL('image/png');
 }
@@ -283,8 +285,22 @@ async function renderVertical(item,mode){
   for(var i=0;i<4;i++){
     var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]],cc=cases[i];r.rect(cc.x,cc.y,3.31,1.15,'#113A50',accent,.006,.06);
     r.text(ca[0],cc.x+.13,cc.y+.08,3.08,.18,{pt:10,min:8.4,bold:true,color:accent,lh:1.0});r.text(ca[1],cc.x+.13,cc.y+.31,3.08,.34,{pt:8.4,min:7.0,color:'#fff',lh:1.06});
-    var names=(sol[1]||[]).slice(0,4),bw=.72,g=.06,x0=cc.x+.13;
-    for(var j=0;j<4;j++){var bx=x0+j*(bw+g);r.rect(bx,cc.y+.79,bw,.24,'#fff',accent,.004,.02);if(names[j]){var u=logoUrl(names[j]);if(u){try{await r.contain(u,bx+.04,cc.y+.82,bw-.08,.18,.01)}catch(e){r.text(names[j],bx+.03,cc.y+.855,bw-.06,.10,{pt:4.7,min:4,bold:true,color:'#173744',align:'center'})}}}}
+    // Render only real manufacturer entries: never draw empty white boxes.
+    // When a logo cannot be loaded, show the manufacturer name instead of leaving a blank slot.
+    var names=(sol[1]||[]).filter(Boolean).slice(0,4),count=names.length;
+    if(count){
+      var totalW=3.05,g=.06,bw=Math.min(.72,(totalW-g*(count-1))/count),usedW=bw*count+g*(count-1),x0=cc.x+.13+(totalW-usedW)/2;
+      for(var j=0;j<count;j++){
+        var name=names[j],bx=x0+j*(bw+g),u=logoUrl(name);
+        r.rect(bx,cc.y+.79,bw,.24,'#fff',accent,.004,.02);
+        if(u){
+          try{await r.contain(u,bx+.04,cc.y+.82,bw-.08,.18,.01)}
+          catch(e){r.text(name,bx+.03,cc.y+.842,bw-.06,.13,{pt:4.7,min:4,bold:true,color:'#173744',align:'center',lh:1.0})}
+        }else{
+          r.text(name,bx+.03,cc.y+.842,bw-.06,.13,{pt:4.7,min:4,bold:true,color:'#173744',align:'center',lh:1.0});
+        }
+      }
+    }
   }
   r.rect(2.83,4.02,3.31,.99,'#113A50',accent,.006,.05);r.text('QUICK WINS',2.96,4.11,.94,.14,{pt:8,bold:true,color:accent});r.text((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),2.97,4.30,3.04,.60,{pt:7.8,min:6.5,color:'#fff',lh:1.06});
   r.rect(6.29,4.02,3.31,.99,'#113A50',accent,.006,.05);r.text('POR QUÉ GANAMOS',6.41,4.11,1.31,.14,{pt:8,bold:true,color:accent});r.text('• Portfolio multi-fabricante alineado al caso de uso\n• PoC, preventa y 3D Labs para demostrar valor\n• Servicios, FLEX y lifecycle para ampliar la oportunidad',6.42,4.30,3.04,.60,{pt:7.7,min:6.4,color:'#fff',lh:1.06});
