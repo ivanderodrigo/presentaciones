@@ -215,7 +215,7 @@ async function renderVendor(item,mode){
   r.rect(.23,2.16,3.57,.72,leftBase);r.text(p.tagline||'',.25,2.20,3.50,.65,{pt:12.5,min:10.5,italic:true,family:'Corbel',color:'#fff',lh:1.08});
   r.rect(4.14,.20,5.58,.40,rightBox);r.text('¿Qué aporta '+item.vendor.replace(' (SonarQube)','')+'?',4.15,.22,5.55,.38,{pt:12,min:10.5,bold:true,family:'Corbel',color:accent,lh:1});
   r.rect(4.14,.60,5.58,1.87,rightBox);r.text(p.valueProposition||'',4.15,.65,5.55,1.82,{pt:11,min:9.7,family:'Corbel',color:'#E7E6E6',lh:1.15});
-  r.rect(3.96,2.93,5.90,2.38,'#1A2E44');
+  r.rect(3.96,3.00,5.90,2.31,'#1A2E44');
   var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.00;
   adv.forEach(function(a){
     r.text('•',4.00,yy,.25,.28,{pt:11,family:'Corbel',color:'#E7E6E6'});
