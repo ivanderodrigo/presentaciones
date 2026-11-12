@@ -535,7 +535,7 @@ async function generatePptx(){
       }
     }
     await group('CIBERSEGURIDAD',vendorNamesForArea('cyber'),.44,1.18,7.15,5.68,4);
-    await group('NETWORKING',vendorNamesForArea('network'),8.02,1.18,4.85,2.28,3);
+    await group('NETWORKING',vendorNamesForArea('network'),8.02,1.18,4.85,2.28,4);
     await group('CLOUD Y OTRAS SOLUCIONES',vendorNamesForArea('cloud'),8.02,3.82,4.85,2.32,3);
     s.addText('FY2027 — Westcon Comstor España',{x:.44,y:7.19,w:3.2,h:.10,fontFace:'Corbel',fontSize:7.5,color:'D8E5E9',margin:0});
     return s;
