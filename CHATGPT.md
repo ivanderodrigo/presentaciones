@@ -39,3 +39,10 @@ For substantial changes: create branch → validate → PR → merge to main. Pr
 - Each vertical/area is one dense, partner-facing FY27-style sector slide, not a multi-slide mini-deck.
 - Vertical slides must show how Westcon portfolio vendors address each use case, using vendor logos where available.
 - Root favicon.ico + versioned favicon.svg must remain enabled.
+
+## v5.3 invariants
+- Curated vendor slides must clone the exact FY27 vendor-card geometry and use Corbel.
+- Cloudflare and Sonar appear only in Cybersecurity and are alphabetically positioned among the other Cyber vendors.
+- Page 5 portfolio and taxonomy pages are patched on top of the original source visuals; do not redesign them.
+- Library order mirrors the original corporate deck and inserts area-specific verticals immediately before the next solution section.
+- Vertical slides clone the FY27 sector-playbook grid and remain one dense slide per sector/area.
