@@ -1,5 +1,5 @@
 {
-  "version": "5.3.0",
+  "version": "5.4.0",
   "generatedAt": "2026-08-27",
   "slides": [
     {
@@ -2214,8 +2214,8 @@
       "id": "curated-cloudflare",
       "source": "curated",
       "page": null,
-      "title": "APPLICATION SECURITY / SASE / CONNECTIVITY CLOUD",
-      "subtitle": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
+      "title": "APPLICATION SECURITY & SASE",
+      "subtitle": "Protege aplicaciones, usuarios y redes desde una plataforma global",
       "type": "vendor",
       "area": "Ciberseguridad",
       "vendors": [
@@ -2241,8 +2241,8 @@
       "id": "curated-sonar",
       "source": "curated",
       "page": null,
-      "title": "APPLICATION SECURITY / DEVSECOPS",
-      "subtitle": "Verifica cada cambio de código, humano o generado por IA",
+      "title": "APPLICATION SECURITY & DEVSECOPS",
+      "subtitle": "Código seguro y mantenible desde el IDE hasta producción",
       "type": "vendor",
       "area": "Ciberseguridad",
       "vendors": [
