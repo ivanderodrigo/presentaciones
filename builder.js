@@ -234,10 +234,11 @@ function curatedThumb(item,full){
 
 function verticalThumb(item,full){
   var v=verticalModel(item.vertical,item.area),accent=item.accent||'#EC008C';
-  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal">'+esc(w[0])+'</div>'}).join('');
+  var sig=(v.why||[]).slice(0,3).map(function(w){return '<div class="vs-signal"><b>'+esc(w[0])+'</b><span>'+esc(w[1])+'</span></div>'}).join('');
   var cases=(v.cases||[]).slice(0,4).map(function(c,i){
     var sol=(v.solutions||[])[i]||['',[]];
-    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><small>'+esc((sol[1]||[]).join(' · '))+'</small></div>';
+    var logos=(sol[1]||[]).slice(0,4).map(function(name){var u=logoUrl(name);return u?'<img src="'+esc(u)+'" alt="'+esc(name)+'" title="'+esc(name)+'">':'<em>'+esc(name)+'</em>'}).join('');
+    return '<div class="vs-case"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span><small>'+esc(sol[0]||'Cómo lo resolvemos')+'</small><div class="vs-logo-row">'+logos+'</div></div>';
   }).join('');
   var impact=(v.impacts||[]).slice(0,4).map(function(x){return '<span>'+esc(x[0])+' '+esc(x[1])+'</span>'}).join('');
   return '<div class="'+(full?'preview-generated ':'')+'vertical-fy27" style="--accent:'+accent+'">'+
@@ -423,29 +424,30 @@ async function generatePptx(){
     s.addText('SEÑALES DE OPORTUNIDAD',{x:3.86,y:1.18,w:2.35,h:.13,fontFace:'Arial',fontSize:8.5,bold:true,color:accent,margin:0});
     (v.why||[]).slice(0,3).forEach(function(it,i){
       var x=3.86+i*3.07;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:1.39,w:2.84,h:.44,rectRadius:.04,fill:{color:'123F50'},line:{color:accent,pt:.8}});
-      s.addText(it[0],{x:x+.12,y:1.51,w:2.60,h:.13,fontFace:'Arial',fontSize:8.3,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
+      s.addShape(pptx.ShapeType.roundRect,{x:x,y:1.39,w:2.84,h:.58,rectRadius:.04,fill:{color:'123F50'},line:{color:accent,pt:.8}});
+      s.addText(it[0],{x:x+.12,y:1.47,w:2.60,h:.11,fontFace:'Arial',fontSize:7.8,bold:true,color:C.white,align:'center',margin:0,fit:'shrink'});
+      s.addText(it[1],{x:x+.15,y:1.66,w:2.54,h:.14,fontFace:'Arial',fontSize:5.8,color:'D9E8EC',align:'center',margin:0,fit:'shrink'});
     });
 
     for(var i=0;i<4;i++){
       var ca=(v.cases||[])[i]||['',''],sol=(v.solutions||[])[i]||['',[]];
-      var col=i%2,row=Math.floor(i/2),x=3.86+col*4.47,y=2.03+row*1.66;
-      s.addShape(pptx.ShapeType.roundRect,{x:x,y:y,w:4.22,h:1.45,rectRadius:.06,fill:{color:'123F50'},line:{color:accent,pt:.8}});
+      var col=i%2,row=Math.floor(i/2),x=3.86+col*4.47,y=2.14+row*1.62;
+      s.addShape(pptx.ShapeType.roundRect,{x:x,y:y,w:4.22,h:1.40,rectRadius:.06,fill:{color:'123F50'},line:{color:accent,pt:.8}});
       s.addText(ca[0],{x:x+.17,y:y+.16,w:3.75,h:.17,fontFace:'Arial',fontSize:10,bold:true,color:accent,margin:0,fit:'shrink'});
       s.addText(ca[1],{x:x+.17,y:y+.48,w:3.75,h:.40,fontFace:'Arial',fontSize:8.5,color:C.white,margin:0,fit:'shrink'});
       var names=(sol[1]||[]).slice(0,4),n=names.length,boxW=n<=2?1.70:n===3?1.13:.84,gap=.08,start=x+.17;
       for(var j=0;j<n;j++){
         var bx=start+j*(boxW+gap);
-        s.addShape(pptx.ShapeType.roundRect,{x:bx,y:y+1.02,w:boxW,h:.28,rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.35}});
-        await addLogo(s,names[j],bx+.04,y+1.06,boxW-.08,.20);
+        s.addShape(pptx.ShapeType.roundRect,{x:bx,y:y+.98,w:boxW,h:.27,rectRadius:.02,fill:{color:C.white},line:{color:accent,pt:.35}});
+        await addLogo(s,names[j],bx+.04,y+1.015,boxW-.08,.19);
       }
     }
 
-    s.addShape(pptx.ShapeType.roundRect,{x:3.86,y:5.43,w:4.22,h:1.18,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
+    s.addShape(pptx.ShapeType.roundRect,{x:3.86,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
     s.addText('CÓMO EMPEZAR',{x:4.02,y:5.61,w:1.30,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
     s.addText((v.start||[]).slice(0,3).map(function(x){return '• '+x}).join('\n'),{x:4.02,y:5.88,w:3.78,h:.52,fontFace:'Arial',fontSize:8.2,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.roundRect,{x:8.33,y:5.43,w:4.22,h:1.18,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
+    s.addShape(pptx.ShapeType.roundRect,{x:8.33,y:5.42,w:4.22,h:1.19,rectRadius:.05,fill:{color:'123F50'},line:{color:accent,pt:.8}});
     s.addText('IMPACTO ESPERADO',{x:8.49,y:5.61,w:1.62,h:.12,fontFace:'Arial',fontSize:7.5,bold:true,color:accent,margin:0});
     var impacts=(v.impacts||[]).slice(0,4);
     var ix=8.49,iy=5.93;
