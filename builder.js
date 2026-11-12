@@ -382,42 +382,41 @@ async function generatePptx(){
 
   async function addVendorSlide(item){
     var name=item.vendor,p=VI.vendors[name]||{},m=CURATED[name]||{},accent=m.pptAccent||C.purple,s=pptx.addSlide();
-    s.background={color:'17324A'};
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:5.28,h:7.18,fill:{color:'20354C'},line:{color:'20354C'}});
-    s.addShape(pptx.ShapeType.line,{x:5.28,y:0,w:0,h:7.18,line:{color:accent,pt:1.2}});
-    s.addShape(pptx.ShapeType.rect,{x:0,y:7.18,w:13.333,h:.32,fill:{color:accent},line:{color:accent}});
+    var S=4/3, sc=function(v){return v*S};
+    s.background={color:'1A2E44'};
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(.12),h:7.5,fill:{color:accent},line:{color:accent}});
 
-    s.addShape(pptx.ShapeType.rect,{x:.40,y:.24,w:4.48,h:.44,fill:{color:'31415C'},line:{color:accent,pt:.8}});
-    s.addText(p.headline||item.title,{x:.50,y:.37,w:4.25,h:.13,fontFace:'Arial',fontSize:10,bold:true,color:C.white,charSpacing:2,margin:0,fit:'shrink'});
+    s.addText(p.headline||item.title,{x:sc(.35),y:sc(.20),w:sc(3.20),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,charSpacing:2.5,margin:0,fit:'shrink'});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.25),y:sc(.62),w:sc(3.45),h:sc(1.45),fill:{color:C.white},line:{color:accent,pt:1}});
+    await addLogo(s,name,sc(.35),sc(.72),sc(3.25),sc(1.25));
+    s.addText(p.tagline||'',{x:sc(.25),y:sc(2.20),w:sc(3.50),h:sc(.65),fontFace:'Corbel',fontSize:16.67,italic:true,color:C.white,margin:0,fit:'shrink'});
 
-    s.addShape(pptx.ShapeType.rect,{x:.34,y:.83,w:4.62,h:1.94,fill:{color:'F7F7F7'},line:{color:accent,pt:.8}});
-    await addLogo(s,name,.70,1.12,3.90,1.30);
+    s.addShape(pptx.ShapeType.rect,{x:sc(4.0),y:sc(.15),w:sc(5.85),h:sc(2.38),fill:{color:accent,transparency:93},line:{color:accent,pt:.8}});
+    s.addText('¿Qué aporta '+name.replace(' (SonarQube)','')+'?',{x:sc(4.15),y:sc(.22),w:sc(5.55),h:sc(.38),fontFace:'Corbel',fontSize:16,bold:true,color:accent,margin:0,fit:'shrink'});
+    s.addText(p.valueProposition||'',{x:sc(4.15),y:sc(.65),w:sc(5.55),h:sc(1.82),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,fit:'shrink'});
 
-    s.addText(p.tagline||'',{x:.38,y:3.10,w:4.48,h:.56,fontFace:'Arial',fontSize:14.2,italic:true,color:C.white,margin:0,fit:'shrink'});
-
-    s.addShape(pptx.ShapeType.rect,{x:.26,y:4.03,w:4.80,h:.50,fill:{color:'695A34'},line:{color:C.orange,pt:1}});
-    s.addText('💼 OPORTUNIDAD PARA EL SOCIO',{x:.45,y:4.18,w:4.15,h:.14,fontFace:'Arial',fontSize:9.4,bold:true,color:C.white,margin:0});
-    s.addShape(pptx.ShapeType.rect,{x:.26,y:4.53,w:4.80,h:2.52,fill:{color:'1C304A'},line:{color:accent,pt:.85}});
-
-    var y=4.68;
-    OPPORTUNITY_LINES.forEach(function(it){
-      s.addText('✓ '+it[0]+':',{x:.43,y:y,w:1.70,h:.16,fontFace:'Arial',fontSize:8.7,bold:true,color:C.white,margin:0,fit:'shrink'});
-      s.addText(it[1],{x:2.00,y:y,w:2.78,h:.32,fontFace:'Arial',fontSize:8.5,color:C.white,margin:0,fit:'shrink'});
-      y+=.43;
-    });
-
-    s.addShape(pptx.ShapeType.rect,{x:5.42,y:.20,w:7.91,h:3.20,fill:{color:'243650'},line:{color:accent,pt:.9}});
-    s.addText('¿Qué aporta '+name.replace(' (SonarQube)','')+'?',{x:5.65,y:.46,w:6.9,h:.27,fontFace:'Arial',fontSize:14.5,bold:true,color:accent,margin:0});
-    s.addText(p.valueProposition||'',{x:5.66,y:1.50,w:7.02,h:1.06,fontFace:'Arial',fontSize:12.4,color:'E8ECEF',margin:0,fit:'shrink'});
-
-    s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:5.44,y:3.67,w:6.95,h:.20,fontFace:'Arial',fontSize:10.6,bold:true,color:C.orange,charSpacing:3,margin:0});
+    s.addText('VENTAJAS CLAVE PARA TU CLIENTE',{x:sc(4.0),y:sc(2.65),w:sc(5.85),h:sc(.32),fontFace:'Corbel',fontSize:13.6,bold:true,color:C.orange,charSpacing:3.3,margin:0,fit:'shrink'});
     var adv=(p.approvedAdvantages||[]).slice(0,4);
-    var ay=5.05;
-    adv.forEach(function(t){
-      s.addText('•',{x:5.44,y:ay,w:.18,h:.13,fontFace:'Arial',fontSize:12,color:C.white,margin:0});
-      s.addText(t,{x:5.95,y:ay-.01,w:6.82,h:.34,fontFace:'Arial',fontSize:11.3,color:'E3E6E9',margin:0,fit:'shrink'});
-      ay+=.38;
+    var runs=[];
+    adv.forEach(function(t,i){
+      runs.push({text:'•  '+t,options:{breakLine:i<adv.length-1}});
     });
+    s.addText(runs,{x:sc(4.0),y:sc(3.0),w:sc(5.80),h:sc(2.35),fontFace:'Corbel',fontSize:14.67,color:'E7E6E6',margin:0,breakLine:false,fit:'shrink',paraSpaceAfterPt:4});
+
+    s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(2.275),fill:{color:'1A2E44',transparency:40},line:{color:accent,pt:.8}});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.20),y:sc(3.05),w:sc(3.55),h:sc(.38),fill:{color:'F09E0D',transparency:70},line:{color:'F09E0D',pt:1}});
+    s.addText('💼 OPORTUNIDAD PARA EL SOCIO',{x:sc(.30),y:sc(3.10),w:sc(3.35),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,margin:0,fit:'shrink'});
+    var oy=3.50;
+    OPPORTUNITY_LINES.forEach(function(it){
+      s.addText([
+        {text:'✓ ',options:{bold:true,color:'FFAE00'}},
+        {text:it[0],options:{bold:true,color:C.white}},
+        {text:': '+it[1],options:{bold:false,color:C.white}}
+      ],{x:sc(.30),y:sc(oy),w:sc(3.35),h:sc(.34),fontFace:'Corbel',fontSize:11.47,color:C.white,margin:0,fit:'shrink'});
+      oy+=.355;
+    });
+    s.addShape(pptx.ShapeType.rect,{x:0,y:sc(5.40),w:13.333,h:sc(.225),fill:{color:accent},line:{color:accent}});
     addNotes(s,(m.sources||[]).map(function(x){return 'Fuente oficial: '+x}));
     return s;
   }
