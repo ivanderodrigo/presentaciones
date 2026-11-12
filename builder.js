@@ -17,8 +17,8 @@ var STORAGE='westcon.presentationBuilder.v5.5';
 
 var C={navy:'082335',navy2:'1A2E44',white:'FFFFFF',ink:'173744',magenta:'D40A82',cyan:'12C7C0',orange:'F09E0D',purple:'6C5CA3',blue:'24507B',muted:'D8E5E9'};
 var CURATED={
-  'Cloudflare':{accent:'#24507B',headline:'APPLICATION SECURITY & SASE',logo:'assets/vendors/cloudflare.svg'},
-  'Sonar (SonarQube)':{accent:'#6C5CA3',headline:'APPLICATION SECURITY & DEVSECOPS',logo:'assets/vendors/sonar.svg'}
+  'Cloudflare':{accent:'#24507B',headline:'APPLICATION SECURITY & SASE',logo:'assets/vendors/cloudflare.svg',template:'assets/source-slides/corporate/slide-14.png'},
+  'Sonar (SonarQube)':{accent:'#6C5CA3',headline:'APPLICATION SECURITY & DEVSECOPS',logo:'assets/vendors/sonar.svg',template:'assets/source-slides/corporate/slide-24.png'}
 };
 var OPPORTUNITY=[
   ['Generar oportunidades','identificar cuentas de alto potencial y completar el portfolio con los fabricantes adecuados.'],
@@ -202,33 +202,26 @@ function renderer(canvas){
 }
 async function renderVendor(item,mode){
   var canvas=makeCanvas(mode),r=renderer(canvas),ctx=r.ctx,p=VI.vendors[item.vendor]||{},m=CURATED[item.vendor]||{},accent=m.accent||'#6C5CA3';
-  ctx.fillStyle='#1A2E44';ctx.fillRect(0,0,canvas.width,canvas.height);
-  r.rect(0,0,3.9,5.62,rgba(accent,.12),accent,.008);r.rect(0,0,.12,5.62,accent,accent);
-  r.rect(.30,.18,3.30,.32,rgba(accent,.40),accent,.008);
-  r.text(p.headline||item.title,.35,.20,3.20,.28,{pt:9,min:8.2,bold:true,family:'Corbel',color:'#fff',lh:1.0});
-  r.rect(.25,.62,3.45,1.45,rgba('#FFFFFF',.95),accent,.008);
-  await r.contain(m.logo||logoUrl(item.vendor),.35,.72,3.25,1.25,.04);
-  r.text(p.tagline||'',.25,2.20,3.50,.65,{pt:12.5,min:10.5,italic:true,family:'Corbel',color:'#fff',lh:1.08});
-  r.rect(4.00,.15,5.85,2.38,rgba(accent,.07),accent,.008);
-  r.text('¿Qué aporta '+item.vendor.replace(' (SonarQube)','')+'?',4.15,.22,5.55,.38,{pt:12,min:10.5,bold:true,family:'Corbel',color:accent,lh:1.0});
-  r.text(p.valueProposition||'',4.15,.65,5.55,1.82,{pt:11,min:9.5,family:'Corbel',color:'#E7E6E6',lh:1.15});
-  r.text('V E N T A J A S   C L A V E   P A R A   T U   C L I E N T E',4.00,2.65,5.85,.32,{pt:10,min:9.5,bold:true,family:'Corbel',color:'#F09E0D',lh:1.0});
+  function mix(base,over,a){
+    function rgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+    var b=rgb(base),o=rgb(over),v=b.map(function(x,i){return Math.round(x*(1-a)+o[i]*a)});
+    return '#'+v.map(function(x){return x.toString(16).padStart(2,'0')}).join('');
+  }
+  var leftBase=mix('#1A2E44',accent,.12),cat=mix(leftBase,accent,.40),rightBox=mix('#1A2E44',accent,.07);
+  try{var template=await loadImg(m.template);ctx.drawImage(template,0,0,canvas.width,canvas.height)}catch(e){ctx.fillStyle='#1A2E44';ctx.fillRect(0,0,canvas.width,canvas.height)}
+  // Replace only variable regions. The standard partner-opportunity block remains untouched from the FY27 template.
+  r.rect(.30,.18,3.30,.32,cat,accent,.008);r.text(p.headline||item.title,.35,.20,3.20,.28,{pt:9,min:8.2,bold:true,family:'Corbel',color:'#fff',lh:1});
+  r.rect(.25,.62,3.45,1.45,'#FFFFFF',accent,.008);await r.contain(m.logo||logoUrl(item.vendor),.35,.72,3.25,1.25,.04);
+  r.rect(.23,2.16,3.57,.72,leftBase);r.text(p.tagline||'',.25,2.20,3.50,.65,{pt:12.5,min:10.5,italic:true,family:'Corbel',color:'#fff',lh:1.08});
+  r.rect(4.14,.20,5.58,.40,rightBox);r.text('¿Qué aporta '+item.vendor.replace(' (SonarQube)','')+'?',4.15,.22,5.55,.38,{pt:12,min:10.5,bold:true,family:'Corbel',color:accent,lh:1});
+  r.rect(4.14,.60,5.58,1.87,rightBox);r.text(p.valueProposition||'',4.15,.65,5.55,1.82,{pt:11,min:9.7,family:'Corbel',color:'#E7E6E6',lh:1.15});
+  r.rect(3.96,2.93,5.90,2.38,'#1A2E44');
   var adv=(p.approvedAdvantages||[]).slice(0,4),yy=3.00;
   adv.forEach(function(a){
-    r.text('•',4.00,yy,.25,.28,{pt:11,bold:false,family:'Corbel',color:'#E7E6E6'});
-    var mtx=r.text(a,4.38,yy,5.30,.48,{pt:11,min:9.8,family:'Corbel',color:'#E7E6E6',lh:1.08});yy+=Math.max(.42,mtx.height/r.P(1)+.06);
+    r.text('•',4.00,yy,.25,.28,{pt:11,family:'Corbel',color:'#E7E6E6'});
+    var tx=r.text(a,4.38,yy,5.30,.48,{pt:11,min:9.8,family:'Corbel',color:'#E7E6E6',lh:1.08});
+    yy+=Math.max(.42,tx.height/r.P(1)+.055);
   });
-  r.rect(.20,3.05,3.55,2.27,rgba('#1A2E44',.60),accent,.008);
-  r.rect(.20,3.05,3.55,.38,rgba('#F09E0D',.30),'#F09E0D',.008);
-  r.text('💼 OPORTUNIDAD PARA EL SOCIO',.30,3.10,3.35,.28,{pt:9,min:8.5,bold:true,family:'Corbel',color:'#fff',lh:1.0});
-  yy=3.50;
-  OPPORTUNITY.forEach(function(it){
-    r.text('✓',.30,yy,.18,.22,{pt:8.6,bold:true,family:'Corbel',color:'#FFAE00',lh:1.0});
-    r.text(it[0]+':',.48,yy,1.32,.22,{pt:8.6,min:8.2,bold:true,family:'Corbel',color:'#fff',lh:1.0});
-    var tx=r.text(it[1],1.46,yy,2.18,.34,{pt:8.6,min:8.0,family:'Corbel',color:'#fff',lh:1.05});
-    yy+=Math.max(.34,tx.height/r.P(1)+.035);
-  });
-  r.rect(0,5.40,10,.23,accent,accent);
   return canvas.toDataURL('image/png');
 }
 async function drawLogoCard(r,name,x,y,w,h){
