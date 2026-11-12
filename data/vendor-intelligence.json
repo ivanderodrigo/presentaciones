@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "5.2.0",
   "generatedFrom": "Westcon_Comstor_Espana_FY27_completa.pptx",
   "vendors": {
     "Anomali": {
@@ -3427,14 +3427,14 @@
       "name": "Cloudflare",
       "category": "Connectivity Cloud / SASE / Application Security",
       "sourceSlides": [],
-      "headline": "CONNECTIVITY CLOUD / SASE / APPLICATION SECURITY",
+      "headline": "APPLICATION SECURITY / SASE / CONNECTIVITY CLOUD",
       "tagline": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
-      "valueProposition": "Cloudflare unifica seguridad de aplicaciones, Zero Trust/SASE, servicios de red, rendimiento y capacidades de desarrollo sobre una red global común. Permite proteger aplicaciones y APIs, usuarios y conectividad sin encadenar múltiples point products y planos de control.",
+      "valueProposition": "Plataforma de Connectivity Cloud que unifica seguridad de aplicaciones y APIs, Zero Trust/SASE y servicios de red sobre una red global común, reduciendo la proliferación de point products y simplificando el control operativo.",
       "approvedAdvantages": [
-        "Una plataforma común para seguridad de aplicaciones, Zero Trust/SASE y servicios de red.",
-        "WAF, protección DDoS, API Security y Bot Management integrados en el edge.",
-        "Acceso Zero Trust, Secure Web Gateway, CASB y DLP para usuarios y aplicaciones privadas.",
-        "Arquitectura global anycast que combina seguridad, conectividad y rendimiento."
+        "Protege aplicaciones y APIs con WAF, API Security, Bot Management y mitigación DDoS.",
+        "Unifica ZTNA, Secure Web Gateway, CASB y DLP para usuarios y aplicaciones privadas.",
+        "Conecta oficinas, nubes y data centers con servicios de red cloud-native y un plano de control común.",
+        "Consolida seguridad, conectividad y rendimiento sobre una red global para reducir complejidad operativa."
       ],
       "competitors": [
         "Akamai",
@@ -3548,14 +3548,14 @@
       "name": "Sonar (SonarQube)",
       "category": "Code Quality / Application Security / DevSecOps",
       "sourceSlides": [],
-      "headline": "CODE QUALITY & APPLICATION SECURITY",
-      "tagline": "Confianza en cada cambio de código, humano o generado por IA",
-      "valueProposition": "SonarQube verifica cada cambio de código con reglas consistentes de calidad, seguridad y mantenibilidad. Integra quality gates en IDE, pull requests y CI/CD, y aplica el mismo estándar a código escrito por desarrolladores o por agentes de IA.",
+      "headline": "APPLICATION SECURITY / DEVSECOPS",
+      "tagline": "Verifica cada cambio de código, humano o generado por IA",
+      "valueProposition": "Plataforma de code quality y application security que integra análisis estático, quality gates y verificación continua en IDE, pull requests y CI/CD para evitar que bugs, vulnerabilidades y deuda técnica lleguen a producción.",
       "approvedAdvantages": [
-        "Quality gates repetibles para bloquear código que no cumple los estándares definidos.",
-        "SAST, taint analysis, secrets detection, IaC scanning y capacidades de software composition analysis.",
-        "Feedback integrado en IDE, pull requests y CI/CD para corregir antes de producción.",
-        "Verificación independiente del código generado por humanos y por herramientas de IA."
+        "Quality gates automatizados para bloquear cambios que no cumplen los estándares definidos.",
+        "SAST, taint analysis, secrets detection, SCA e IaC scanning para reducir riesgo antes de producción.",
+        "Feedback integrado en IDE, pull requests y CI/CD para corregir problemas en el flujo del desarrollador.",
+        "Aplica el mismo estándar de calidad y seguridad al código humano y al generado por IA."
       ],
       "competitors": [
         "Checkmarx",
