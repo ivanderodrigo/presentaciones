@@ -1,71 +1,71 @@
-# Westcon Presentation Studio · v4
+# Westcon Presentation Builder · v5
 
-Aplicación estática para GitHub Pages orientada a **construir presentaciones ad-hoc** a partir del corpus FY27 de Westcon Comstor.
+Constructor visual de presentaciones ad-hoc para Westcon Comstor España FY27.
 
-## Principio de producto
+## Principio
 
-**Partir de la presentación original y añadir solo lo que aporta valor.**
+**Buscar → añadir → ordenar → generar.**
 
-La aplicación ya no funciona como gestor de reuniones. El usuario puede empezar vacío, reutilizar slides FY27, añadir bloques completos y dejar que el motor proponga una narrativa editable.
+La aplicación no es un gestor de reuniones y no obliga a seleccionar rol, perfil ni configuración de IA.
 
-## Qué aporta v4
+## Interfaz
 
-### Biblioteca visual
-- miniaturas grandes de las slides FY27;
-- búsqueda por fabricante, tecnología o servicio;
-- filtros Corporativo / Fabricantes / Servicios / Verticales / IA útil;
-- previsualización a pantalla completa;
-- añadir, quitar, duplicar, arrastrar y reordenar.
+- buscador único por fabricante, tecnología, servicio o vertical;
+- filtros por Corporativo, Ciberseguridad, Networking, Cloud/UC/Automatización, Servicios, Verticales y Fabricantes;
+- bloques temáticos que añaden varias slides con un clic;
+- biblioteca visual con miniaturas;
+- preview grande al hacer clic;
+- deck final con drag & drop, subir/bajar, duplicar y quitar;
+- portada personalizada y slide de texto opcionales.
 
-### Bloques rápidos
-- base Westcon;
-- bloque completo por fabricante;
-- bloque vertical;
-- servicios adaptados al perfil;
-- cierre.
+## Contenido
 
-### Rol explicado, no impuesto
-El rol es opcional y únicamente modifica la propuesta automática:
-- **PSM**: conversación ejecutiva, valor conjunto, portfolio, verticales, servicios y crecimiento;
-- **VSM**: fabricante, diferenciación, evidencia y activación de canal;
-- **SA**: caso de uso, criterios, PoV/PoC y preventa.
+- 84 slides corporativas FY27 conservadas como fuente;
+- 12 datasheets verticales originales conservados como conocimiento;
+- 37 fabricantes activos en la aplicación;
+- Juniper Networks retirado del portfolio visible;
+- Cloudflare y Sonar (SonarQube) añadidos como slides curadas con la misma gramática visual de las fichas de fabricante;
+- 9 verticales × 3 áreas = 27 slides verticales horizontales:
+  - Banca y seguros
+  - Administración pública
+  - Industria y utilities
+  - Retail
+  - Sanidad
+  - Educación
+  - Transporte y logística
+  - Hostelería y turismo
+  - Software y servicios digitales
 
-La interfaz muestra explícitamente qué cambiará al elegir cada perfil.
+## Slides nuevas
 
-### Vertical explicado, no impuesto
-La vertical es opcional. Si se selecciona, activa contenido FY27 de:
-- Banca y seguros;
-- Administración pública;
-- Industria y utilities;
-- Retail.
+Las nuevas fichas de fabricante reproducen el patrón visual del deck FY27:
+- bloque de categoría;
+- logo/nombre;
+- tagline;
+- oportunidad para el socio;
+- ¿Qué aporta?;
+- ventajas clave.
 
-Los casos de uso se recomponen en 16:9 y se priorizan según las áreas de los fabricantes seleccionados.
+Las nuevas slides verticales utilizan el lenguaje visual de los playbooks sectoriales FY27:
+- fondo navy;
+- color de área;
+- señales de oportunidad;
+- reto;
+- cuatro casos de uso;
+- soluciones asociadas;
+- impacto esperado;
+- cómo empezar;
+- siguiente paso.
 
-### IA con umbral de profundidad
-La aplicación ya no añade automáticamente slides vacías de “diferenciación” o “mercado”.
+No se generan automáticamente slides genéricas de “IA”, “mercado” o “diferenciación”.
 
-Cada fabricante puede generar:
-1. **Historia de valor**: propuesta, por qué ahora, diferenciales, criterios de decisión y resultado buscado.
-2. **Prueba de valor**: PoV/PoC, qué medir, evidencia FY27 y validación externa.
-3. **Señales de mercado**: solo aparece cuando existen al menos tres evidencias públicas suficientemente sólidas.
+## Research
 
-Los motores usan data/vendor-intelligence.* y data/live-intelligence.*. Las afirmaciones externas se muestran únicamente con fuente atribuible.
+El research periódico se mantiene como capa de conocimiento. Cloudflare y Sonar se incorporan al motor y Juniper deja de investigarse como fabricante activo.
 
-## Corpus
+## Calidad
 
-- 84 slides corporativas FY27;
-- 12 datasheets verticales;
-- 36 fabricantes;
-- 12 modelos verticales 16:9;
-- research periódico de fabricantes y partners.
-
-## Presentación generada
-
-Las slides originales se reutilizan como imagen completa para conservar fidelidad visual. Las slides nuevas se construyen como objetos PowerPoint editables y utilizan un sistema visual consistente con Westcon: tipografía amplia, más espacio en blanco, jerarquía clara y menos cajas de texto pequeñas.
-
-## Desarrollo
-
-La calidad se valida en cada Pull Request y en main:
+Cada Pull Request y cada push a main valida:
 
     node --check builder.js
     python scripts/quality_gate.py
@@ -73,4 +73,4 @@ La calidad se valida en cada Pull Request y en main:
 
 ## GitHub Pages
 
-La aplicación sigue siendo 100% estática y compatible con Pages desde main.
+La aplicación se publica desde main y sigue siendo completamente estática.

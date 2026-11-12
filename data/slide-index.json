@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "5.0.0",
   "generatedAt": "2026-08-27",
   "slides": [
     {
@@ -1012,30 +1012,6 @@
       ],
       "level": "technical",
       "asset": "assets/source-slides/corporate/slide-44.png",
-      "freshness": "FY2027"
-    },
-    {
-      "id": "corp-45",
-      "source": "corporate",
-      "page": 45,
-      "title": "AI-NATIVE NETWORKING (MIST AI)",
-      "subtitle": "La primera red verdaderamente autónoma gracias a Mist AI",
-      "type": "vendor",
-      "area": "Networking",
-      "vendors": [
-        "Juniper Networks"
-      ],
-      "vertical": null,
-      "tags": [
-        "Juniper Networks"
-      ],
-      "roles": [
-        "psm",
-        "vsm",
-        "sa"
-      ],
-      "level": "technical",
-      "asset": "assets/source-slides/corporate/slide-45.png",
       "freshness": "FY2027"
     },
     {
@@ -2233,6 +2209,59 @@
       "level": "business-technical",
       "asset": "assets/source-slides/verticals/slide-12.png",
       "freshness": "FY2027"
+    },
+    {
+      "id": "curated-cloudflare",
+      "source": "curated",
+      "page": null,
+      "title": "CONNECTIVITY CLOUD / SASE / APPLICATION SECURITY",
+      "subtitle": "Conecta, protege y acelera aplicaciones, usuarios y redes desde una plataforma global",
+      "type": "vendor",
+      "area": "Ciberseguridad / Networking",
+      "vendors": [
+        "Cloudflare"
+      ],
+      "vertical": null,
+      "tags": [
+        "Cloudflare",
+        "SASE",
+        "Zero Trust",
+        "WAAP",
+        "API Security",
+        "DDoS",
+        "Connectivity Cloud"
+      ],
+      "roles": [],
+      "level": "technical",
+      "asset": null,
+      "freshness": "2026",
+      "curated": true
+    },
+    {
+      "id": "curated-sonar",
+      "source": "curated",
+      "page": null,
+      "title": "CODE QUALITY & APPLICATION SECURITY",
+      "subtitle": "Confianza en cada cambio de código, humano o generado por IA",
+      "type": "vendor",
+      "area": "Ciberseguridad / Cloud, UC y automatización",
+      "vendors": [
+        "Sonar (SonarQube)"
+      ],
+      "vertical": null,
+      "tags": [
+        "Sonar",
+        "SonarQube",
+        "Code Quality",
+        "SAST",
+        "DevSecOps",
+        "AI Code Verification"
+      ],
+      "roles": [],
+      "level": "technical",
+      "asset": null,
+      "freshness": "2026",
+      "curated": true
     }
   ]
 }

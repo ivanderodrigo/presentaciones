@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "5.0.0",
   "sourceDecks": [
     {
       "name": "Westcon Comstor España FY2027",
@@ -14,26 +14,7 @@
       "status": "seeded"
     }
   ],
-  "roles": [
-    {
-      "id": "psm",
-      "name": "PSM",
-      "mission": "Gestión comercial global orientada al partner",
-      "accent": "#e4007f"
-    },
-    {
-      "id": "vsm",
-      "name": "VSM",
-      "mission": "Gestión comercial del fabricante dentro del partner",
-      "accent": "#7357a6"
-    },
-    {
-      "id": "sa",
-      "name": "Solution Architect",
-      "mission": "Diseño y defensa técnica de la solución",
-      "accent": "#00a6b2"
-    }
-  ],
+  "roles": [],
   "vendors": [
     {
       "name": "Anomali",
@@ -284,17 +265,6 @@
       ]
     },
     {
-      "name": "Juniper Networks",
-      "area": "Networking",
-      "tags": [
-        "Mist AI",
-        "Campus",
-        "Routing",
-        "Data Centre",
-        "WAN"
-      ]
-    },
-    {
       "name": "Nokia",
       "area": "Networking",
       "tags": [
@@ -374,6 +344,31 @@
         "RPA",
         "AI"
       ]
+    },
+    {
+      "name": "Cloudflare",
+      "area": "Ciberseguridad / Networking",
+      "tags": [
+        "Connectivity Cloud",
+        "SASE",
+        "Zero Trust",
+        "WAAP",
+        "API Security",
+        "DDoS",
+        "Network Services"
+      ]
+    },
+    {
+      "name": "Sonar (SonarQube)",
+      "area": "Ciberseguridad / Cloud, UC y automatización",
+      "tags": [
+        "Code Quality",
+        "SAST",
+        "DevSecOps",
+        "Application Security",
+        "AI Code Verification",
+        "Quality Gates"
+      ]
     }
   ],
   "westconServices": [
@@ -396,6 +391,11 @@
     "Administración pública",
     "Industria y utilities",
     "Retail",
+    "Sanidad",
+    "Educación",
+    "Transporte y logística",
+    "Hostelería y turismo",
+    "Software y servicios digitales",
     "Otros"
   ],
   "corporateFacts": {
@@ -512,6 +512,6 @@
     "Competitive context",
     "Public analyst signals",
     "News/media/cases",
-    "Role-specific narrative"
+    "Curated vendor slides"
   ]
 }
