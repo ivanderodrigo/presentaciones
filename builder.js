@@ -372,12 +372,26 @@ async function generatePptx(){
     var s=pptx.addSlide();s.background={color:C.white};var d=await assetData(sourceAsset(page));s.addImage({data:d,x:0,y:0,w:13.333,h:7.5});return s;
   }
   function addNotes(s,lines){try{s.addNotes(lines.filter(Boolean).join('\n'))}catch(e){}}
+  var logoDimCache={};
+  async function logoDims(data){
+    if(logoDimCache[data])return logoDimCache[data];
+    return logoDimCache[data]=await new Promise(function(resolve){
+      var im=new Image();
+      im.onload=function(){resolve({w:im.naturalWidth||im.width||1,h:im.naturalHeight||im.height||1})};
+      im.onerror=function(){resolve({w:1,h:1})};
+      im.src=data;
+    });
+  }
   async function addLogo(s,name,x,y,w,h){
     var u=logoUrl(name);
     if(u){
-      try{var d=await assetData(u);s.addImage({data:d,x:x,y:y,w:w,h:h});return}catch(e){}
+      try{
+        var d=await assetData(u),dim=await logoDims(d),scale=Math.min(w/dim.w,h/dim.h),iw=dim.w*scale,ih=dim.h*scale;
+        s.addImage({data:d,x:x+(w-iw)/2,y:y+(h-ih)/2,w:iw,h:ih});
+        return;
+      }catch(e){}
     }
-    s.addText(name,{x:x,y:y+h*.27,w:w,h:h*.46,fontFace:'Arial',fontSize:7.5,bold:true,color:C.ink,align:'center',valign:'mid',fit:'shrink',margin:0});
+    s.addText(name,{x:x,y:y+h*.27,w:w,h:h*.46,fontFace:'Corbel',fontSize:7.5,bold:true,color:C.ink,align:'center',valign:'mid',fit:'shrink',margin:0});
   }
 
   async function addVendorSlide(item){
