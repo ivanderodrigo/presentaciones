@@ -558,8 +558,9 @@ async function generatePptx(){
     var name=item.vendor,p=VI.vendors[name]||{},m=CURATED[name]||{},accent=m.pptAccent||C.purple,s=pptx.addSlide();
     var S=4/3, sc=function(v){return v*S};
     s.background={color:'1A2E44'};
-    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(3.9),h:7.5,fill:{color:accent,transparency:88},line:{color:accent,pt:1}});
     s.addShape(pptx.ShapeType.rect,{x:0,y:0,w:sc(.12),h:7.5,fill:{color:accent},line:{color:accent}});
+    s.addShape(pptx.ShapeType.rect,{x:sc(.30),y:sc(.18),w:sc(3.30),h:sc(.32),fill:{color:accent,transparency:60},line:{color:accent,pt:1}});
 
     s.addText(p.headline||item.title,{x:sc(.35),y:sc(.20),w:sc(3.20),h:sc(.28),fontFace:'Corbel',fontSize:12,bold:true,color:C.white,charSpacing:2.5,margin:0,fit:'shrink'});
     s.addShape(pptx.ShapeType.rect,{x:sc(.25),y:sc(.62),w:sc(3.45),h:sc(1.45),fill:{color:C.white},line:{color:accent,pt:1}});
