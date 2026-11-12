@@ -223,6 +223,28 @@ function themeBlocks(){
   ];
 }
 
+function sourceOverlayHtml(page){
+  if(Number(page)===5){
+    return '<div class="portfolio-hide-juniper"></div>'+
+      '<div class="portfolio-new-card cloudflare"><img src="'+esc(logoUrl('Cloudflare')||'')+'" alt="Cloudflare"></div>'+
+      '<div class="portfolio-new-card sonar"><img src="'+esc(logoUrl('Sonar (SonarQube)')||'')+'" alt="Sonar"></div>';
+  }
+  if(Number(page)===7){
+    return '<div class="taxonomy-patch cyber-sase">• Palo Alto, Cisco, Zscaler, F5 y Cloudflare<br>• NGFW, SSE/SASE, ZTNA, DDoS<br>• Certes: cifrado persistente</div>'+
+      '<div class="taxonomy-patch cyber-apps">• F5/Cloudflare/Noname: WAAP, WAF y API Security<br>• Sonar: SAST, quality gates y DevSecOps<br>• Menlo: Secure Browser / RBI</div>';
+  }
+  if(Number(page)===39){
+    return '<div class="taxonomy-patch network-routing">• Nokia: 7750/7250/7210, SR Linux, IP/MPLS/SR, NSP, fixed access/FTTx y DAC 4G/5G</div>'+
+      '<div class="taxonomy-patch network-campus">• Extreme: switching, Wi‑Fi, Fabric, EP1/XIQ, NAC y SD‑WAN<br>• Cisco/Meraki: Catalyst, Meraki MS/MR, ISE y cloud mgmt<br>• RUCKUS: Wi‑Fi, ICX, SmartZone y RUCKUS One</div>'+
+      '<div class="taxonomy-patch network-dc">• Cisco: Nexus, ACI, NDFC y switching DC<br>• Extreme: SLX, VSP/Universal Switching y Fabric Connect</div>'+
+      '<div class="taxonomy-patch network-branch">• Cisco/Meraki: MX/Catalyst SD‑WAN y branch routing<br>• Extreme: ExtremeCloud SD‑WAN<br>• Ericsson Cradlepoint: NetCloud, 4G/5G routers, IoT y private cellular</div>';
+  }
+  return '';
+}
+function sourceVisualHtml(item,showPage){
+  return '<div class="source-visual"><img src="'+esc(item.asset)+'" alt="'+esc(item.title||'')+'">'+sourceOverlayHtml(item.page)+(showPage?'<span class="thumb-tag">P. '+item.page+'</span>':'')+'</div>';
+}
+
 function opportunityHtml(){
   return OPPORTUNITY_LINES.map(function(it){return '<div><b>✓ '+esc(it[0])+':</b> '+esc(it[1])+'</div>'}).join('');
 }
@@ -263,7 +285,7 @@ function generatedMini(item){
   return '<div class="deck-mini-generated" style="--accent:'+accent+'">'+esc(item.kind==='vertical'?item.vertical:item.vendor||'PERSONALIZADA')+'</div>';
 }
 function thumbnail(item){
-  if(item.asset)return '<div class="thumb"><img src="'+esc(item.asset)+'" alt=""><span class="thumb-tag">P. '+item.page+'</span></div>';
+  if(item.asset)return '<div class="thumb">'+sourceVisualHtml(item,true)+'</div>';
   if(item.kind==='curated-vendor')return '<div class="thumb">'+curatedThumb(item,false)+'</div>';
   if(item.kind==='vertical')return '<div class="thumb">'+verticalThumb(item,false)+'</div>';
   return '<div class="thumb">'+generatedMini(item)+'</div>';
@@ -293,7 +315,7 @@ function renderDeck(){
   var host=$('#deckList');host.innerHTML='';$('#emptyDeck').classList.toggle('hidden',state.deck.length>0);$('#deckCount').textContent=state.deck.length;
   state.deck.forEach(function(item,i){
     var row=document.createElement('div');row.className='deck-item';row.draggable=true;
-    var mini=item.asset?'<div class="deck-thumb"><img src="'+esc(item.asset)+'" alt=""></div>':'<div class="deck-thumb">'+generatedMini(item)+'</div>';
+    var mini=item.asset?'<div class="deck-thumb">'+sourceVisualHtml(item,false)+'</div>':'<div class="deck-thumb">'+generatedMini(item)+'</div>';
     row.innerHTML='<div class="deck-num">'+(i+1)+'</div>'+mini+'<div class="deck-copy"><strong>'+esc(item.title)+'</strong><small>'+esc(item.subtitle||'')+'</small></div><div class="deck-actions"><button title="Subir">↑</button><button title="Bajar">↓</button><button title="Duplicar">⧉</button><button title="Quitar">×</button></div>';
     $('.deck-thumb',row).addEventListener('click',function(){openPreview(item)});
     var bs=$$('button',row);bs[0].onclick=function(){move(i,-1)};bs[1].onclick=function(){move(i,1)};bs[2].onclick=function(){duplicate(i)};bs[3].onclick=function(){state.deck.splice(i,1);renderDeck();renderLibrary();save()};
@@ -308,7 +330,7 @@ function openPreview(item){
   state.preview=item;$('#previewTitle').textContent=item.title;
   $('#previewKicker').textContent=item.kind==='vertical'?'VERTICAL':item.kind==='curated-vendor'?'FABRICANTE':'SLIDE FY27';
   var stage=$('#previewStage');stage.innerHTML='';
-  if(item.asset){var img=document.createElement('img');img.src=item.asset;img.alt=item.title;stage.appendChild(img)}
+  if(item.asset){stage.innerHTML='<div class="preview-source">'+sourceVisualHtml(item,false)+'</div>'}
   else if(item.kind==='curated-vendor')stage.innerHTML=curatedThumb(item,true);
   else if(item.kind==='vertical')stage.innerHTML=verticalThumb(item,true);
   else stage.innerHTML='<div class="preview-generated">'+generatedMini(item)+'</div>';
