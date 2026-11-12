@@ -46,6 +46,108 @@ var OPPORTUNITY_LINES=[
   ['Ampliar la oportunidad','servicios profesionales y soporte, FLEX, marketplaces, SaaS y renovaciones/lifecycle.']
 ];
 
+
+var TAXONOMY={
+  cyber:{
+    title:'TAXONOMÍA DE CIBERSEGURIDAD',
+    subtitle:'Identidad · endpoint · Zero Trust/SASE · AppSec · dato/cloud/OT · SecOps · exposición',
+    cards:[
+      {title:'Identidad, acceso y secrets',vendors:['Okta','Ping Identity','1Password','Cisco'],detail:'IAM · CIAM · SSO/MFA · Duo · passwords y secrets'},
+      {title:'Endpoint, puesto y usuario',vendors:['CrowdStrike','Ivanti','Proofpoint','Menlo Security'],detail:'EDR/XDR · UEM/patch · email/human risk · secure browser'},
+      {title:'Zero Trust, SASE y red',vendors:['Zscaler','Palo Alto Networks','Cisco','Cloudflare','Certes Networks'],detail:'SSE/ZTNA · NGFW · DLP · DDoS · cifrado/segmentación'},
+      {title:'Aplicaciones, APIs y código',vendors:['F5','Cloudflare','Noname / Akamai API Security','Sonar (SonarQube)'],detail:'WAAP/WAF · API Security · bots/DDoS · SAST · quality gates'},
+      {title:'Dato, cloud y OT/XIoT',vendors:['Fortanix','CrowdStrike','Palo Alto Networks','Claroty','Certes Networks'],detail:'KMS/HSM · CNAPP · CSPM · OT/XIoT · protección de dato'},
+      {title:'Detección, respuesta y threat intel',vendors:['Anomali','CrowdStrike','Vectra AI','NETSCOUT','LevelBlue','Cisco','Palo Alto Networks'],detail:'Threat Intel · NDR/XDR · MDR/SOC · visibilidad y respuesta'},
+      {title:'Exposure, validación y policy',vendors:['AttackIQ','XM Cyber','FireMon','Vectra AI'],detail:'BAS/CTEM · attack paths · security policy · priorización de exposición'}
+    ]
+  },
+  network:{
+    title:'TAXONOMÍA DE NETWORKING',
+    subtitle:'Transporte · routing · campus · Wi‑Fi · WAN/5G · DDI · guest experience',
+    cards:[
+      {title:'Transporte óptico y DCI',vendors:['Ciena','Nokia'],detail:'WDM/OTN · coherent optics · DCI · automatización de transporte'},
+      {title:'Routing, IP/MPLS y acceso operador',vendors:['Nokia','Cisco'],detail:'Edge/core routing · IP/MPLS/SR · fixed access · carrier networking'},
+      {title:'Campus switching y fabric',vendors:['Extreme Networks','Cisco','Ruckus Networks'],detail:'Switching · fabric · policy · operación centralizada'},
+      {title:'Wi‑Fi, NAC y experiencia',vendors:['Extreme Networks','Cisco','Ruckus Networks','Weblib'],detail:'WLAN · NAC · assurance · guest access · experiencia digital'},
+      {title:'Branch, SD‑WAN y Wireless WAN',vendors:['Cisco','Extreme Networks','Ericsson'],detail:'SD‑WAN · branch routing · 4G/5G · failover · private cellular'},
+      {title:'DDI, DNS Security e IPAM',vendors:['EfficientIP'],detail:'DNS · DHCP · IPAM · security · automatización y APIs'},
+      {title:'Guest Wi‑Fi y engagement',vendors:['Weblib','Ruckus Networks','Cisco'],detail:'Captive portal · analytics · marketing · servicios para invitados'}
+    ]
+  },
+  cloud:{
+    title:'TAXONOMÍA DE CLOUD, UC Y AUTOMATIZACIÓN',
+    subtitle:'Voz y CX · cloud · datos/IA · automatización · edge y alta disponibilidad',
+    cards:[
+      {title:'Voz empresarial y Teams Phone',vendors:['AudioCodes','Microsoft'],detail:'SBC · gateways · Direct Routing · Operator Connect · survivability'},
+      {title:'Contact center, CX y colaboración',vendors:['Avaya','AudioCodes','Microsoft'],detail:'UC/CCaaS · omnicanalidad · IA conversacional · colaboración'},
+      {title:'Cloud infrastructure y gobierno',vendors:['AWS','Microsoft'],detail:'Compute · storage · networking · identity · governance · marketplace'},
+      {title:'Datos, IA y modernización',vendors:['AWS','Microsoft'],detail:'Containers · serverless · data platforms · GenAI · AI services'},
+      {title:'Automatización y agentic AI',vendors:['UiPath','AWS','Microsoft'],detail:'RPA · process/task mining · agents · workflows · document automation'},
+      {title:'Edge, HA e infraestructura crítica',vendors:['Penguin Solutions'],detail:'High availability · edge · fault tolerance · AI/HPC infrastructure'}
+    ]
+  }
+};
+
+var VERTICAL_TITLE={
+  'Banca y seguros':{left:'BANCA Y\nSEGUROS',main:'BANCA Y SEGUROS',lf:28.7,mf:29.8},
+  'Administración pública':{left:'ADMINISTRACIÓN\nPÚBLICA',main:'ADMINISTRACIÓN PÚBLICA',lf:22.0,mf:25.0},
+  'Industria y utilities':{left:'INDUSTRIA Y\nUTILITIES',main:'INDUSTRIA Y UTILITIES',lf:24.0,mf:27.0},
+  'Retail':{left:'RETAIL',main:'RETAIL',lf:29.0,mf:30.0},
+  'Sanidad':{left:'SANIDAD',main:'SANIDAD',lf:29.0,mf:30.0},
+  'Educación':{left:'EDUCACIÓN',main:'EDUCACIÓN',lf:27.0,mf:29.0},
+  'Transporte y logística':{left:'TRANSPORTE Y\nLOGÍSTICA',main:'TRANSPORTE Y LOGÍSTICA',lf:22.0,mf:25.0},
+  'Hostelería y turismo':{left:'HOSTELERÍA Y\nTURISMO',main:'HOSTELERÍA Y TURISMO',lf:22.0,mf:25.5},
+  'Software y servicios digitales':{left:'SOFTWARE Y\nSERVICIOS DIGITALES',main:'SOFTWARE Y SERVICIOS DIGITALES',lf:18.5,mf:21.5}
+};
+
+var VERTICAL_QUESTION={
+  'Banca y seguros':{
+    cyber:'¿Qué servicio financiero no puede caer ni exponer datos sensibles?',
+    network:'¿Qué sucursal o servicio crítico depende de una red sin margen de fallo?',
+    cloud:'¿Qué proceso legacy limita hoy la experiencia o la eficiencia?'
+  },
+  'Administración pública':{
+    cyber:'¿Qué trámite digital no puede caer ni perder trazabilidad?',
+    network:'¿Qué servicio público se resiente si falla la conectividad?',
+    cloud:'¿Qué trámite sigue consumiendo tiempo por tareas manuales?'
+  },
+  'Industria y utilities':{
+    cyber:'¿Qué activo OT no puede parar ni quedar expuesto?',
+    network:'¿Qué proceso industrial necesita conectividad continua y predecible?',
+    cloud:'¿Qué proceso de planta ganaría valor con edge, datos o automatización?'
+  },
+  'Retail':{
+    cyber:'¿Qué caída o fraude impactaría hoy directamente en ventas?',
+    network:'¿Qué tienda pierde experiencia cuando falla la conectividad?',
+    cloud:'¿Qué fricción de cliente o back‑office podemos automatizar?'
+  },
+  'Sanidad':{
+    cyber:'¿Qué servicio clínico no puede caer ni exponer datos del paciente?',
+    network:'¿Qué área asistencial depende de Wi‑Fi y segmentación fiables?',
+    cloud:'¿Qué tarea administrativa resta hoy tiempo a la atención?'
+  },
+  'Educación':{
+    cyber:'¿Qué identidad o servicio académico sería más costoso comprometer?',
+    network:'¿Dónde sufre más la experiencia Wi‑Fi en el campus?',
+    cloud:'¿Qué servicio académico necesita escalar sin más operación manual?'
+  },
+  'Transporte y logística':{
+    cyber:'¿Qué hub, API o tercero puede detener la operación si se compromete?',
+    network:'¿Qué nodo logístico necesita movilidad y enlaces siempre disponibles?',
+    cloud:'¿Qué proceso documental o de datos sigue siendo demasiado manual?'
+  },
+  'Hostelería y turismo':{
+    cyber:'¿Qué fallo en reserva, pago o acceso dañaría antes la experiencia?',
+    network:'¿Dónde nota más el huésped una conectividad deficiente?',
+    cloud:'¿Qué interacción con el huésped podemos automatizar sin perder contexto?'
+  },
+  'Software y servicios digitales':{
+    cyber:'¿Cómo verificamos más código sin frenar el ritmo de entrega?',
+    network:'¿Qué dependencia de red limita una aplicación distribuida?',
+    cloud:'¿Qué parte del ciclo de software necesita más elasticidad o automatización?'
+  }
+};
+
 var state={deck:[],filter:'all',query:'',drag:null,preview:null};
 
 function uid(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random()}
