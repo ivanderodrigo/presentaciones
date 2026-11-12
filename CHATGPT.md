@@ -29,4 +29,4 @@ Maximum intelligence underneath, minimum effort for the user.
 Prefer original slides. Generate a new slide only when it adds context or synthesis that the source deck does not already contain.
 
 ## GitHub / ChatGPT
-The repository is readable through the connected GitHub app. To enable direct code changes from ChatGPT, the GitHub App installation must allow repository Contents/refs write access in addition to ChatGPT's app permission setting.
+Direct read/write access from ChatGPT to this repository is enabled. For substantial changes, prefer: create a dedicated branch → validate → review diff → merge to `main`. Preserve automatically refreshed intelligence files unless the task explicitly requires changing them.
