@@ -429,12 +429,39 @@ async function generatePptx(){
   if(!state.deck.length){alert('Añade al menos una slide.');return}
   if(typeof PptxGenJS==='undefined'){alert('No se ha cargado PptxGenJS.');return}
   var pptx=new PptxGenJS();pptx.layout='LAYOUT_WIDE';pptx.author='Westcon Comstor España';pptx.company='Westcon Comstor';pptx.subject='Presentación ad-hoc FY2027';pptx.title='Westcon Presentation Builder';pptx.lang='es-ES';pptx.theme={headFontFace:'Arial',bodyFontFace:'Arial',lang:'es-ES'};
-  async function addVisual(item){var s=pptx.addSlide(),src=await getVisualSrc(item,'full');s.addImage({data:src,x:0,y:0,w:13.333,h:7.5});return s}
+  async function addVisual(item){
+    // Source slides are relative image URLs; generated slides are data URLs.
+    // PptxGenJS data= accepts encoded image bytes, NEVER a relative URL.
+    var src=await getVisualSrc(item,'full');
+    if(!src||typeof src!=='string')throw new Error('Diapositiva sin imagen: '+item.title);
+    var data=src.startsWith('data:image/')?src:await assetData(src);
+    if(!/^data:image\/(png|jpeg|jpg|gif|webp|svg\+xml);/i.test(data))throw new Error('Formato de imagen no válido: '+item.title);
+    // Create the PowerPoint slide only after the image is loaded and validated.
+    var slide=pptx.addSlide();
+    slide.addImage({data:data,x:0,y:0,w:13.333,h:7.5});
+    return slide;
+  }
   async function addCover(item){var s=pptx.addSlide();s.background={color:C.navy};var logo=await assetData('assets/westcon-comstor.png');s.addShape(pptx.ShapeType.roundRect,{x:.55,y:.42,w:1.95,h:.64,fill:{color:C.white},line:{color:C.white}});s.addImage({data:logo,x:.87,y:.54,w:1.32,h:.38});s.addText('WESTCON COMSTOR · FY2027',{x:.58,y:1.61,w:4.8,h:.14,fontFace:'Arial',fontSize:8.5,bold:true,color:C.cyan,charSpacing:1.5,margin:0});s.addText(item.title,{x:.58,y:2.04,w:5.85,h:.78,fontFace:'Arial',fontSize:31,bold:true,color:C.white,fit:'shrink',margin:0});s.addText(item.subtitle||'',{x:.60,y:3.08,w:5.65,h:.65,fontFace:'Arial',fontSize:16,color:'D8E6EA',fit:'shrink',margin:0});s.addShape(pptx.ShapeType.rect,{x:0,y:7.17,w:13.333,h:.33,fill:{color:C.cyan},line:{color:C.cyan}})}
   async function addCustom(item){var s=pptx.addSlide();s.background={color:'1A2E44'};s.addText(item.title,{x:.55,y:.55,w:12.0,h:.55,fontFace:'Arial',fontSize:25,bold:true,color:C.white,margin:0,fit:'shrink'});var lines=String(item.body||'').split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);s.addText(lines.map(function(x){return '• '+x}).join('\n'),{x:.75,y:1.55,w:11.6,h:4.7,fontFace:'Arial',fontSize:20,color:C.white,margin:0,fit:'shrink'});s.addShape(pptx.ShapeType.rect,{x:0,y:7.2,w:13.333,h:.3,fill:{color:C.magenta},line:{color:C.magenta}})}
-  for(var i=0;i<state.deck.length;i++){var item=state.deck[i];if(item.kind==='cover')await addCover(item);else if(item.kind==='custom')await addCustom(item);else await addVisual(item)}
-  var title=(state.deck.find(function(x){return x.kind==='cover'})||{}).title||'Westcon';
-  try{await pptx.writeFile({fileName:slug(title)+'-FY27.pptx'})}catch(e){console.error(e);alert('No se pudo generar el PowerPoint.')}
+  var button=$('#generateBtn'),previousLabel=button.textContent;
+  button.disabled=true;button.textContent='Preparando '+state.deck.length+' diapositivas…';
+  try{
+    // Snapshot the actual chosen order; avoid UI changes during export.
+    var selected=state.deck.slice();
+    for(var i=0;i<selected.length;i++){
+      var item=selected[i];
+      button.textContent='Exportando '+(i+1)+'/'+selected.length+'…';
+      if(item.kind==='cover')await addCover(item);
+      else if(item.kind==='custom')await addCustom(item);
+      else await addVisual(item);
+    }
+    if(pptx._slides.length!==selected.length)throw new Error('Recuento incorrecto: '+pptx._slides.length+' frente a '+selected.length);
+    var title=(selected.find(function(x){return x.kind==='cover'})||{}).title||'Westcon';
+    await pptx.writeFile({fileName:slug(title)+'-FY27.pptx'});
+  }catch(e){
+    console.error('Exportación PPTX cancelada:',e);
+    alert('No se ha exportado el PowerPoint porque una diapositiva no pudo cargarse correctamente. No se generará una presentación incompleta. Detalle: '+e.message);
+  }finally{button.disabled=false;button.textContent=previousLabel}
 }
 
 function renderAll(){renderBlocks();renderLibrary();renderDeck()}
