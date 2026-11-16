@@ -1,4 +1,4 @@
-# Westcon Presentation Builder · v5.7
+# Westcon Presentation Builder · v5.8
 
 Constructor visual de presentaciones ad-hoc para Westcon Comstor España FY27.
 
@@ -110,3 +110,13 @@ La aplicación se publica desde main y sigue siendo completamente estática.
 - Cisco se trata correctamente como fabricante multiárea y puede aparecer en Cybersecurity y Networking.
 - Cloudflare y Sonar replican ahora la geometría exacta del cuadro FY27 de ventajas de Ping/F5: Corbel 11 pt, interlineado 100%, espacio posterior 0, sangría colgante de bullet y anclaje vertical centrado.
 - Las taxonomías sustituyen las listas de nombres por tarjetas blancas con los logos de los fabricantes, manteniendo texto explicativo tecnológico debajo.
+
+
+## Corrección v5.8 — Exportación de PowerPoint
+
+- Las diapositivas originales del repositorio se cargan y convierten a datos de imagen antes de incorporarlas a PptxGenJS; ya no se pasa una ruta relativa al parámetro `data`.
+- Las diapositivas generadas dinámicamente mantienen sus imágenes codificadas sin conversión innecesaria.
+- Se comprueba el formato de imagen y se crea cada slide únicamente después de cargarla correctamente.
+- La exportación respeta una copia ordenada de la selección y verifica que el total generado coincide con el total seleccionado.
+- Si alguna imagen falla, se cancela la descarga con un mensaje de error en lugar de entregar un PowerPoint con páginas en blanco.
+- Se actualiza la versión de la interfaz y la URL del script para evitar el JavaScript antiguo en caché.
